@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { requestResetCode } from '../api/authApi';
-
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -11,7 +10,7 @@ export default function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    setIsSubmitting(true); // Disable button on first click
+    setIsSubmitting(true);
 
     try {
       await requestResetCode(email);
@@ -19,7 +18,7 @@ export default function ForgotPassword() {
       navigate('/verify-code');
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');
-      setIsSubmitting(false); // Enable again if error occurs
+      setIsSubmitting(false);
     }
   };
 
@@ -47,11 +46,10 @@ export default function ForgotPassword() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full py-2 rounded text-white transition duration-200 ${
-              isSubmitting
+            className={`w-full py-2 rounded text-white transition duration-200 ${isSubmitting
                 ? 'bg-gray-400 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700'
-            }`}
+              }`}
           >
             {isSubmitting ? 'Sending...' : 'Send Verification Code'}
           </button>
