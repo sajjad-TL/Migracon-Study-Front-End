@@ -2,12 +2,47 @@ import React, { useState, useEffect } from 'react';
 import img1 from "../assets/schoolgirl.jpg";
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import { GoogleLogin } from '@react-oauth/google';
+
 
 const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const [user, setUser] = useState({});
+
+  const handleLoginSuccess = async (response) => {
+    try {
+      const res = await fetch('http://localhost:5000/api/auth/google-login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: response.credential }),
+      });
+  
+      const data = await res.json();
+  
+      if (data?.token) {
+        localStorage.setItem("token", data.token);  
+        setUser(data);
+        setError(null);
+        navigate("/dashboard");
+      } else {
+        setError(data.message || 'Something went wrong');
+      }
+    } catch (err) {
+      console.error(err);
+      setError('Error with the Google login API');
+    }
+  };
+  
+
+  const handleLoginError = (error) => {
+    setError('Failed to login with Google');
+  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -109,10 +144,10 @@ const Login = () => {
           </div>
 
           <div className="space-y-2">
-            <button className="w-full flex items-center justify-center border rounded-lg py-2 hover:bg-gray-100">
-              <img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt="Google" className="h-5 mr-2" />
-              Log In with Google
-            </button>
+          <GoogleLogin
+            onSuccess={handleLoginSuccess}
+            onError={handleLoginError}
+          />
             <button className="w-full flex items-center justify-center border rounded-lg py-2 hover:bg-gray-100">
               <img src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="Apple" className="h-5 mr-2" />
               Log In with Apple
