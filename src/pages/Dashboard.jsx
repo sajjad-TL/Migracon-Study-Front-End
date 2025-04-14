@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { BsFillBagCheckFill, BsCalculatorFill } from "react-icons/bs";
 import { IoDocumentText } from "react-icons/io5";
 import {  FaFileArrowUp } from "react-icons/fa6";
@@ -76,13 +76,28 @@ export default function Dashboard() {
     { label: "View Reports", icon: FaChartBar },
   ];
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef();
+
+   // Close dropdown when clicking outside
+   useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
  
       {/* navbar */}
       <div>
-        <nav className="w-[102.9%] bg-white shadow-md">
+        <nav className="w-[98.9%] bg-white shadow-md">
           <div className="max-w-7xl pl-[5rem] pr-[1rem] py-3 flex justify-between items-center relative">
             <ul className="hidden md:flex space-x-6 text-gray-500 font-medium">
               {navItems.map((item) => (
@@ -101,14 +116,28 @@ export default function Dashboard() {
               ))}
             </ul>
 
-            <div className="flex flex-row gap-8 items-center -mr-[20rem]">
-              <IoMdNotifications className="text-2xl text-gray-500" />
-              <img
-                src="https://randomuser.me/api/portraits/women/44.jpg"
-                className="w-10 h-10 rounded-full"
-                alt="User"
-              />
-            </div>
+            <div className="relative" ref={dropdownRef}>
+      <div className="flex flex-row gap-8 items-center cursor-pointer">
+        <IoMdNotifications className="text-2xl text-gray-500" />
+        <img
+          src="https://randomuser.me/api/portraits/women/44.jpg"
+          className="w-10 h-10 rounded-full"
+          alt="User"
+          onClick={() => setDropdownOpen((prev) => !prev)}
+        />
+      </div>
+
+      {/* Dropdown menu */}
+      {dropdownOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+          <ul className="py-2 text-sm text-gray-700">
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</li>
+          </ul>
+        </div>
+      )}
+    </div>
 
 
           </div>
@@ -118,7 +147,7 @@ export default function Dashboard() {
 
           {/* Main Content */}
 
-          <main className="flex-1 p-4 sm:p-6 space-y-6 overflow-y-auto">
+          <main className="flex-1 p-4 sm:p-6 space-y-6 w-full lg:w-[60rem] overflow-y-auto">
             {/* TopNav */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div className="text-xl font-bold">Agent Dashboard</div>
@@ -275,7 +304,7 @@ export default function Dashboard() {
 
 
           {/* Right Sidebar */}
-          <aside className="w-full lg:w-[36rem] bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem]">
+          <aside className="w-full lg:w-[24rem] bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem]">
             {/* Your Balance Section */}
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-sm text-black mb-2 font-bold">Your balance</div>
@@ -340,7 +369,7 @@ export default function Dashboard() {
 
 
 const StatCard = ({ title, value, icon }) => (
-  <div className="bg-white p-4 rounded-lg shadow flex items-center gap-4">
+  <div className="bg-white p-2 rounded-lg shadow flex items-center gap-4">
     <div className="text-2xl">{icon}</div>
     <div>
       <div className="text-sm text-gray-500">{title}</div>
@@ -358,13 +387,6 @@ const Card = ({ title, children, colSpan }) => (
     {children}
   </div>
 );
-
-
-
-
-
-
-
 
 const AppRow = ({ image, name, uni, status }) => (
   <div className="flex justify-between text-sm py-2 border-b last:border-b-0">
