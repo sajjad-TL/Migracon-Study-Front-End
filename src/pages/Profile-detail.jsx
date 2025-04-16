@@ -1,0 +1,401 @@
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { MdEdit } from "react-icons/md";
+import logo from "../assets/Migracon.svg";
+import {
+  FaArrowLeft,
+  FaBell,
+  FaEnvelope,
+  FaFacebook,
+  FaYoutube,
+  FaInstagram,
+  FaLinkedin,
+} from "react-icons/fa";
+
+const ProfileDetail = () => {
+  const [activeTab, setActiveTab] = useState("profile");
+
+  const tabs = [
+    { key: "profile", label: "Profile Information" },
+    { key: "business", label: "Business Information" },
+    { key: "notifications", label: "Notification Preferences" },
+  ];
+
+  return (
+    <div className="container">
+      <div className="bg-gray-50 min-h-screen">
+        {/* Header */}
+        <header className="bg-white shadow-sm">
+          <div
+            className="container mx-auto px-4 py-4 flex items-center justify-between"
+            style={{ borderBottom: "2px solid #bebebe" }}
+          >
+            <div className="flex items-center space-x-2 text-gray-500">
+              <Link to="#" className="text-gray-500">
+                <FaArrowLeft />
+              </Link>
+              <span>Home</span>
+              <span>/</span>
+              <span className="text-gray-900 font-semibold">Dashboard</span>
+            </div>
+            <div className="flex items-center space-x-4">
+              <FaBell className="text-gray-500" />
+              <div className="w-8 h-8 rounded-full bg-gray-300" />
+            </div>
+          </div>
+        </header>
+
+        {/* Main */}
+        <main className="container mx-auto px-4 py-8">
+          <div className="rounded-lg p-6">
+            {/* Tabs */}
+            <div
+              className="flex justify-between items-center mb-6"
+              style={{ borderBottom: "2px solid #d6d6d6", width: "80%" }}
+            >
+              <div className="flex space-x-4">
+                {tabs.map((tab) => (
+                  <button
+                    key={tab.key}
+                    onClick={() => setActiveTab(tab.key)}
+                    className={`px-4 py-2 rounded ${activeTab === tab.key
+                        ? "bg-blue-100 text-blue-700"
+                        : "text-gray-500"
+                      }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Tab Content */}
+            {activeTab === "profile" && (
+              <>
+                {/* Profile Info */}
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-md-4">
+                      <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                        Profile Information
+                      </h2>
+                    </div>
+                    <div className="col-md-8">
+                      <div
+                        className="flex items-center space-x-2 py-1 ml-[33%] rounded-3 border"
+                        style={{ width: "38%" }}
+                      >
+                        <img
+                          alt="Company Logo"
+                          className="w-10 h-10 rounded-full ms-2"
+                          src={logo}
+                        />
+                        <div>
+                          <p
+                            className="text-gray-900 font-semibold m-0"
+                            style={{ fontSize: "12px" }}
+                          >
+                            Migracon Inc.
+                          </p>
+                          <p
+                            className="text-gray-500 text-sm m-0"
+                            style={{ fontSize: "12px" }}
+                          >
+                            Recruitment Partner ID: 259023
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="p-6 rounded-lg border shadow-sm bg-white"
+                  style={{ width: "52%" }}
+                >
+                  {/* Header */}
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-lg font-semibold text-gray-900">
+                      User Settings
+                    </h3>
+                    <MdEdit className="text-gray-500 cursor-pointer" />
+                  </div>
+
+                  {/* Content */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
+                    <div className="text-sm text-gray-500 font-medium">
+                      Profile Photo
+                    </div>
+                    <div className="flex items-center space-x-4">
+                      <img
+                        alt="Profile"
+                        className="w-10 h-10 rounded-full ml-[88%]"
+                        src="https://placehold.co/40x40"
+                      />
+                    </div>
+
+                    <div className="text-sm text-gray-500 font-medium">
+                      Password
+                    </div>
+                    <div className="text-gray-900 text-sm ml-[82%]">
+                      *********
+                    </div>
+
+                    <div className="text-sm text-gray-500 font-medium">
+                      First Name
+                    </div>
+                    <div className="text-gray-900 text-sm ml-[86%]">
+                      Faisal
+                    </div>
+
+                    <div className="text-sm text-gray-500 font-medium">
+                      Last Name
+                    </div>
+                    <div className="text-gray-900 text-sm ml-[80%]">
+                      Mahmood
+                    </div>
+
+                    <div className="text-sm text-gray-500 font-medium">
+                      Email
+                    </div>
+                    <div className="text-gray-900 text-sm ml-[55%]">
+                      faisal@migracon.com
+                    </div>
+
+                    <div className="text-sm text-gray-500 font-medium">
+                      Mobile
+                    </div>
+                    <div className="flex items-center space-x-2 text-gray-900 text-sm">
+                      <img
+                        alt="Canada Flag"
+                        className="w-5 h-5 ml-[62%]"
+                        src="https://placehold.co/20x20"
+                      />
+                      <span>+1289321913</span>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+
+            {activeTab === "business" && (
+              <>
+                {/* Profile Info */}
+                <div className="container-fluid">
+                  <div className="row">
+                    <div className="col-md-4">
+                      <h2 className="text-2xl font-semibold text-gray-900 mb-4">
+                        Business Information
+                      </h2>
+                    </div>
+                    <div className="col-md-8">
+                      <div
+                        className="flex items-center space-x-2 py-1 ml-[33%] rounded-3 border"
+                        style={{ width: "38%" }}
+                      >
+                        <img
+                          alt="Company Logo"
+                          className="w-10 h-10 rounded-full ms-2"
+                          src={logo}
+                        />
+                        <div>
+                          <p
+                            className="text-gray-900 font-semibold m-0"
+                            style={{ fontSize: "12px" }}
+                          >
+                            Migracon Inc.
+                          </p>
+                          <p
+                            className="text-gray-500 text-sm m-0"
+                            style={{ fontSize: "12px" }}
+                          >
+                            Recruitment Partner ID: 259023
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className="p-6 rounded-lg border "
+                  style={{ width: "52%" }}
+                >
+                  {/* Header */}
+                  <div className=" p-6 bg-gray-50">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-4">
+                      General Information
+                    </h3>
+                    <div className="grid grid-cols-2 gap-y-4 text-sm">
+                      <div className="text-gray-500 font-medium">Company Logo</div>
+                      <div>
+                        <img
+                          src={logo}
+                          alt="Company Logo"
+                          className="w-10 h-10 object-contain"
+                        />
+                      </div>
+
+                      <div className="text-gray-500 font-medium">Company Name</div>
+                      <div className="text-gray-900">Migracon Inc.</div>
+
+                      <div className="text-gray-500 font-medium">Website</div>
+                      <div className="text-blue-600 underline">
+                        <a href="https://www.migracon.com" target="_blank" rel="noreferrer">
+                          www.migracon.com
+                        </a>
+                      </div>
+
+                      <div className="text-gray-500 font-medium">Main Source Of Students</div>
+                      <div className="flex items-center space-x-2">
+                        <img
+                          src="https://flagcdn.com/w40/pk.png"
+                          alt="PK"
+                          className="w-5 h-4 object-cover"
+                        />
+                        <span>Pakistan</span>
+                      </div>
+
+                      <div className="text-gray-500 font-medium">Street Address</div>
+                      <div className="text-gray-900">5485 Bellaggio Crescent</div>
+
+                      <div className="text-gray-500 font-medium">City</div>
+                      <div className="text-gray-900">Mississauga</div>
+
+                      <div className="text-gray-500 font-medium">Country</div>
+                      <div className="flex items-center space-x-2">
+                        <img
+                          src="https://flagcdn.com/w40/ca.png"
+                          alt="Canada"
+                          className="w-5 h-4 object-cover"
+                        />
+                        <span>Canada</span>
+                      </div>
+
+                      <div className="text-gray-500 font-medium">State / Province</div>
+                      <div className="text-gray-900">Ontario</div>
+
+                      <div className="text-gray-500 font-medium">Postal Code</div>
+                      <div className="text-gray-900">L5V 0C6</div>
+                    </div>
+                  </div>
+
+                </div>
+              </>
+            )}
+
+
+            {activeTab === "notifications" && (
+              <div>
+              <h1 className="text-2xl font-semibold text-gray-800 mb-2">Notification Preferences</h1>
+              <p className="text-gray-600 mb-6 pb-2"  style={{ borderBottom: "2px solid #d6d6d6", width: "80%" }}>
+                Manage your notifications (including alert types and frequency) to stay informed and meet every deadline.
+              </p>
+    
+              {/* Notification Type */}
+              <div className="mb-6">
+                <label htmlFor="notification-type" className="block text-gray-700 font-medium mb-2">
+                  Notification type <i className="fas fa-info-circle text-gray-400"></i>
+                </label>
+                <select id="notification-type" className="block w-full border border-gray-300 rounded-md p-2" style={{ width: "9%"}}>
+                  <option>Notes</option>
+                </select>
+                <p className="text-gray-600 mt-2">
+                  You will receive a notification when a new note has been added to an application.
+                </p>
+              </div>
+    
+              {/* Grid Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  {/* Email Notifications */}
+  <div className="bg-white p-6 rounded-lg shadow-md w-full">
+    <h2 className="text-lg font-medium text-gray-800 mb-4">Email notifications</h2>
+    <p className="text-gray-600 mb-4">
+      Adjust how you would like to receive this type of notification via email.
+    </p>
+    <label htmlFor="frequency-options" className="block text-gray-700 font-medium mb-2">
+      Frequency options
+    </label>
+    <select id="frequency-options" className="block w-full border border-gray-300 rounded-md p-2 mb-4">
+      <option>Immediate</option>
+      <option>Never</option>
+      <option>Daily</option>
+      <option>Weekly</option>
+    </select>
+  </div>
+
+  {/* Mobile Notification Illustration */}
+  <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center w-full">
+    <img
+      src="https://oaidalleapiprodscus.blob.core.windows.net/private/org-LmQ09WWGIGwOeeA4ArnRw0x5/user-uJPET5fjNenSso8wCETWVNOp/img-TQAMuRMZwOSAphooVbFPuHq8.png"
+      alt="Mobile Notification"
+      width={100}
+      height={100}
+      className="mb-4"
+    />
+    <p className="text-gray-600 text-center mb-4">
+      To receive your notifications via mobile, go to your ApplyBoard app. Don't have the app?
+    </p>
+    <button className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
+      <i className="fas fa-download mr-2"></i> Download app
+    </button>
+  </div>
+</div>
+
+            </div>
+            )}
+          </div>
+        </main>
+
+        {/* Footer */}
+        <footer className="bg-white py-4 mt-8">
+          <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-500 mb-4 md:mb-0">
+              © 2025 Migraconstudy.com
+            </p>
+            <div className="flex space-x-4">
+              <a href="#" className="text-gray-500">
+                <FaEnvelope />
+              </a>
+              <a href="#" className="text-gray-500">
+                <FaFacebook />
+              </a>
+              <a href="#" className="text-gray-500">
+                <FaYoutube />
+              </a>
+              <a href="#" className="text-gray-500">
+                <FaInstagram />
+              </a>
+              <a href="#" className="text-gray-500">
+                <FaLinkedin />
+              </a>
+            </div>
+            <div className="flex flex-wrap space-x-4 mb-2 md:mb-0">
+              {[
+                "Legal",
+                "Privacy policy",
+                "Terms & conditions",
+                "Accessibility",
+                "About",
+                "Blog",
+              ].map((item) => (
+                <a key={item} className="text-gray-500" href="#">
+                  {item}
+                </a>
+              ))}
+            </div>
+          </div>
+        </footer>
+
+        {/* Help Button */}
+        <div className="fixed bottom-4 right-4">
+          <button className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg">
+            Help
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ProfileDetail;

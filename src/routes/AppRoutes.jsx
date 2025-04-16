@@ -9,6 +9,7 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import PublicRoute from '../components/PublicRoute';
 import Application from '../pages/Application-section';
 import Layout from '../layouts/Layout';
+import ProfileDetail from '../pages/Profile-detail'
 
 const AppRoutes = () => {
   return (
@@ -34,6 +35,7 @@ const AppRoutes = () => {
         >
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="application" element={<Application />} />
+          <Route path="ProfileDetail" element={<ProfileDetail />} />
           {/* Add more nested routes here if needed */}
         </Route>
       </Routes>

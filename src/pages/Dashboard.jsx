@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { BsFillBagCheckFill, BsCalculatorFill } from "react-icons/bs";
 import { IoDocumentText } from "react-icons/io5";
-import {  FaFileArrowUp } from "react-icons/fa6";
-import {  FaEdit } from "react-icons/fa";
+import { FaFileArrowUp } from "react-icons/fa6";
+import { FaEdit } from "react-icons/fa";
 import { IoMdNotifications } from "react-icons/io";
 import { MdPayments } from "react-icons/md";
 import img1 from "../assets/schoolgirl.jpg"
@@ -12,7 +12,7 @@ import { TfiEmail } from "react-icons/tfi";
 import { MdLocalPhone } from "react-icons/md";
 import { FaUserPlus, FaSearch, FaFileAlt, FaChartBar } from "react-icons/fa";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
+import { Link } from "react-router-dom";
 
 
 const getStatusClasses = (status) => {
@@ -49,9 +49,6 @@ const ActionButton = ({ label, icon: Icon, isActive, onClick }) => (
   </button>
 );
 
-
-
-
 const semesters = [
   "Summer 2025",
   "Fall 2025",
@@ -68,7 +65,6 @@ export default function Dashboard() {
   const navItems = ["Dashboard", "Student", "Application", "Program"];
   const [activeAction, setActiveAction] = useState("Add New Student");
 
-  //  Define the actions array here
   const actions = [
     { label: "Add New Student", icon: FaUserPlus },
     { label: "Search Programs", icon: FaSearch },
@@ -79,8 +75,7 @@ export default function Dashboard() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
 
-   // Close dropdown when clicking outside
-   useEffect(() => {
+  useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
@@ -92,9 +87,16 @@ export default function Dashboard() {
     };
   }, []);
 
+  const handleLogout = () => {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
- 
+
       {/* navbar */}
       <div>
         <nav className="w-[98.9%] bg-white shadow-md">
@@ -117,28 +119,34 @@ export default function Dashboard() {
             </ul>
 
             <div className="relative" ref={dropdownRef}>
-      <div className="flex flex-row gap-8 items-center cursor-pointer">
-        <IoMdNotifications className="text-2xl text-gray-500" />
-        <img
-          src="https://randomuser.me/api/portraits/women/44.jpg"
-          className="w-10 h-10 rounded-full"
-          alt="User"
-          onClick={() => setDropdownOpen((prev) => !prev)}
-        />
-      </div>
+              <div className="flex flex-row gap-8 items-center cursor-pointer">
+                <IoMdNotifications className="text-2xl text-gray-500" />
+                <img
+                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                  className="w-10 h-10 rounded-full"
+                  alt="User"
+                  onClick={() => setDropdownOpen((prev) => !prev)}
+                />
+              </div>
 
-      {/* Dropdown menu */}
-      {dropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
-          <ul className="py-2 text-sm text-gray-700">
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
-            <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Logout</li>
-          </ul>
-        </div>
-      )}
-    </div>
-
+              {/* Dropdown menu */}
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+                  <ul className="py-2 text-sm text-gray-700">
+                  <Link to="/ProfileDetail">
+                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                </Link>
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
 
           </div>
         </nav>
@@ -147,13 +155,14 @@ export default function Dashboard() {
 
           {/* Main Content */}
 
-          <main className="flex-1 p-4 sm:p-6 space-y-6 w-full lg:w-[60rem] overflow-y-auto">
+          <main className="flex-1 p-4 sm:p-6 space-y-6 w-full lg:w-[58rem] overflow-y-auto">
             {/* TopNav */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div className="text-xl font-bold">Agent Dashboard</div>
             </div>
 
             {/* Stats */}
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <StatCard
                 title="Active Tasks"
@@ -170,8 +179,9 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Applications & Tasks */}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <Card title="Recent Applications" colSpan={2}>
+              <Card title={<span className="text-xl font-bold">Recent Applications</span>} colSpan={2}>
                 <AppRow
                   image={img1}
                   name="Sarah Chen"
@@ -196,8 +206,8 @@ export default function Dashboard() {
                   </button>
                 </div>
               </Card>
-
-              <Card title="Tasks Due Soon">
+              
+              <Card title={<span className="text-xl font-bold">Tasks Due Soon</span>}>
                 <TaskRow
                   image={<FaFileArrowUp className="text-2xl" />}
                   title="Upload IELTS Results"
@@ -251,8 +261,8 @@ export default function Dashboard() {
                     <button
                       key={index}
                       className={`pb-2 text-sm font-medium ${sem === "Summer 2025"
-                          ? "border-b-2 border-black text-black"
-                          : "text-gray-500"
+                        ? "border-b-2 border-black text-black"
+                        : "text-gray-500"
                         }`}
                     >
                       {sem}
@@ -367,7 +377,6 @@ export default function Dashboard() {
 }
 
 
-
 const StatCard = ({ title, value, icon }) => (
   <div className="bg-white p-2 rounded-lg shadow flex items-center gap-4">
     <div className="text-2xl">{icon}</div>
@@ -406,7 +415,6 @@ const AppRow = ({ image, name, uni, status }) => (
 
 );
 
-// tasks solution 
 
 const TaskRow = ({ title, due, para, image }) => (
   <div className="text-sm py-1 flex justify-between  border-b last:border-b-0">

@@ -47,8 +47,8 @@ export default function ForgotPassword() {
             type="submit"
             disabled={isSubmitting}
             className={`w-full py-2 rounded text-white transition duration-200 ${isSubmitting
-                ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-blue-600 hover:bg-blue-700'
+              ? 'bg-gray-400 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700'
               }`}
           >
             {isSubmitting ? 'Sending...' : 'Send Verification Code'}
