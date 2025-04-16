@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import logo from "../assets/Migracon.svg";
+import notification from "../assets/notificaton.png"
+import EditProfileModal from "../Model/EditProfileModal"
+
 import {
   FaArrowLeft,
   FaBell,
@@ -14,6 +17,10 @@ import {
 
 const ProfileDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
+  const openModal = () => setIsEditOpen(true);
+  const closeModal = () => setIsEditOpen(false);
 
   const tabs = [
     { key: "profile", label: "Profile Information" },
@@ -31,7 +38,7 @@ const ProfileDetail = () => {
             style={{ borderBottom: "2px solid #bebebe" }}
           >
             <div className="flex items-center space-x-2 text-gray-500">
-              <Link to="#" className="text-gray-500">
+              <Link to="/dashboard" className="text-gray-500">
                 <FaArrowLeft />
               </Link>
               <span>Home</span>
@@ -59,8 +66,8 @@ const ProfileDetail = () => {
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
                     className={`px-4 py-2 rounded ${activeTab === tab.key
-                        ? "bg-blue-100 text-blue-700"
-                        : "text-gray-500"
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-500"
                       }`}
                   >
                     {tab.label}
@@ -118,7 +125,9 @@ const ProfileDetail = () => {
                     <h3 className="text-lg font-semibold text-gray-900">
                       User Settings
                     </h3>
-                    <MdEdit className="text-gray-500 cursor-pointer" />
+                    <MdEdit className="text-gray-500 cursor-pointer" onClick={openModal} />
+                  
+                    <EditProfileModal isOpen={isEditOpen} onClose={closeModal} />
                   </div>
 
                   {/* Content */}
@@ -232,22 +241,22 @@ const ProfileDetail = () => {
                         <img
                           src={logo}
                           alt="Company Logo"
-                          className="w-10 h-10 object-contain"
+                          className="w-10 h-10 object-contain ml-[85%]"
                         />
                       </div>
 
                       <div className="text-gray-500 font-medium">Company Name</div>
-                      <div className="text-gray-900">Migracon Inc.</div>
+                      <div className="text-gray-900 ml-[68%]">Migracon Inc.</div>
 
                       <div className="text-gray-500 font-medium">Website</div>
-                      <div className="text-blue-600 underline">
+                      <div className="text-blue-600 underline ml-[55%]">
                         <a href="https://www.migracon.com" target="_blank" rel="noreferrer">
                           www.migracon.com
                         </a>
                       </div>
 
                       <div className="text-gray-500 font-medium">Main Source Of Students</div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 ml-[70%]">
                         <img
                           src="https://flagcdn.com/w40/pk.png"
                           alt="PK"
@@ -257,13 +266,13 @@ const ProfileDetail = () => {
                       </div>
 
                       <div className="text-gray-500 font-medium">Street Address</div>
-                      <div className="text-gray-900">5485 Bellaggio Crescent</div>
+                      <div className="text-gray-900 ml-[43%]">5485 Bellaggio Crescent</div>
 
                       <div className="text-gray-500 font-medium">City</div>
-                      <div className="text-gray-900">Mississauga</div>
+                      <div className="text-gray-900  ml-[74%]">Mississauga</div>
 
                       <div className="text-gray-500 font-medium">Country</div>
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center space-x-2 ml-[74%]">
                         <img
                           src="https://flagcdn.com/w40/ca.png"
                           alt="Canada"
@@ -273,10 +282,10 @@ const ProfileDetail = () => {
                       </div>
 
                       <div className="text-gray-500 font-medium">State / Province</div>
-                      <div className="text-gray-900">Ontario</div>
+                      <div className="text-gray-900 ml-[84%]">Ontario</div>
 
                       <div className="text-gray-500 font-medium">Postal Code</div>
-                      <div className="text-gray-900">L5V 0C6</div>
+                      <div className="text-gray-900 ml-[80%]">L5V 0C6</div>
                     </div>
                   </div>
 
@@ -287,62 +296,70 @@ const ProfileDetail = () => {
 
             {activeTab === "notifications" && (
               <div>
-              <h1 className="text-2xl font-semibold text-gray-800 mb-2">Notification Preferences</h1>
-              <p className="text-gray-600 mb-6 pb-2"  style={{ borderBottom: "2px solid #d6d6d6", width: "80%" }}>
-                Manage your notifications (including alert types and frequency) to stay informed and meet every deadline.
-              </p>
-    
-              {/* Notification Type */}
-              <div className="mb-6">
-                <label htmlFor="notification-type" className="block text-gray-700 font-medium mb-2">
-                  Notification type <i className="fas fa-info-circle text-gray-400"></i>
-                </label>
-                <select id="notification-type" className="block w-full border border-gray-300 rounded-md p-2" style={{ width: "9%"}}>
-                  <option>Notes</option>
-                </select>
-                <p className="text-gray-600 mt-2">
-                  You will receive a notification when a new note has been added to an application.
+                <h1 className="text-2xl font-semibold text-gray-800 mb-2">Notification Preferences</h1>
+                <p className="text-gray-600 mb-6 pb-2" style={{ borderBottom: "2px solid #d6d6d6", width: "80%" }}>
+                  Manage your notifications (including alert types and frequency) to stay informed and meet every deadline.
                 </p>
+
+                {/* Notification Type */}
+                <div className="mb-6">
+                  <label htmlFor="notification-type" className="block text-gray-700 font-medium mb-2">
+                    Notification type <i className="fas fa-info-circle text-gray-400"></i>
+                  </label>
+                  <select id="notification-type" className="block w-full border border-gray-300 rounded-md p-2" style={{ width: "9%" }}>
+                    <option>Notes</option>
+                  </select>
+                  <p className="text-gray-600 mt-2">
+                    You will receive a notification when a new note has been added to an application.
+                  </p>
+                </div>
+
+                {/* Grid Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ width: '68%' }}>
+                  {/* Email Notifications */}
+                  <div className="bg-white p-6 rounded-lg shadow-md w-full">
+                    <h2 className="text-lg font-medium text-gray-800 mb-4">Email notifications</h2>
+                    <p className="text-gray-600 mb-4">
+                      Adjust how you would like to receive this type of notification via email.
+                    </p>
+                    <label htmlFor="frequency-options" className="block text-gray-700 font-medium mb-2">
+                      Frequency options
+                    </label>
+                    <select id="frequency-options" className="block w-full border border-gray-300 rounded-md p-2 mb-4">
+                      <option>Immediate</option>
+                      <option>Never</option>
+                      <option>Daily</option>
+                      <option>Weekly</option>
+                    </select>
+                  </div>
+
+                  {/* Mobile Notification Illustration */}
+
+                  <div className="bg-white p-6 rounded-2 shadow-md w-full flex flex-col items-center text-center">
+                    <h2 className="text-xl font-semibold text-gray-800 mb-4 w-full text-left">
+                      Mobile Push Notifications
+                    </h2>
+
+                    <img
+                      src={notification}
+                      alt="Mobile Notification"
+                      width={100}
+                      height={100}
+                      className="mb-4"
+                    />
+
+                    <p className="text-gray-600 mb-4">
+                      To receive notifications on your phone, open the ApplyBoard app. Don’t have it yet?
+                    </p>
+
+                    <button className="bg-blue-600 hover:bg-blue-700 transition-colors duration-200 text-white px-5 py-2 rounded-lg flex items-center">
+                      <i className="fas fa-download mr-2"></i> Download App
+                    </button>
+                  </div>
+
+                </div>
+
               </div>
-    
-              {/* Grid Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  {/* Email Notifications */}
-  <div className="bg-white p-6 rounded-lg shadow-md w-full">
-    <h2 className="text-lg font-medium text-gray-800 mb-4">Email notifications</h2>
-    <p className="text-gray-600 mb-4">
-      Adjust how you would like to receive this type of notification via email.
-    </p>
-    <label htmlFor="frequency-options" className="block text-gray-700 font-medium mb-2">
-      Frequency options
-    </label>
-    <select id="frequency-options" className="block w-full border border-gray-300 rounded-md p-2 mb-4">
-      <option>Immediate</option>
-      <option>Never</option>
-      <option>Daily</option>
-      <option>Weekly</option>
-    </select>
-  </div>
-
-  {/* Mobile Notification Illustration */}
-  <div className="bg-white p-6 rounded-lg shadow-md flex flex-col items-center w-full">
-    <img
-      src="https://oaidalleapiprodscus.blob.core.windows.net/private/org-LmQ09WWGIGwOeeA4ArnRw0x5/user-uJPET5fjNenSso8wCETWVNOp/img-TQAMuRMZwOSAphooVbFPuHq8.png"
-      alt="Mobile Notification"
-      width={100}
-      height={100}
-      className="mb-4"
-    />
-    <p className="text-gray-600 text-center mb-4">
-      To receive your notifications via mobile, go to your ApplyBoard app. Don't have the app?
-    </p>
-    <button className="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
-      <i className="fas fa-download mr-2"></i> Download app
-    </button>
-  </div>
-</div>
-
-            </div>
             )}
           </div>
         </main>

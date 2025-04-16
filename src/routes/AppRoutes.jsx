@@ -10,6 +10,7 @@ import PublicRoute from '../components/PublicRoute';
 import Application from '../pages/Application-section';
 import Layout from '../layouts/Layout';
 import ProfileDetail from '../pages/Profile-detail'
+import EditProfileModal from '../Model/EditProfileModal'
 
 const AppRoutes = () => {
   return (
@@ -36,6 +37,7 @@ const AppRoutes = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="application" element={<Application />} />
           <Route path="ProfileDetail" element={<ProfileDetail />} />
+          <Route path="EditProfileModal" element={<EditProfileModal />} />
           {/* Add more nested routes here if needed */}
         </Route>
       </Routes>
