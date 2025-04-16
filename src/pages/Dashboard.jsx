@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { BsFillBagCheckFill, BsCalculatorFill } from "react-icons/bs";
 import { IoDocumentText } from "react-icons/io5";
 import { FaFileArrowUp } from "react-icons/fa6";
@@ -13,7 +13,7 @@ import { MdLocalPhone } from "react-icons/md";
 import { FaUserPlus, FaSearch, FaFileAlt, FaChartBar } from "react-icons/fa";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Link } from "react-router-dom";
-
+import { UserContext } from "../context/userContext";
 
 const getStatusClasses = (status) => {
   switch (status) {
@@ -64,6 +64,7 @@ export default function Dashboard() {
   const [active, setActive] = useState("Dashboard");
   const navItems = ["Dashboard", "Student", "Application", "Program"];
   const [activeAction, setActiveAction] = useState("Add New Student");
+  const { user } = useContext(UserContext)
 
   const actions = [
     { label: "Add New Student", icon: FaUserPlus },
@@ -122,7 +123,7 @@ export default function Dashboard() {
               <div className="flex flex-row gap-8 items-center cursor-pointer">
                 <IoMdNotifications className="text-2xl text-gray-500" />
                 <img
-                  src="https://randomuser.me/api/portraits/women/44.jpg"
+                  src={user?.profilePicture || "https://randomuser.me/api/portraits/women/44.jpg"}
                   className="w-10 h-10 rounded-full"
                   alt="User"
                   onClick={() => setDropdownOpen((prev) => !prev)}
