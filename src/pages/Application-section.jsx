@@ -84,7 +84,7 @@ function Application() {
       flag: 'CA',
       startDate: '2023-01-01',
       recruitmentPartner: 'haris@region.com',
-      status: 'Not Paid',
+      status: 'Accepted',
       requirements: [],
       currentStage: 'Pre-Payment'
     }

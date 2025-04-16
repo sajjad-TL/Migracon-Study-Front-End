@@ -315,7 +315,7 @@ export default function Dashboard() {
 
 
           {/* Right Sidebar */}
-          <aside className="w-full lg:w-[24rem] bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem]">
+          <aside className="w-full lg:w-[38rem] bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem]">
             {/* Your Balance Section */}
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-sm text-black mb-2 font-bold">Your balance</div>
