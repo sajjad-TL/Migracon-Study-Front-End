@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import img1 from "../assets/schoolgirl.jpg";
+import img1 from "../assets/Auth-banner.png";
+import logo from "../assets/Migracon.svg";
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
+
 
 
 const Login = () => {
@@ -21,11 +23,11 @@ const Login = () => {
         },
         body: JSON.stringify({ token: response.credential }),
       });
-  
+
       const data = await res.json();
-  
+
       if (data?.token) {
-        localStorage.setItem("token", data.token);  
+        localStorage.setItem("token", data.token);
         setUser(data);
         setError(null);
         navigate("/dashboard");
@@ -37,7 +39,7 @@ const Login = () => {
       setError('Error with the Google login API');
     }
   };
-  
+
 
   const handleLoginError = (error) => {
     setError('Failed to login with Google');
@@ -85,7 +87,7 @@ const Login = () => {
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8">
         <div className="w-full max-w-sm">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/ApplyBoard_logo.svg/2560px-ApplyBoard_logo.svg.png"
+            src={logo}
             alt="ApplyBoard Logo"
             className="h-10 mb-8"
           />
@@ -144,10 +146,10 @@ const Login = () => {
           </div>
 
           <div className="space-y-2">
-          <GoogleLogin
-            onSuccess={handleLoginSuccess}
-            onError={handleLoginError}
-          />
+            <GoogleLogin
+              onSuccess={handleLoginSuccess}
+              onError={handleLoginError}
+            />
             <button className="w-full flex items-center justify-center border rounded-lg py-2 hover:bg-gray-100">
               <img src="https://cdn-icons-png.flaticon.com/512/179/179309.png" alt="Apple" className="h-5 mr-2" />
               Log In with Apple
@@ -181,7 +183,7 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="hidden md:block w-1/2 bg-cover bg-center" style={{ backgroundImage: `url(${img1})` }}></div>
+      <div className="hidden md:block w-1/2 bg-cover bg-center " style={{ backgroundImage: `url(${img1})` }}></div>
     </div>
   );
 };

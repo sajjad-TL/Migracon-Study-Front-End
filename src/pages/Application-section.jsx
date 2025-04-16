@@ -113,7 +113,7 @@ function Application() {
 
   return (
     <div className="flex h-screen bg-gray-100">
-     
+
 
       {/* Main content */}
       <div className="flex-1 p-6 overflow-auto">

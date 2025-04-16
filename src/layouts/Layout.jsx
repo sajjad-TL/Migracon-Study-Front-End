@@ -1,11 +1,10 @@
-// src/layouts/Layout.jsx
 import { useState } from "react";
 import { Outlet, useLocation, Link } from "react-router-dom";
 import migracon from '../assets/Migracon.svg';
 import { IoDocumentText, IoPersonAdd } from "react-icons/io5";
-import { FaSchool, FaArrowTrendUp, FaBuildingColumns, FaFileArrowUp } from "react-icons/fa6";
-import { FaTasks, FaHandHoldingUsd, FaEdit } from "react-icons/fa";
-import { IoMdHome, IoMdNotifications } from "react-icons/io";
+import { FaSchool, FaArrowTrendUp, FaBuildingColumns } from "react-icons/fa6";
+import { FaTasks, FaHandHoldingUsd } from "react-icons/fa";
+import { IoMdHome } from "react-icons/io";
 import { PiStudentFill, PiTestTubeFill } from "react-icons/pi";
 import { MdPayments } from "react-icons/md";
 import { HiAcademicCap } from "react-icons/hi2";
@@ -28,60 +27,87 @@ const navItem = [
 const Layout = () => {
   const location = useLocation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const sidebarWidth = 200;
 
   return (
-    <div className="flex">
-      {/* Sidebar button and overlay */}
+    <div className="d-flex vh-100 overflow-hidden">
+      {/* Mobile Toggle Button */}
       <button
-        className="md:hidden p-2 m-2 text-gray-700 bg-gray-100 rounded fixed z-50"
+        className="btn btn-light d-md-none m-2 position-fixed z-3"
         onClick={() => setIsSidebarOpen(!isSidebarOpen)}
       >
         ☰
       </button>
 
+      {/* Overlay for Mobile */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-30"
+          className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-25 z-2"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside
-        className={`fixed z-40 top-0 left-0 h-full w-[300px] bg-white border-r p-4 flex flex-col transform transition-transform duration-300
-        ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} 
-        md:translate-x-0 md:static md:flex
-      `}
+      <div
+        className={`bg-white border-end p-3 position-fixed top-0 start-0 h-100 overflow-auto z-3 
+          ${isSidebarOpen ? "d-block" : "d-none"} 
+          d-md-block`}
+        style={{ width: `${sidebarWidth}px` }}
       >
-        <div className="mb-6">
-          <img src={migracon} alt="migracon" className="h-14" />
+        <div className="mb-4">
+          <img src={migracon} alt="migracon" className="img-fluid" style={{ height: "56px" }} />
         </div>
-        <nav className="flex-1 space-y-2 text-sm overflow-y-auto">
-          {navItem.map(({ icon, text, path, badge }) => (
-            <Link
-              key={text}
-              to={path}
-              className={`flex items-center justify-between p-2 rounded hover:bg-gray-100 transition ${
-                location.pathname === path ? "bg-gray-100 font-semibold" : ""
-              }`}
-              onClick={() => setIsSidebarOpen(false)}
-            >
-              <div className="flex items-center gap-2">
-                {icon}
-                <span>{text}</span>
-              </div>
-              {badge && (
-                <span className="text-xs text-green-700 font-semibold bg-green-200 px-2 py-0.5 rounded-full">
-                  {badge}
-                </span>
-              )}
-            </Link>
-          ))}
+        <nav className="nav flex-column">
+          {navItem.map(({ icon, text, path, badge }) => {
+            const isActive = location.pathname === path;
+            return (
+              <Link
+                key={text}
+                to={path}
+                onClick={() => setIsSidebarOpen(false)}
+                className={`nav-link d-flex justify-content-between align-items-center py-2 px-2 rounded ${
+                  isActive ? "fw-semibold" : ""
+                }`}
+                style={{
+                  color: isActive ? "#000" : "#000",
+                  backgroundColor: isActive ? "#f8f9fa" : "transparent",
+                  transition: "0.2s ease",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = "#f1f1f1";
+                  if (!isActive) e.currentTarget.style.color = "#555";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = isActive ? "#f8f9fa" : "transparent";
+                  e.currentTarget.style.color = "#000";
+                }}
+              >
+                <div className="d-flex align-items-center gap-2">
+                  {icon}
+                  <span>{text}</span>
+                </div>
+                {badge && (
+                  <span className="badge bg-success bg-opacity-25 text-success fw-semibold px-2 py-1 rounded-pill">
+                    {badge}
+                  </span>
+                )}
+              </Link>
+            );
+          })}
         </nav>
-      </aside>
+      </div>
 
-      {/* Page Content */}
-      <div className="flex-1 ml-0">
+      {/* Main Content */}
+      <div
+        className="flex-grow-1"
+        style={{
+          marginLeft: isSidebarOpen ? 0 : undefined,
+          marginLeft: window.innerWidth >= 768 ? `${sidebarWidth}px` : 0,
+          transition: "margin-left 0.3s ease",
+          overflowY: "auto",
+          height: "100vh",
+        }}
+      >
         <Outlet />
       </div>
     </div>
