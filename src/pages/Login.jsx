@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import img1 from "../assets/Auth-banner.png";
 import logo from "../assets/Migracon.svg";
 import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
-
+import { UserContext } from '../context/userContext';
 
 
 const Login = () => {
@@ -12,7 +12,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [user, setUser] = useState({});
+  const { setUser} = useContext(UserContext)
 
   const handleLoginSuccess = async (response) => {
     try {
@@ -66,6 +66,7 @@ const Login = () => {
       if (res.status === 200) {
 
         localStorage.setItem("token", res.data.token);
+        setUser(res.data)
         navigate("/dashboard");
       }
     } catch (err) {
