@@ -10,7 +10,7 @@ import PublicRoute from '../components/PublicRoute';
 import Application from '../pages/Application-section';
 import Layout from '../layouts/Layout';
 import ProfileDetail from '../pages/Profile-detail'
-import Students from '../pages/Students';
+import StudentDashboard from '../pages/Student';
 
 const AppRoutes = () => {
   return (
@@ -37,7 +37,7 @@ const AppRoutes = () => {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="application" element={<Application />} />
           <Route path="ProfileDetail" element={<ProfileDetail />} />
-          <Route path="students" element={<Students />} />
+          <Route path="students" element={<StudentDashboard />} />
           {/* Add more nested routes here if needed */}
         </Route>
       </Routes>
