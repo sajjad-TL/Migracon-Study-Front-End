@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext,useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import logo from "../assets/Migracon.svg";
 import notification from "../assets/notificaton.png"
 import EditProfileModal from "../Model/EditProfileModal"
-
+import { UserContext } from '../context/userContext'
+import axios from 'axios'; 
 import {
   FaArrowLeft,
   FaBell,
@@ -18,10 +19,27 @@ import {
 const ProfileDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditOpen, setIsEditOpen] = useState(false);
-
+  const { user} = useContext(UserContext)
   const openModal = () => setIsEditOpen(true);
   const closeModal = () => setIsEditOpen(false);
 
+  
+
+  useEffect(() => {
+    debugger
+    fetchAgentData();
+  }, []);
+
+  const fetchAgentData = async () => {
+    try {
+      if (user?.agentId) {
+        const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
+        console.log('Agent Data:', response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching agent data:', error);
+    }
+  };
   const tabs = [
     { key: "profile", label: "Profile Information" },
     { key: "business", label: "Business Information" },
