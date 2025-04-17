@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import logo from "../assets/Migracon.svg";
@@ -24,10 +24,29 @@ const ProfileDetail = () => {
   const closeModal = () => setIsEditOpen(false);
   const [agentData, setAgentData] = useState(null);
 
-
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef();
   useEffect(() => {
     fetchAgentData();
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
+
+  const handleLogout = () => {
+
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
+
 
   const fetchAgentData = async () => {
     try {
@@ -90,10 +109,33 @@ const ProfileDetail = () => {
               <span>/</span>
               <span className="text-gray-900 font-semibold">Dashboard</span>
             </div>
-            <div className="flex items-center space-x-4">
-              <FaBell className="text-gray-500" />
-              <div className="w-8 h-8 rounded-full bg-gray-300" />
-            </div>
+            <div className="relative" ref={dropdownRef}>
+  <div className="flex items-center space-x-4">
+    <FaBell className="text-gray-500 cursor-pointer" />
+    <img
+      src={user?.profilePicture || "https://randomuser.me/api/portraits/women/44.jpg"}
+      alt="User"
+      className="w-8 h-8 rounded-full cursor-pointer"
+      onClick={() => setDropdownOpen((prev) => !prev)}
+    />
+  </div>
+
+  {dropdownOpen && (
+    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+      <ul className="py-2 text-sm text-gray-700">
+        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+        <li
+          className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
+          onClick={handleLogout}
+        >
+          Logout
+        </li>
+      </ul>
+    </div>
+  )}
+</div>
+
+
           </div>
         </header>
 
@@ -140,7 +182,7 @@ const ProfileDetail = () => {
                         <img
                           alt="Company Logo"
                           className="w-10 h-10 rounded-full ms-2"
-                          src={logo}
+                          src={user?.profilePicture || "https://randomuser.me/api/portraits/women/44.jpg"}
                         />
                         <div>
                           <p
@@ -181,7 +223,7 @@ const ProfileDetail = () => {
                   </div>
 
                   {/* Content */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8" >
                     {/* Profile Photo */}
                     <div className="text-sm text-gray-500 font-medium">
                       Profile Photo
@@ -190,7 +232,7 @@ const ProfileDetail = () => {
                       <img
                         alt="Profile"
                         className="w-10 h-10 rounded-full ms-auto"
-                        src="https://placehold.co/40x40"
+                        src={user?.profilePicture || "https://randomuser.me/api/portraits/women/44.jpg"}
                       />
                     </div>
 
