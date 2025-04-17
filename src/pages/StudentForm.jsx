@@ -1,40 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { IoIosClose } from "react-icons/io";
-import { useNavigate } from "react-router-dom"; // ⬅️ Step 1: Import this
 import "../App.css";
 
-const StudentForm = () => {
-    const [isOpen, setIsOpen] = useState(true);
-  const [shouldRender, setShouldRender] = useState(true);
-  const navigate = useNavigate(); // ⬅️ Step 2
+const StudentForm = ({ isOpen, onClose }) => {
+  const [shouldRender, setShouldRender] = useState(isOpen);
 
   useEffect(() => {
     if (!isOpen) {
       const timeout = setTimeout(() => {
         setShouldRender(false);
-        navigate("/students"); // ⬅️ Step 3: Redirect to student page
-      }, 300); // Should match transition duration
+      }, 300);
       return () => clearTimeout(timeout);
+    } else {
+      setShouldRender(true);
     }
-  }, [isOpen, navigate]);
+  }, [isOpen]);
 
   if (!shouldRender) return null;
   return (
     <div
-    className={`fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300 ${
-      isOpen
-        ? ""
-        : ""
-    }`}
-  >
-  
-  <div className="bg-white w-full max-w-2xl max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg">
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ${isOpen ? "bg-black bg-opacity-50 opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+    >
+      <div
+        className={`bg-white w-full max-w-2xl max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg transform transition-transform duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+          }`}
+      >
         <div className="flex flex-row justify-between items-center">
           <div className=" bg-white z-10 px-6 pt-6 pb-2 border-b">
             <h2 className="text-xl font-semibold">Add new student</h2>
           </div>
           <IoIosClose
-            onClick={() => setIsOpen(false)} // ⬅️ Close & redirect handled in useEffect
+            onClick={onClose}
             className="text-3xl cursor-pointer"
           />
         </div>
@@ -164,8 +161,7 @@ const StudentForm = () => {
           <div className="flex justify-end gap-4 mt-6">
             <button
               className="px-4 py-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
-              onClick={() => setIsOpen(false)}
-            >
+              onClick={onClose}>
               Cancel
             </button>
             <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition">Add student</button>
@@ -175,5 +171,4 @@ const StudentForm = () => {
     </div>
   );
 };
-
 export default StudentForm;
