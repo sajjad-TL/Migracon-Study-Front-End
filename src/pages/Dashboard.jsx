@@ -77,6 +77,7 @@ export default function Dashboard() {
   const dropdownRef = useRef();
 
   useEffect(() => {
+    
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
