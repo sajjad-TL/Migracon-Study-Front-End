@@ -1,11 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
+const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    password: "",
+    profilePhoto: null,
+  });
 
-const EditProfileModal = ({ isOpen, onClose }) => {
+  useEffect(() => {
+    if (agentData) {
+      setFormData({
+        firstName: agentData.firstName || "",
+        lastName: agentData.lastName || "",
+        email: agentData.email || "",
+        phone: agentData.phone || "",
+        password: "",
+        profilePhoto: null,
+      });
+    }
+  }, [agentData]);
+
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "profilePhoto") {
+      setFormData({ ...formData, [name]: files[0] });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    onSubmit(formData); // Send data to parent
+    onClose(); // Close modal after submit
+  };
+
   if (!isOpen) return null;
 
   return (
-    
     <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
       <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-xl">
         <div className="flex justify-between items-center border-b pb-2 mb-4">
@@ -15,42 +50,39 @@ const EditProfileModal = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        <form className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium">Profile Photo</label>
-            <input type="file" className="mt-1 block w-full text-sm" />
+            <input name="profilePhoto" type="file" onChange={handleChange} className="mt-1 block w-full text-sm" />
           </div>
 
           <div>
             <label className="block text-sm font-medium">Password</label>
-            <input type="password" className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            <input name="password" type="password" value={formData.password} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
           </div>
 
           <div>
             <label className="block text-sm font-medium">First Name</label>
-            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            <input name="firstName" type="text" value={formData.firstName} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
           </div>
 
           <div>
             <label className="block text-sm font-medium">Last Name</label>
-            <input type="text" className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            <input name="lastName" type="text" value={formData.lastName} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
           </div>
 
           <div>
             <label className="block text-sm font-medium">Email</label>
-            <input type="email" className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            <input name="email" type="email" value={formData.email} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
           </div>
 
           <div>
             <label className="block text-sm font-medium">Mobile</label>
-            <input type="tel" className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            <input name="phone" type="tel" value={formData.phone} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
           </div>
 
           <div className="flex justify-end mt-4">
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-            >
+            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
               Save Changes
             </button>
           </div>

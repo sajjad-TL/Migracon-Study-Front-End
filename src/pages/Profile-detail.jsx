@@ -1,11 +1,11 @@
-import React, { useState, useContext,useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MdEdit } from "react-icons/md";
 import logo from "../assets/Migracon.svg";
 import notification from "../assets/notificaton.png"
 import EditProfileModal from "../Model/EditProfileModal"
 import { UserContext } from '../context/userContext'
-import axios from 'axios'; 
+import axios from 'axios';
 import {
   FaArrowLeft,
   FaBell,
@@ -19,14 +19,13 @@ import {
 const ProfileDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { user} = useContext(UserContext)
+  const { user } = useContext(UserContext)
   const openModal = () => setIsEditOpen(true);
   const closeModal = () => setIsEditOpen(false);
+  const [agentData, setAgentData] = useState(null);
 
-  
 
   useEffect(() => {
-    debugger
     fetchAgentData();
   }, []);
 
@@ -35,11 +34,39 @@ const ProfileDetail = () => {
       if (user?.agentId) {
         const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
         console.log('Agent Data:', response.data);
+        setAgentData(response.data.agent); // Store agent data here
       }
     } catch (error) {
       console.error('Error fetching agent data:', error);
     }
   };
+
+  const handleUpdate = async (formData) => {
+    try {
+      const response = await fetch("http://localhost:5000/agent/update", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          agentId: agentData._id,
+          ...formData,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        setAgentData(data.agent); // Refresh UI with updated data
+      } else {
+        alert("Update failed: " + data.message);
+      }
+    } catch (err) {
+      console.error("Update error", err);
+      alert("Something went wrong!");
+    }
+  };
+
   const tabs = [
     { key: "profile", label: "Profile Information" },
     { key: "business", label: "Business Information" },
@@ -126,7 +153,7 @@ const ProfileDetail = () => {
                             className="text-gray-500 text-sm m-0"
                             style={{ fontSize: "12px" }}
                           >
-                            Recruitment Partner ID: 259023
+                            Recruitment Partner ID: {agentData?._id || 'N/A'}
                           </p>
                         </div>
                       </div>
@@ -144,63 +171,75 @@ const ProfileDetail = () => {
                       User Settings
                     </h3>
                     <MdEdit className="text-gray-500 cursor-pointer" onClick={openModal} />
-                  
-                    <EditProfileModal isOpen={isEditOpen} onClose={closeModal} />
+
+                    <EditProfileModal
+                      isOpen={isEditOpen}
+                      onClose={closeModal}
+                      agentData={agentData}
+                      onSubmit={handleUpdate}
+                    />
                   </div>
 
                   {/* Content */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                    {/* Profile Photo */}
                     <div className="text-sm text-gray-500 font-medium">
                       Profile Photo
                     </div>
-                    <div className="flex items-center space-x-4">
+                    <div className="flex items-center">
                       <img
                         alt="Profile"
-                        className="w-10 h-10 rounded-full ml-[88%]"
+                        className="w-10 h-10 rounded-full ms-auto"
                         src="https://placehold.co/40x40"
                       />
                     </div>
 
+                    {/* Password */}
                     <div className="text-sm text-gray-500 font-medium">
                       Password
                     </div>
-                    <div className="text-gray-900 text-sm ml-[82%]">
+                    <div className="text-gray-900 text-sm ms-auto">
                       *********
                     </div>
 
+                    {/* First Name */}
                     <div className="text-sm text-gray-500 font-medium">
                       First Name
                     </div>
-                    <div className="text-gray-900 text-sm ml-[86%]">
-                      Faisal
+                    <div className="text-gray-900 text-sm ms-auto">
+                      {agentData?.firstName || 'N/A'}
                     </div>
 
+                    {/* Last Name */}
                     <div className="text-sm text-gray-500 font-medium">
                       Last Name
                     </div>
-                    <div className="text-gray-900 text-sm ml-[80%]">
-                      Mahmood
+                    <div className="text-gray-900 text-sm ms-auto">
+                      {agentData?.lastName || 'N/A'}
                     </div>
 
+                    {/* Email */}
                     <div className="text-sm text-gray-500 font-medium">
                       Email
                     </div>
-                    <div className="text-gray-900 text-sm ml-[55%]">
-                      faisal@migracon.com
+                    <div className="text-gray-900 text-sm ms-auto">
+                      {agentData?.email || 'N/A'}
                     </div>
 
+                    {/* Mobile */}
                     <div className="text-sm text-gray-500 font-medium">
                       Mobile
                     </div>
-                    <div className="flex items-center space-x-2 text-gray-900 text-sm">
+                    <div className="flex items-center text-gray-900 text-sm space-x-2">
                       <img
                         alt="Canada Flag"
-                        className="w-5 h-5 ml-[62%]"
+                        className="w-5 h-5 ms-auto"
                         src="https://placehold.co/20x20"
                       />
-                      <span>+1289321913</span>
+                      <span>{agentData?.phone || 'N/A'}</span>
                     </div>
                   </div>
+
                 </div>
               </>
             )}
