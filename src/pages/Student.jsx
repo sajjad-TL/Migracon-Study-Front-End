@@ -70,7 +70,11 @@ const StatusBadge = ({ status }) => {
 };
 
 export default function StudentDashboard() {
-    const [showModal, setShowModal] = useState(false)
+    const [isFormOpen, setIsFormOpen] = useState(false); // 👈 control modal from here
+
+    const openModal = () => setIsFormOpen(true);
+    const closeModal = () => setIsFormOpen(false);
+
     return (
         <div className="p-6 space-y-6">
             {/* Stat Cards */}
@@ -94,12 +98,17 @@ export default function StudentDashboard() {
             {/* Student Table */}
             <div className="bg-white shadow rounded-xl p-4">
                 <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
+
                     <button
-                        onClick={() => setShowModal(true)}
+                        onClick={openModal}
                         className="bg-black text-white px-4 py-2 rounded-md font-medium"
                     >
                         + Add New Student
                     </button>
+
+                    {/* ✅ Pass props to control modal */}
+                    {isFormOpen && <StudentForm isOpen={isFormOpen} onClose={closeModal} />}
+
                     <div className="flex items-center gap-2 w-full md:w-auto">
                         <input
                             type="text"
@@ -157,21 +166,9 @@ export default function StudentDashboard() {
                         <button className="px-3 py-1 border rounded-md">Next</button>
                     </div>
                 </div>
-                {showModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto relative">
-                <button
-                  onClick={() => setShowModal(false)}
-                  className="absolute top-2 right-2 text-gray-500 hover:text-black"
-                >
-                  ✖
-                </button>
-                <StudentForm />
-              </div>
-            </div>
-          )} 
+
             </div>
         </div>
-                  
+
     );
 }
