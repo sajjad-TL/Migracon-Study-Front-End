@@ -16,16 +16,17 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
         firstName: agentData.firstName || "",
         lastName: agentData.lastName || "",
         email: agentData.email || "",
-        phone: agentData.phone || "",
+        phoneNumber: agentData.phoneNumber || "",
         password: "",
-        profilePhoto: null,
+        profilePicture: null, 
       });
     }
   }, [agentData]);
+  
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "profilePhoto") {
+    if (name === "profilePicture") {
       setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
@@ -53,7 +54,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium">Profile Photo</label>
-            <input name="profilePhoto" type="file" onChange={handleChange} className="mt-1 block w-full text-sm" />
+            <input name="profilePicture" type="file" onChange={handleChange} className="mt-1 block w-full text-sm" />
           </div>
 
           <div>

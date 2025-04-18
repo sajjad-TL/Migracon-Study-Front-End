@@ -19,13 +19,14 @@ import {
 const ProfileDetail = () => {
   const [activeTab, setActiveTab] = useState("profile");
   const [isEditOpen, setIsEditOpen] = useState(false);
-  const { user } = useContext(UserContext)
+  const { user, setUser } = useContext(UserContext)
   const openModal = () => setIsEditOpen(true);
   const closeModal = () => setIsEditOpen(false);
   const [agentData, setAgentData] = useState(null);
-
+  const agentId = user._id
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
+
   useEffect(() => {
     fetchAgentData();
     function handleClickOutside(event) {
@@ -46,12 +47,12 @@ const ProfileDetail = () => {
     localStorage.removeItem("user");
     window.location.href = "/login";
   };
-
+  console.log('User: ', user)
 
   const fetchAgentData = async () => {
     try {
-      if (user?.agentId) {
-        const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
+      if (user?._id) {
+        const response = await axios.get(`http://localhost:5000/agent/${agentId}`);
         console.log('Agent Data:', response.data);
         setAgentData(response.data.agent); // Store agent data here
       }
@@ -61,22 +62,29 @@ const ProfileDetail = () => {
   };
 
   const handleUpdate = async (formData) => {
+    const sendData = new FormData();
+  
+    for (let key in formData) {
+      if (key === "profilePicture" && formData[key] instanceof File) {
+        sendData.append(key, formData[key]); // only if it's a real file
+      } else if (key !== "profilePicture") {
+        sendData.append(key, formData[key]);
+      }
+    }
+  
     try {
-      const response = await fetch("http://localhost:5000/agent/update", {
+      const response = await fetch(`http://localhost:5000/agent/update/${agentId}`, {
         method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          agentId: agentData._id,
-          ...formData,
-        }),
+        body: sendData, 
       });
   
       const data = await response.json();
-  
       if (data.success) {
-        setAgentData(data.agent); // Refresh UI with updated data
+        setUser(data.agent);
+        console.log('Agend new Data: ', data.agent)
+  console.log('ProfilePic: ', user.profilePicture)
+
+        setAgentData(data.agent);
       } else {
         alert("Update failed: " + data.message);
       }
@@ -85,7 +93,7 @@ const ProfileDetail = () => {
       alert("Something went wrong!");
     }
   };
-
+  
   const tabs = [
     { key: "profile", label: "Profile Information" },
     { key: "business", label: "Business Information" },
@@ -113,7 +121,7 @@ const ProfileDetail = () => {
   <div className="flex items-center space-x-4">
     <FaBell className="text-gray-500 cursor-pointer" />
     <img
-      src={user?.profilePicture || "https://randomuser.me/api/portraits/women/44.jpg"}
+      src={user.profilePicture ? user.profilePicture :  "https://randomuser.me/api/portraits/women/44.jpg"}
       alt="User"
       className="w-8 h-8 rounded-full cursor-pointer"
       onClick={() => setDropdownOpen((prev) => !prev)}
