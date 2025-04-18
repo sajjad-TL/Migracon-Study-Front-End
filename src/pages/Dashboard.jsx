@@ -124,8 +124,9 @@ export default function Dashboard() {
               <div className="flex flex-row gap-8 items-center cursor-pointer">
                 <IoMdNotifications className="text-2xl text-gray-500" />
                 <img
-                  src={user?.profilePicture || "https://randomuser.me/api/portraits/women/44.jpg"}
-                  className="w-10 h-10 rounded-full"
+           src={user.profilePicture ? `${user.profilePicture}?v${Date.now()}` :  "https://randomuser.me/api/portraits/women/44.jpg"}
+          
+                 className="w-10 h-10 rounded-full"
                   alt="User"
                   onClick={() => setDropdownOpen((prev) => !prev)}
                 />
