@@ -41,8 +41,8 @@ const ActionButton = ({ label, icon: Icon, isActive, onClick }) => (
   <button
     onClick={onClick}
     className={`flex items-center gap-2 px-10 py-2 rounded text-sm font-medium transition-colors duration-200
-      ${isActive ? "bg-blue-800 text-white" : "bg-white text-gray-800 border"}
-      hover:bg-blue-800 hover:text-white`}
+      ${isActive ? "bg-blue-800 text-white" : "bg-white text-gray-800 border hover:bg-blue-600"}
+       hover:text-black `}
   >
     <Icon className="text-base" />
     {label}
@@ -77,7 +77,7 @@ export default function Dashboard() {
   const dropdownRef = useRef();
 
   useEffect(() => {
-    
+
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
@@ -136,9 +136,9 @@ export default function Dashboard() {
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
                   <ul className="py-2 text-sm text-gray-700">
-                  <Link to="/ProfileDetail">
-                   <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
-                </Link>
+                    <Link to="/ProfileDetail">
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
+                    </Link>
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
@@ -158,7 +158,7 @@ export default function Dashboard() {
 
           {/* Main Content */}
 
-          <main className="flex-1 p-4 sm:p-6 space-y-6 w-full lg:w-[58rem] overflow-y-auto">
+          <main className="flex-1 p-4 sm:p-6 space-y-6 w-full  overflow-y-auto">
             {/* TopNav */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div className="text-xl font-bold">Agent Dashboard</div>
@@ -209,7 +209,7 @@ export default function Dashboard() {
                   </button>
                 </div>
               </Card>
-              
+
               <Card title={<span className="text-xl font-bold">Tasks Due Soon</span>}>
                 <TaskRow
                   image={<FaFileArrowUp className="text-2xl" />}
@@ -317,62 +317,69 @@ export default function Dashboard() {
 
 
           {/* Right Sidebar */}
-          <aside className="w-full lg:w-[38rem] bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem]">
-            {/* Your Balance Section */}
-            <div className="bg-white p-4 rounded-lg shadow">
-              <div className="text-sm text-black mb-2 font-bold">Your balance</div>
-              <input placeholder="CAD" className="border p-2 rounded w-full" />
-              <div className="mt-4 text-sm leading-[2] text-black ">
-                Commissions <br /> ApplyCredits
-              </div>
-              <button className="mt-2 w-full bg-blue-100 text-black font-semibold py-2 rounded text-sm">
-                Request commission withdrawal
-              </button>
-            </div>
+          <aside className="bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem] w-full max-w-md mx-auto lg:mx-0">
+  {/* Your Balance Section */}
+  <div className="bg-white p-4 rounded-lg shadow">
+    <div className="text-sm text-black mb-2 font-bold">Your balance</div>
+    <input
+      placeholder="CAD"
+      className="border p-2 rounded w-full"
+    />
+    <div className="mt-4 text-sm leading-[2] text-black flex flex-col sm:flex-row sm:space-x-6">
+      <span>Commissions</span>
+      <span>ApplyCredits</span>
+    </div>
+    <button className="mt-2 w-full bg-blue-100 text-black font-semibold py-2 rounded text-sm">
+      Request commission withdrawal
+    </button>
+  </div>
 
-            {/* Popular Links */}
-            <div className="bg-white p-4 rounded-lg shadow ">
-              <div className="text-sm font-medium mb-2">Popular links</div>
-              <ul className="space-y-1 text-sm text-black leading-[2]">
-                <li className="flex flex-row gap-2 items-center ">
-                  <MdOutlineWhatsapp className="text-green-500 text-2xl" />
-                  WhatsApp chat
-                </li>
-                <li className="flex flex-row gap-2 items-center ">
-                  <IoDocumentTextSharp className="text-2xl" />
-                  Assist - knowledge base
-                </li>
-                <li className="flex flex-row gap-2 items-center ">
-                  <BsCalculatorFill className="text-2xl" />
-                  Canadian visa calculator
-                </li>
-              </ul>
-            </div>
+  {/* Popular Links */}
+  <div className="bg-white p-4 rounded-lg shadow">
+    <div className="text-sm font-medium mb-2">Popular links</div>
+    <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-black leading-[2]">
+      <li className="flex items-center gap-2">
+        <MdOutlineWhatsapp className="text-green-500 text-2xl" />
+        WhatsApp chat
+      </li>
+      <li className="flex items-center gap-2">
+        <IoDocumentTextSharp className="text-2xl" />
+        Assist - knowledge base
+      </li>
+      <li className="flex flex-row items-center gap-2">
+        <BsCalculatorFill className="text-2xl" />
+        <span>Canadian visa calculator</span>
+      </li>
+    </ul>
+  </div>
 
-            {/* Account Manager */}
-            <div className="bg-white p-4 rounded-lg shadow flex justify-between items-center gap-4">
-              <div>
-                <div className="font-semibold mb-4">Your account manager</div>
-                <div className="text-sm text-gray-500">
-                  <div className="flex flex-row gap-2 items-center">
-                    <TfiEmail />
-                    shakeel@migraconstudy.com
-                  </div>
-                  <div className="flex flex-row gap-2 items-center">
-                    <MdLocalPhone />
-                    +92 333 1234 567
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <img
-                  src="https://randomuser.me/api/portraits/men/31.jpg"
-                  className="w-12 h-12 rounded-full"
-                />
-                <div className="font-semibold">Shakeel</div>
-              </div>
-            </div>
-          </aside>
+  {/* Account Manager */}
+  <div className="bg-white p-4 rounded-lg shadow flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+    <div>
+      <div className="font-semibold mb-4">Your account manager</div>
+      <div className="text-sm text-gray-500 space-y-2">
+        <div className="flex items-center gap-2">
+          <TfiEmail />
+          shakeel@migraconstudy.com
+        </div>
+        <div className="flex items-center gap-2">
+          <MdLocalPhone />
+          +92 333 1234 567
+        </div>
+      </div>
+    </div>
+    <div className="flex items-center gap-4 mt-4 md:mt-0">
+      <img
+        src="https://randomuser.me/api/portraits/men/31.jpg"
+        alt="Account manager"
+        className="w-12 h-12 rounded-full"
+      />
+      <div className="font-semibold">Shakeel</div>
+    </div>
+  </div>
+</aside>
+
+
         </div>
       </div>
     </div>
