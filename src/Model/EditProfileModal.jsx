@@ -55,7 +55,6 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
           <div>
             <label className="block text-sm font-medium">Profile Photo</label>
             <input name="profilePicture" type="file" onChange={handleChange} className="mt-1 block w-full text-sm" />
-            <input name="profilePicture" type="file" onChange={handleChange} className="mt-1 block w-full text-sm" />
           </div>
 
           <div>
