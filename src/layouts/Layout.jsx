@@ -50,7 +50,7 @@ const Layout = () => {
       {/* Sidebar */}
       <div
         className={`bg-white border-end p-3 position-fixed top-0 start-0 h-100 overflow-auto z-3 
-          ${isSidebarOpen ? "d-block" : "d-none"} 
+          ${isSidebarOpen ? "d-block" : "d-none"}
           d-md-block`}
         style={{ width: `${sidebarWidth}px` }}
       >

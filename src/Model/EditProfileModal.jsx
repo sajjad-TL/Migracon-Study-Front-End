@@ -41,7 +41,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 opacity-100 flex justify-center items-center z-50">
       <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-xl">
         <div className="flex justify-between items-center border-b pb-2 mb-4">
           <h2 className="text-xl font-semibold">Edit Profile</h2>
