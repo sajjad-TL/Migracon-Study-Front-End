@@ -51,7 +51,7 @@ const ProfileDetail = () => {
   const fetchAgentData = async () => {
     try {
       if (user?._id) {
-        const response = await axios.get(`http://localhost:5000/agent/${user?._id}`);
+        const response = await axios.get(`http://localhost:5000/agent/${user?._id || user.agentId}`);
         console.log('Agent Data:', response.data);
         setAgentData(response.data.agent); // Store agent data here
       }
@@ -77,7 +77,7 @@ const ProfileDetail = () => {
   
     try {
       console.log('Agend id in handle update func', user._id)
-      const response = await fetch(`http://localhost:5000/agent/update/${user._id}`, {
+      const response = await fetch(`http://localhost:5000/agent/update/${user._id || user.agentId}`, {
         method: "PATCH",
         body: sendData,
       });
