@@ -180,6 +180,7 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
           {/* Additional Info */}
           <div className="mb-6">
             
+
             <div className="flex flex-col pt-4">
               <label htmlFor="status" className="font-semibold">Status *</label>
               <select name="status" value={formData.status} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
