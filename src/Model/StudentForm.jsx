@@ -29,7 +29,6 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
   };
 
   const [formData, setFormData] = useState(initialFormState);
-  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!isOpen) {
@@ -53,15 +52,14 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
   };
 
   const handleSubmit = async () => {
-    // Frontend validation: check required fields
     const requiredFields = ["firstName", "lastName", "email", "phoneNumber", "status", "citizenOf"];
     const emptyFields = requiredFields.filter((field) => !formData[field]);
-  
+
     if (emptyFields.length > 0) {
       toast.error("Please fill in all required fields.");
       return;
     }
-  
+
     try {
       const response = await fetch("http://localhost:5000/student/add-new", {
         method: "POST",
@@ -71,9 +69,9 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
           agentId: user?.agentId,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
         if (data?.message === "User already exists") {
           toast.error("Student with this name already exists.");
@@ -81,14 +79,11 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
         }
         throw new Error(data?.message || "Failed to add student");
       }
-  
+
       toast.success("Student added successfully!");
-      onStudentAdded(data);  // Notify the parent component with the new student data
+      onStudentAdded(data); // Send full new student object to dashboard
       onClose(); // Close modal
-  
-      // Reset form
-      setFormData(initialFormState);
-  
+      setFormData(initialFormState); // Reset form
     } catch (err) {
       console.error(err);
       toast.error("Failed to add student!");
@@ -107,14 +102,14 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
         }`}
       >
         <div className="flex flex-row justify-between items-center">
-          <div className=" bg-white z-10 px-6 pt-6 pb-2 border-b">
+          <div className="bg-white z-10 px-6 pt-6 pb-2 border-b">
             <h2 className="text-xl font-semibold">Add new student</h2>
           </div>
           <IoIosClose onClick={onClose} className="text-3xl cursor-pointer" />
         </div>
 
         <div className="px-6 pb-6 pt-2">
-          {/* Personal Information */}
+          {/* Personal Info */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Personal information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -148,9 +143,8 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
             </div>
 
             <div className="flex flex-col pt-4">
-              <label htmlFor="passportNumber" className="font-semibold">Passport number *</label>
+              <label htmlFor="passportNumber" className="font-semibold">Passport number</label>
               <input id="passportNumber" name="passportNumber" value={formData.passportNumber} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
-              <p className="text-sm text-gray-500 mt-1">Passport number is optional, but strongly recommended.</p>
             </div>
 
             <div className="flex flex-col pt-4">
@@ -169,7 +163,7 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
             </div>
           </div>
 
-          {/* Contact Information */}
+          {/* Contact Info */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Contact information</h3>
             <div className="flex flex-col pt-2">
@@ -183,10 +177,10 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
             </div>
           </div>
 
-          {/* Lead Management */}
+          {/* Additional Info */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold mb-2">Lead management</h3>
-            <div className="flex flex-col pt-2">
+            
+            <div className="flex flex-col pt-4">
               <label htmlFor="status" className="font-semibold">Status *</label>
               <select name="status" value={formData.status} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
                 <option value="">Please choose a status</option>
@@ -197,22 +191,22 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
             </div>
 
             <div className="flex flex-col pt-4">
-              <label htmlFor="referral" className="font-semibold">Referral Source</label>
-              <select id="referral" name="referralSource" value={formData.referralSource} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
-                <option value="">Please choose a referral source</option>
+              <label htmlFor="referralSource" className="font-semibold">Referral Source</label>
+              <select name="referralSource" value={formData.referralSource} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
+                <option value="">Choose source</option>
                 <option value="Facebook">Facebook</option>
                 <option value="Instagram">Instagram</option>
               </select>
             </div>
 
             <div className="flex flex-col pt-4">
-              <label htmlFor="interestCountry" className="font-semibold">Country of interest</label>
-              <input type="text" name="countryOfInterest" value={formData.countryOfInterest} onChange={handleChange} placeholder="Country of interest" className="border rounded px-3 py-2 mt-4" />
+              <label htmlFor="countryOfInterest" className="font-semibold">Country of interest</label>
+              <input name="countryOfInterest" value={formData.countryOfInterest} onChange={handleChange} className="border rounded px-3 py-2" />
             </div>
 
             <div className="flex flex-col pt-4">
-              <label htmlFor="services" className="font-semibold">Services of interest</label>
-              <input type="text" name="serviceOfInterest" value={formData.serviceOfInterest} onChange={handleChange} placeholder="Service of interest" className="border rounded px-3 py-2 mt-4" />
+              <label htmlFor="serviceOfInterest" className="font-semibold">Services of interest</label>
+              <input name="serviceOfInterest" value={formData.serviceOfInterest} onChange={handleChange} className="border rounded px-3 py-2" />
             </div>
 
             <label className="flex items-start gap-2 mt-4">

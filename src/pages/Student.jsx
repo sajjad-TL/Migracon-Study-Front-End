@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import StudentForm from '../Model/StudentForm';
 import { BsReverseLayoutTextSidebarReverse } from "react-icons/bs";
 import { CiGrid41 } from "react-icons/ci";
-import { UserContext } from '../context/userContext'; // ✅ Import context
+import { UserContext } from '../context/userContext';
 
 const StatusBadge = ({ status }) => {
     const colors = {
@@ -20,9 +20,9 @@ export default function StudentDashboard() {
     const [currentPage, setCurrentPage] = useState(1);
     const [viewMode, setViewMode] = useState('table');
     const [searchTerm, setSearchTerm] = useState('');
-    const [students, setStudents] = useState([]); // ✅ students from backend
+    const [students, setStudents] = useState([]);
 
-    const { user } = useContext(UserContext); // ✅ Get agentId
+    const { user } = useContext(UserContext);
     const agentId = user?.agentId;
 
     const studentsPerPage = 6;
@@ -30,32 +30,28 @@ export default function StudentDashboard() {
     const openModal = () => setIsFormOpen(true);
     const closeModal = () => setIsFormOpen(false);
 
-    const handleStudentAdded = (newStudent) => {
-        setStudents((prev) => [newStudent, ...prev]);
-        setIsFormOpen(false);
+    const fetchStudents = async () => {
+        if (!agentId) return;
+        try {
+            const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
+            const data = await res.json();
+            setStudents(data?.students || []);
+        } catch (error) {
+            console.error('Error fetching students:', error);
+        }
     };
 
-    // ✅ Fetch data from backend API
     useEffect(() => {
-        if (!agentId) return;
-
-        const fetchStudents = async () => {
-            try {
-                const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
-                const data = await res.json();
-                setStudents(data?.students || []);
-            } catch (error) {
-                console.error('Error fetching students:', error);
-            }
-        };
-
         fetchStudents();
     }, [agentId]);
 
+    const handleStudentAdded = () => {
+        fetchStudents(); // Fetch again after new student is added
+    };
+
     const filteredStudents = students.filter((student) =>
         Object.values(student).some((value) =>
-            typeof value === 'string' &&
-            value.toLowerCase().includes(searchTerm.toLowerCase())
+            typeof value === 'string' && value.toLowerCase().includes(searchTerm.toLowerCase())
         )
     );
 
@@ -94,13 +90,11 @@ export default function StudentDashboard() {
                     <button onClick={openModal} className="bg-black text-white px-4 py-2 rounded-md font-medium">
                         + Add New Student
                     </button>
-                    {isFormOpen && (
-                        <StudentForm
-                            isOpen={isFormOpen}
-                            onClose={closeModal}
-                            onStudentAdded={handleStudentAdded} // 👈 real-time update
-                        />
-                    )}
+                    <StudentForm
+                        isOpen={isFormOpen}
+                        onClose={closeModal}
+                        onStudentAdded={handleStudentAdded}
+                    />
 
                     <div className="flex items-center gap-2 w-full md:w-auto">
                         <input
@@ -131,7 +125,7 @@ export default function StudentDashboard() {
                     </div>
                 </div>
 
-                {/* Table/Grid Display */}
+                {/* Display Students */}
                 {viewMode === 'table' ? (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
@@ -149,18 +143,15 @@ export default function StudentDashboard() {
                                 {currentStudents.map((s, i) => (
                                     <tr key={i} className="border-t">
                                         <td className="p-2 flex items-center gap-3">
-                                            <img src={s.avatar || `https://i.pravatar.cc/40?img=${i + 1}`} alt={s.name} className="w-8 h-8 rounded-full" />
+                                            <img src={s.avatar || `https://i.pravatar.cc/40?img=${i + 1}`} alt={s.firstName} className="w-8 h-8 rounded-full" />
                                             <div>
-                                                <span className="d-flex">
-                                                    <div className="font-medium">{s.firstName}</div>
-                                                    <div className="font-medium ms-2">{s.lastName}</div>
-                                                </span>
+                                                <div className="font-medium">{s.firstName} {s.lastName}</div>
                                                 <div className="text-gray-500 text-xs">{s.email}</div>
                                             </div>
                                         </td>
                                         <td className="p-2">{s._id}</td>
-                                        <td className="p-2">{s.education}</td>
-                                        <td className="p-2">{s.applications}</td>
+                                        <td className="p-2">{s.education || "N/A"}</td>
+                                        <td className="p-2">{s.applications || "0"}</td>
                                         <td className="p-2"><StatusBadge status={s.status} /></td>
                                         <td className="p-2 text-indigo-600 font-medium cursor-pointer">Edit</td>
                                     </tr>
@@ -173,15 +164,15 @@ export default function StudentDashboard() {
                         {currentStudents.map((s, i) => (
                             <div key={i} className="border rounded-xl p-4 shadow flex flex-col gap-2">
                                 <div className="flex items-center gap-3">
-                                    <img src={s.avatar || `https://i.pravatar.cc/40?img=${i + 1}`} alt={s.name} className="w-10 h-10 rounded-full" />
+                                    <img src={s.avatar || `https://i.pravatar.cc/40?img=${i + 1}`} alt={s.firstName} className="w-10 h-10 rounded-full" />
                                     <div>
-                                        <div className="font-medium">{s.name}</div>
+                                        <div className="font-medium">{s.firstName} {s.lastName}</div>
                                         <div className="text-gray-500 text-xs">{s.email}</div>
                                     </div>
                                 </div>
-                                <div className="text-sm">ID: <strong>{s.id}</strong></div>
-                                <div className="text-sm">Education: <strong>{s.education}</strong></div>
-                                <div className="text-sm">Applications: <strong>{s.applications}</strong></div>
+                                <div className="text-sm">ID: <strong>{s._id}</strong></div>
+                                <div className="text-sm">Education: <strong>{s.education || "N/A"}</strong></div>
+                                <div className="text-sm">Applications: <strong>{s.applications || "0"}</strong></div>
                                 <div className="text-sm">Status: <StatusBadge status={s.status} /></div>
                                 <div className="text-sm text-indigo-600 font-medium cursor-pointer mt-2">Edit</div>
                             </div>
