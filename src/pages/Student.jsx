@@ -3,6 +3,7 @@ import StudentForm from '../Model/StudentForm';
 import { BsReverseLayoutTextSidebarReverse } from "react-icons/bs";
 import { CiGrid41 } from "react-icons/ci";
 import { UserContext } from '../context/userContext'; // ✅ Import context
+import EditStudent from '../Model/EditStudent';
 
 const StatusBadge = ({ status }) => {
     const colors = {
@@ -21,6 +22,16 @@ export default function StudentDashboard() {
     const [viewMode, setViewMode] = useState('table');
     const [searchTerm, setSearchTerm] = useState('');
     const [students, setStudents] = useState([]); // ✅ students from backend
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [userData, setUserData] = useState({
+        name: "Ali Khan",
+        email: "ali@example.com",
+    });
+
+    const handleSave = (updatedData) => {
+        setUserData(updatedData);
+        console.log("Updated User Data:", updatedData);
+    };
 
     const { user } = useContext(UserContext); // ✅ Get agentId
     const agentId = user?.agentId;
@@ -31,13 +42,14 @@ export default function StudentDashboard() {
     const closeModal = () => setIsFormOpen(false);
 
     const handleStudentAdded = (newStudent) => {
+        // Add the new student to the state directly
         setStudents((prev) => [newStudent, ...prev]);
         setIsFormOpen(false);
     };
 
     // ✅ Fetch data from backend API
     useEffect(() => {
-        if (!agentId) return;
+        if (!agentId || students.length > 0) return;  // Only fetch if no students are present
 
         const fetchStudents = async () => {
             try {
@@ -50,7 +62,8 @@ export default function StudentDashboard() {
         };
 
         fetchStudents();
-    }, [agentId]);
+    }, [agentId, students]);  // Fetch only when agentId changes or students array is empty
+
 
     const filteredStudents = students.filter((student) =>
         Object.values(student).some((value) =>
@@ -68,11 +81,14 @@ export default function StudentDashboard() {
     const endIndex = startIndex + studentsPerPage;
     const currentStudents = filteredStudents.slice(startIndex, endIndex);
 
+
+
+
     return (
         <div className="p-6 space-y-6">
             {/* Stat Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[ 
+                {[
                     { label: 'Total Students', value: students.length, icon: '👥' },
                     { label: 'Active Applications', value: '1,234', icon: '📄' },
                     { label: 'Completed', value: '892', icon: '✅' },
@@ -162,7 +178,20 @@ export default function StudentDashboard() {
                                         <td className="p-2">{s.education}</td>
                                         <td className="p-2">{s.applications}</td>
                                         <td className="p-2"><StatusBadge status={s.status} /></td>
-                                        <td className="p-2 text-indigo-600 font-medium cursor-pointer">Edit</td>
+                                        <td className="p-4">
+                                            <div
+                                                className="text-sm text-indigo-600 font-medium cursor-pointer mt-2"
+                                                onClick={() => setIsModalOpen(true)}
+                                            >
+                                                Edit
+                                            </div>
+                                            <EditStudent
+                                                isOpen={isModalOpen}
+                                                onClose={() => setIsModalOpen(false)}
+                                                userData={userData}
+                                                onSave={handleSave}
+                                            />
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -183,7 +212,24 @@ export default function StudentDashboard() {
                                 <div className="text-sm">Education: <strong>{s.education}</strong></div>
                                 <div className="text-sm">Applications: <strong>{s.applications}</strong></div>
                                 <div className="text-sm">Status: <StatusBadge status={s.status} /></div>
-                                <div className="text-sm text-indigo-600 font-medium cursor-pointer mt-2">Edit</div>
+                                <div className="p-4">
+                                    <p>Name: {userData.name}</p>
+                                    <p>Email: {userData.email}</p>
+
+                                    <div
+                                        className="text-sm text-indigo-600 font-medium cursor-pointer mt-2"
+                                        onClick={() => setIsModalOpen(true)}
+                                    >
+                                        Edit
+                                    </div>
+
+                                    <EditStudent
+                                        isOpen={isModalOpen}
+                                        onClose={() => setIsModalOpen(false)}
+                                        userData={userData}
+                                        onSave={handleSave}
+                                    />
+                                </div>
                             </div>
                         ))}
                     </div>
