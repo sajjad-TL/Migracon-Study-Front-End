@@ -1,9 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { IoIosClose } from "react-icons/io";
 import "../App.css";
+import { UserContext } from "../context/userContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const StudentForm = ({ isOpen, onClose }) => {
+const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
   const [shouldRender, setShouldRender] = useState(isOpen);
+  const { user } = useContext(UserContext);
+
+  const initialFormState = {
+    firstName: "",
+    lastName: "",
+    middleName: "",
+    dateOfBirth: "",
+    citizenOf: "",
+    passportNumber: "",
+    passportExpiryDate: "",
+    gender: "",
+    email: "",
+    phoneNumber: "",
+    status: "",
+    referralSource: "",
+    countryOfInterest: "",
+    serviceOfInterest: "",
+    conditionsAccepted: false,
+    agentId: user?.agentId || "",
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     if (!isOpen) {
@@ -17,82 +43,128 @@ const StudentForm = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   if (!shouldRender) return null;
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async () => {
+    // Frontend validation: check required fields
+    const requiredFields = ["firstName", "lastName", "email", "phoneNumber", "status", "citizenOf"];
+    const emptyFields = requiredFields.filter((field) => !formData[field]);
+  
+    if (emptyFields.length > 0) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+  
+    try {
+      const response = await fetch("http://localhost:5000/student/add-new", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          agentId: user?.agentId,
+        }),
+      });
+  
+      const data = await response.json();
+  
+      if (!response.ok) {
+        if (data?.message === "User already exists") {
+          toast.error("Student with this name already exists.");
+          return;
+        }
+        throw new Error(data?.message || "Failed to add student");
+      }
+  
+      toast.success("Student added successfully!");
+      onStudentAdded(data);  // Notify the parent component with the new student data
+      onClose(); // Close modal
+  
+      // Reset form
+      setFormData(initialFormState);
+  
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to add student!");
+    }
+  };
+
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ${isOpen ? "bg-black bg-opacity-50 opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ${
+        isOpen ? "bg-black bg-opacity-50 opacity-100" : "opacity-0 pointer-events-none"
+      }`}
     >
       <div
-        className={`bg-white w-full max-w-2xl max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg transform transition-transform duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
-          }`}
+        className={`bg-white w-full max-w-2xl max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg transform transition-transform duration-300 ${
+          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        }`}
       >
         <div className="flex flex-row justify-between items-center">
           <div className=" bg-white z-10 px-6 pt-6 pb-2 border-b">
             <h2 className="text-xl font-semibold">Add new student</h2>
           </div>
-          <IoIosClose
-            onClick={onClose}
-            className="text-3xl cursor-pointer"
-          />
+          <IoIosClose onClick={onClose} className="text-3xl cursor-pointer" />
         </div>
 
         <div className="px-6 pb-6 pt-2">
           {/* Personal Information */}
           <div className="mb-6">
             <h3 className="text-lg font-semibold mb-2">Personal information</h3>
-            <button className="mb-3 px-4 py-2 bg-blue-100 text-blue-700 font-medium rounded flex items-center hover:bg-blue-200 transition">
-              <span className="mr-2">🔍</span> Autofill with passport
-            </button>
-            <p className="text-sm text-gray-500 mb-4">
-              Auto-complete this section by uploading the student’s passport. This is optional, but strongly recommended.
-            </p>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col">
                 <label htmlFor="firstName" className="font-semibold">First name</label>
-                <input id="firstName" type="text" className="border rounded px-3 py-2" />
+                <input id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
               </div>
               <div className="flex flex-col">
                 <label htmlFor="lastName" className="font-semibold">Last name</label>
-                <input id="lastName" type="text" className="border rounded px-3 py-2" />
+                <input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
               </div>
             </div>
 
             <div className="flex flex-col pt-4">
               <label htmlFor="middleName" className="font-semibold">Middle name</label>
-              <input id="middleName" type="text" className="border rounded px-3 py-2" />
+              <input id="middleName" name="middleName" value={formData.middleName} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
             </div>
 
             <div className="flex flex-col pt-4">
               <label htmlFor="dob" className="font-semibold">Date of birth</label>
-              <input id="dob" type="date" className="border rounded px-3 py-2" />
+              <input id="dob" name="dateOfBirth" value={formData.dateOfBirth} onChange={handleChange} type="date" className="border rounded px-3 py-2" />
             </div>
 
             <div className="flex flex-col pt-4">
-              <label htmlFor="citizenship" className="font-semibold">Country of citizenship *</label>
-              <select id="citizenship" className="border bg-blue-100 rounded px-3 py-2">
-                <option>Please choose a country</option>
+              <label htmlFor="citizenOf" className="font-semibold">Country of citizenship *</label>
+              <select name="citizenOf" value={formData.citizenOf} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
+                <option value="">Please choose a country</option>
+                <option value="USA">USA</option>
+                <option value="Canada">Canada</option>
               </select>
             </div>
 
             <div className="flex flex-col pt-4">
               <label htmlFor="passportNumber" className="font-semibold">Passport number *</label>
-              <input id="passportNumber" type="text" className="border rounded px-3 py-2" />
+              <input id="passportNumber" name="passportNumber" value={formData.passportNumber} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
               <p className="text-sm text-gray-500 mt-1">Passport number is optional, but strongly recommended.</p>
             </div>
 
             <div className="flex flex-col pt-4">
               <label htmlFor="passportExpiry" className="font-semibold">Passport expiry date</label>
-              <input id="passportExpiry" type="date" className="border rounded px-3 py-2" />
+              <input id="passportExpiry" name="passportExpiryDate" value={formData.passportExpiryDate} onChange={handleChange} type="date" className="border rounded px-3 py-2" />
             </div>
 
             <p className="mt-4 font-semibold">Gender</p>
             <div className="flex items-center gap-4 pt-2">
               <label className="flex items-center gap-2">
-                <input type="radio" name="gender" /> Male
+                <input type="radio" name="gender" value="Male" checked={formData.gender === "Male"} onChange={handleChange} /> Male
               </label>
               <label className="flex items-center gap-2">
-                <input type="radio" name="gender" /> Female
+                <input type="radio" name="gender" value="Female" checked={formData.gender === "Female"} onChange={handleChange} /> Female
               </label>
             </div>
           </div>
@@ -102,15 +174,12 @@ const StudentForm = ({ isOpen, onClose }) => {
             <h3 className="text-lg font-semibold mb-2">Contact information</h3>
             <div className="flex flex-col pt-2">
               <label htmlFor="email" className="font-semibold">Email *</label>
-              <input id="email" type="email" className="border rounded px-3 py-2" />
-              <p className="text-sm text-gray-500 mt-1">
-                Please provide a valid and actively monitored email address for the student.
-              </p>
+              <input id="email" name="email" value={formData.email} onChange={handleChange} type="email" className="border rounded px-3 py-2" />
             </div>
 
             <div className="flex flex-col pt-2">
               <label htmlFor="phone" className="font-semibold">Phone number *</label>
-              <input id="phone" type="tel" className="border rounded px-3 py-2" />
+              <input id="phone" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} type="tel" className="border rounded px-3 py-2" />
             </div>
           </div>
 
@@ -119,34 +188,35 @@ const StudentForm = ({ isOpen, onClose }) => {
             <h3 className="text-lg font-semibold mb-2">Lead management</h3>
             <div className="flex flex-col pt-2">
               <label htmlFor="status" className="font-semibold">Status *</label>
-              <select id="status" className="border bg-blue-100 rounded px-3 py-2">
-                <option>Please choose a status</option>
+              <select name="status" value={formData.status} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
+                <option value="">Please choose a status</option>
+                <option value="Active">Active</option>
+                <option value="In Active">In Active</option>
+                <option value="Pending">Pending</option>
               </select>
             </div>
 
             <div className="flex flex-col pt-4">
               <label htmlFor="referral" className="font-semibold">Referral Source</label>
-              <select id="referral" className="border bg-blue-100 rounded px-3 py-2">
-                <option>Please choose a referral source</option>
+              <select id="referral" name="referralSource" value={formData.referralSource} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
+                <option value="">Please choose a referral source</option>
+                <option value="Facebook">Facebook</option>
+                <option value="Instagram">Instagram</option>
               </select>
             </div>
 
             <div className="flex flex-col pt-4">
               <label htmlFor="interestCountry" className="font-semibold">Country of interest</label>
-              <select id="interestCountry" className="border rounded px-3 py-2">
-                <option>🔍</option>
-              </select>
+              <input type="text" name="countryOfInterest" value={formData.countryOfInterest} onChange={handleChange} placeholder="Country of interest" className="border rounded px-3 py-2 mt-4" />
             </div>
 
             <div className="flex flex-col pt-4">
               <label htmlFor="services" className="font-semibold">Services of interest</label>
-              <select id="services" className="border rounded px-3 py-2 mt-1">
-                <option>🔍</option>
-              </select>
+              <input type="text" name="serviceOfInterest" value={formData.serviceOfInterest} onChange={handleChange} placeholder="Service of interest" className="border rounded px-3 py-2 mt-4" />
             </div>
 
             <label className="flex items-start gap-2 mt-4">
-              <input type="checkbox" className="mt-1" />
+              <input type="checkbox" name="conditionsAccepted" checked={formData.conditionsAccepted} onChange={handleChange} className="mt-1" />
               <span className="text-sm text-gray-600">
                 I confirm that I have received express written consent from the student and I can provide proof of their consent upon request. <a href="#" className="text-blue-600 underline">Learn more</a>.
               </span>
@@ -159,16 +229,13 @@ const StudentForm = ({ isOpen, onClose }) => {
 
           {/* Buttons */}
           <div className="flex justify-end gap-4 mt-6">
-            <button
-              className="px-4 py-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 transition"
-              onClick={onClose}>
-              Cancel
-            </button>
-            <button className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition">Add student</button>
+            <button onClick={onClose} className="px-4 py-2 rounded bg-gray-100 text-gray-700 hover:bg-gray-200 transition">Cancel</button>
+            <button onClick={handleSubmit} className="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700 transition">Add student</button>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 export default StudentForm;
