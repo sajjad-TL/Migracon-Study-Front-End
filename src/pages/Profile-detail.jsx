@@ -62,19 +62,18 @@ const ProfileDetail = () => {
 
   const handleUpdate = async (formData) => {
     try {
-      const response = await fetch("http://localhost:5000/agent/update", {
+      const response = await fetch(`http://localhost:5000/agent/update/${user.agentId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          agentId: agentData._id,
           ...formData,
         }),
       });
-  
+
       const data = await response.json();
-  
+
       if (data.success) {
         setAgentData(data.agent); // Refresh UI with updated data
       } else {
@@ -110,30 +109,30 @@ const ProfileDetail = () => {
               <span className="text-gray-900 font-semibold">Dashboard</span>
             </div>
             <div className="relative" ref={dropdownRef}>
-  <div className="flex items-center space-x-4">
-    <FaBell className="text-gray-500 cursor-pointer" />
-    <img
-      src={user?.profilePicture || "https://randomuser.me/api/portraits/women/44.jpg"}
-      alt="User"
-      className="w-8 h-8 rounded-full cursor-pointer"
-      onClick={() => setDropdownOpen((prev) => !prev)}
-    />
-  </div>
+              <div className="flex items-center space-x-4">
+                <FaBell className="text-gray-500 cursor-pointer" />
+                <img
+                  src={user?.profilePicture || "https://randomuser.me/api/portraits/women/44.jpg"}
+                  alt="User"
+                  className="w-8 h-8 rounded-full cursor-pointer"
+                  onClick={() => setDropdownOpen((prev) => !prev)}
+                />
+              </div>
 
-  {dropdownOpen && (
-    <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
-      <ul className="py-2 text-sm text-gray-700">
-        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
-        <li
-          className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
-          onClick={handleLogout}
-        >
-          Logout
-        </li>
-      </ul>
-    </div>
-  )}
-</div>
+              {dropdownOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+                  <ul className="py-2 text-sm text-gray-700">
+                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                    <li
+                      className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
 
 
           </div>
@@ -330,32 +329,36 @@ const ProfileDetail = () => {
                   style={{ width: "52%" }}
                 >
                   {/* Header */}
-                  <div className=" p-6 bg-gray-50">
+                  <div className="p-6 bg-gray-50">
                     <h3 className="text-lg font-semibold text-gray-800 mb-4">
                       General Information
                     </h3>
-                    <div className="grid grid-cols-2 gap-y-4 text-sm">
-                      <div className="text-gray-500 font-medium">Company Logo</div>
-                      <div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
+                      {/* Company Logo */}
+                      <div className="text-sm text-gray-500 font-medium">Company Logo</div>
+                      <div className="flex justify-start ms-auto">
                         <img
                           src={logo}
                           alt="Company Logo"
-                          className="w-10 h-10 object-contain ml-[85%]"
+                          className="w-10 h-10 object-contain"
                         />
                       </div>
 
-                      <div className="text-gray-500 font-medium">Company Name</div>
-                      <div className="text-gray-900 ml-[68%]">Migracon Inc.</div>
+                      {/* Company Name */}
+                      <div className="text-sm text-gray-500 font-medium">Company Name</div>
+                      <div className="text-gray-900 text-sm ms-auto">Migracon Inc.</div>
 
-                      <div className="text-gray-500 font-medium">Website</div>
-                      <div className="text-blue-600 underline ml-[55%]">
+                      {/* Website */}
+                      <div className="text-sm text-gray-500 font-medium">Website</div>
+                      <div className="text-blue-600 text-sm underline ms-auto">
                         <a href="https://www.migracon.com" target="_blank" rel="noreferrer">
                           www.migracon.com
                         </a>
                       </div>
 
-                      <div className="text-gray-500 font-medium">Main Source Of Students</div>
-                      <div className="flex items-center space-x-2 ml-[70%]">
+                      {/* Main Source Of Students */}
+                      <div className="text-sm text-gray-500 font-medium">Main Source Of Students</div>
+                      <div className="flex items-center text-sm ms-auto space-x-2">
                         <img
                           src="https://flagcdn.com/w40/pk.png"
                           alt="PK"
@@ -364,14 +367,17 @@ const ProfileDetail = () => {
                         <span>Pakistan</span>
                       </div>
 
-                      <div className="text-gray-500 font-medium">Street Address</div>
-                      <div className="text-gray-900 ml-[43%]">5485 Bellaggio Crescent</div>
+                      {/* Street Address */}
+                      <div className="text-sm text-gray-500 font-medium">Street Address</div>
+                      <div className="text-gray-900 text-sm ms-auto">5485 Bellaggio Crescent</div>
 
-                      <div className="text-gray-500 font-medium">City</div>
-                      <div className="text-gray-900  ml-[74%]">Mississauga</div>
+                      {/* City */}
+                      <div className="text-sm text-gray-500 font-medium">City</div>
+                      <div className="text-gray-900 text-sm ms-auto">Mississauga</div>
 
-                      <div className="text-gray-500 font-medium">Country</div>
-                      <div className="flex items-center space-x-2 ml-[74%]">
+                      {/* Country */}
+                      <div className="text-sm text-gray-500 font-medium">Country</div>
+                      <div className="flex items-center text-sm ms-auto space-x-2">
                         <img
                           src="https://flagcdn.com/w40/ca.png"
                           alt="Canada"
@@ -380,13 +386,16 @@ const ProfileDetail = () => {
                         <span>Canada</span>
                       </div>
 
-                      <div className="text-gray-500 font-medium">State / Province</div>
-                      <div className="text-gray-900 ml-[84%]">Ontario</div>
+                      {/* State / Province */}
+                      <div className="text-sm text-gray-500 font-medium">State / Province</div>
+                      <div className="text-gray-900 text-sm ms-auto">Ontario</div>
 
-                      <div className="text-gray-500 font-medium">Postal Code</div>
-                      <div className="text-gray-900 ml-[80%]">L5V 0C6</div>
+                      {/* Postal Code */}
+                      <div className="text-sm text-gray-500 font-medium">Postal Code</div>
+                      <div className="text-gray-900 text-sm ms-auto">L5V 0C6</div>
                     </div>
                   </div>
+
 
                 </div>
               </>

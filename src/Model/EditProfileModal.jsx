@@ -18,7 +18,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
         email: agentData.email || "",
         phone: agentData.phone || "",
         password: "",
-        profilePhoto: null,
+        profilePicture: "",
       });
     }
   }, [agentData]);
@@ -53,7 +53,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium">Profile Photo</label>
-            <input name="profilePhoto" type="file" onChange={handleChange} className="mt-1 block w-full text-sm" />
+            <input name="profilePicture" type="file" onChange={handleChange} className="mt-1 block w-full text-sm" />
           </div>
 
           <div>
