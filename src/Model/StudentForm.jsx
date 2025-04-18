@@ -9,6 +9,7 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
   const [shouldRender, setShouldRender] = useState(isOpen);
   const { user } = useContext(UserContext);
 
+
   const initialFormState = {
     firstName: "",
     lastName: "",
@@ -31,6 +32,8 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
   const [formData, setFormData] = useState(initialFormState);
 
   useEffect(() => {
+  console.log('User in student form: ', user)
+
     if (!isOpen) {
       const timeout = setTimeout(() => {
         setShouldRender(false);

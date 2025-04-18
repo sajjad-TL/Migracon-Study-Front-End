@@ -28,6 +28,7 @@ const Login = () => {
 
       if (data?.token) {
         localStorage.setItem("token", data.token);
+        console.log('Context of google stored user', data)
         setUser(data);
         setError(null);
         navigate("/dashboard");
@@ -66,6 +67,7 @@ const Login = () => {
       if (res.status === 200) {
 
         localStorage.setItem("token", res.data.token);
+        console.log('Context of normal login user', res.data)
         setUser(res.data)
         navigate("/dashboard");
       }
