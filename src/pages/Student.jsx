@@ -27,6 +27,7 @@ export default function StudentDashboard() {
   const [viewMode, setViewMode] = useState('table');
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState([]);
+  const [studentData, setStudentData] = useState(null);
 
   const { user } = useContext(UserContext);
   const agentId = user?.agentId;
@@ -40,28 +41,31 @@ export default function StudentDashboard() {
     setIsEditModalOpen(true);
   };
 
-  const handleStudentAdded = (newStudent) => {
+  const handleStudentAdded = () => {
     fetchStudents()
     setIsFormOpen(false);
     fetchStudents()
-  };
-
-  const handleUpdateStudent = (updatedData) => {
+  }
+  
+  const handleUpdateStudent = (updatedStudent) => {
+    setStudentData(updatedStudent);
+  
     setStudents(prev =>
       prev.map(s =>
-        s._id === selectedStudent._id
+        s._id === updatedStudent._id
           ? {
               ...s,
-              ...updatedData,
-              name: `${updatedData.firstName} ${updatedData.lastName}`,
+              ...updatedStudent,
+              name: `${updatedStudent.firstName} ${updatedStudent.lastName}`,
               avatar: s.avatar || `https://i.pravatar.cc/40?u=${s._id}`,
             }
           : s
       )
     );
-    setIsEditModalOpen(false);
+  
+    setIsEditModalOpen(false); // ✅ close modal after update
   };
-
+  
 
   
   const fetchStudents = async () => {
@@ -71,9 +75,7 @@ export default function StudentDashboard() {
       const normalized = (data?.students || []).map(s => ({
         ...s,
         name: `${s.firstName} ${s.lastName}`,
-        avatar: `https://i.pravatar.cc/40?u=${s._id}`,
-        education: "N/A",
-        applications: "0"
+        avatar: `https://i.pravatar.cc/40?u=${s._id}`
       }));
       setStudents(normalized);
     } catch (error) {
@@ -265,11 +267,12 @@ export default function StudentDashboard() {
 
       {/* ✅ Edit Modal */}
       <EditProfileModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        agentData={selectedStudent}
-        onSubmit={handleUpdateStudent}
-      />
+  isOpen={isEditModalOpen}
+  onClose={() => setIsEditModalOpen(false)}
+  agentData={selectedStudent}
+  onStudentUpdated={handleUpdateStudent} // ✅ Correct prop name
+/>
+
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
 
 const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
   const [formData, setFormData] = useState({
@@ -6,8 +7,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
     lastName: "",
     email: "",
     phoneNumber: "",
-    password: "",
-    profilePicture: null,
+    profilePicture: null
   });
 
   useEffect(() => {
@@ -17,8 +17,8 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
         lastName: agentData.lastName || "",
         email: agentData.email || "",
         phoneNumber: agentData.phoneNumber || "",
-        password: "",
         profilePicture: null,
+        status: agentData.status || "Pending",
       });
     }
   }, [agentData]);
@@ -26,9 +26,9 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "profilePicture") {
-      setFormData({ ...formData, [name]: files[0] });
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
     } else {
-      setFormData({ ...formData, [name]: value });
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -36,42 +36,38 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
     e.preventDefault();
 
     try {
-      const formPayload = new FormData();
-      formPayload.append("studentId", agentData._id); // Make sure agentData has _id
-
-      for (const key in formData) {
-        if (formData[key]) {
-          formPayload.append(key, formData[key]);
-        }
-      }
-
-      const response = await fetch("/student/update-student", {
+      const response = await fetch("http://localhost:5000/student/update-student", {
         method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           studentId: agentData._id,
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
           phoneNumber: formData.phoneNumber,
-          password: formData.password,
+          status: formData.status,
         }),
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to update student.");
+      }
 
       const result = await response.json();
 
-      if (response.ok) {
-        alert("Student updated successfully!");
-        onStudentUpdated(result.student); // callback for parent component to refresh
-        onClose(); // close modal
-      } else {
-        alert(result.message || "Failed to update student.");
+      toast.success("Student updated successfully!");
+
+      if (onStudentUpdated) {
+        onStudentUpdated(result.student);
       }
+
+      onClose();
     } catch (error) {
       console.error("Update failed:", error);
-      alert("Something went wrong.");
+      toast.error("Update failed: " + error.message);
     }
   };
 
@@ -82,10 +78,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
       <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-xl">
         <div className="flex justify-between items-center border-b pb-2 mb-4">
           <h2 className="text-xl font-semibold">Edit Profile</h2>
-          <button
-            onClick={onClose}
-            className="text-gray-600 hover:text-red-500 text-xl font-bold"
-          >
+          <button onClick={onClose} className="text-gray-600 hover:text-red-500 text-xl font-bold">
             &times;
           </button>
         </div>
@@ -98,17 +91,6 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
               type="file"
               onChange={handleChange}
               className="mt-1 block w-full text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium">Password</label>
-            <input
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
             />
           </div>
 
@@ -146,6 +128,21 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
           </div>
 
           <div>
+  <label className="block text-sm font-medium">Status</label>
+  <select
+    name="status"
+    value={formData.status}
+    onChange={handleChange}
+    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+  >
+    <option value="Active">Active</option>
+    <option value="In Active">In Active</option>
+    <option value="Pending">Pending</option>
+  </select>
+</div>
+
+
+          <div>
             <label className="block text-sm font-medium">Mobile</label>
             <input
               name="phoneNumber"
@@ -157,10 +154,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
           </div>
 
           <div className="flex justify-end mt-4">
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-            >
+            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
               Save Changes
             </button>
           </div>
