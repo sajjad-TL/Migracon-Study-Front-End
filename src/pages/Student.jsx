@@ -41,14 +41,7 @@ export default function StudentDashboard() {
   };
 
   const handleStudentAdded = (newStudent) => {
-    const normalizedStudent = {
-      ...newStudent,
-      name: `${newStudent.firstName} ${newStudent.lastName}`,
-      avatar: `https://i.pravatar.cc/40?u=${newStudent._id}`,
-      education: "N/A",
-      applications: "0"
-    };
-    setStudents((prev) => [normalizedStudent, ...prev]);
+    fetchStudents()
     setIsFormOpen(false);
   };
 
@@ -68,28 +61,29 @@ export default function StudentDashboard() {
     setIsEditModalOpen(false);
   };
 
+
+  
+  const fetchStudents = async () => {
+    try {
+      const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
+      const data = await res.json();
+      const normalized = (data?.students || []).map(s => ({
+        ...s,
+        name: `${s.firstName} ${s.lastName}`,
+        avatar: `https://i.pravatar.cc/40?u=${s._id}`,
+        education: "N/A",
+        applications: "0"
+      }));
+      setStudents(normalized);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  };
+  
   useEffect(() => {
     if (!agentId) return;
-
-    const fetchStudents = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
-        const data = await res.json();
-        const normalized = (data?.students || []).map(s => ({
-          ...s,
-          name: `${s.firstName} ${s.lastName}`,
-          avatar: `https://i.pravatar.cc/40?u=${s._id}`,
-          education: "N/A",
-          applications: "0"
-        }));
-        setStudents(normalized);
-      } catch (error) {
-        console.error("Error fetching students:", error);
-      }
-    };
-
     fetchStudents();
-  }, [agentId]);
+  }, []);
 
   const filteredStudents = students.filter((student) =>
     Object.values(student).some((value) =>
