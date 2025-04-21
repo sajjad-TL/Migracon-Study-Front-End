@@ -30,28 +30,23 @@ export default function StudentDashboard() {
     const openModal = () => setIsFormOpen(true);
     const closeModal = () => setIsFormOpen(false);
 
-    const handleStudentAdded = (newStudent) => {
-        // Add the new student to the state directly
-        setStudents((prev) => [newStudent, ...prev]);
-        setIsFormOpen(false);
+    const handleStudentAdded = () => {
+        fetchStudents()
       };
 
-    // ✅ Fetch data from backend API
-    useEffect(() => {
-        if (!agentId || students.length > 0) return;  // Only fetch if no students are present
-      
-        const fetchStudents = async () => {
-            try {
-                const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
-                const data = await res.json();
-                setStudents(data?.students || []);
-            } catch (error) {
-                console.error('Error fetching students:', error);
-            }
-        };
-      
-        fetchStudents();
-      }, [agentId, students]);  // Fetch only when agentId changes or students array is empty
+
+      const fetchStudents = async () => {
+        try {
+            const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
+            const data = await res.json();
+            setStudents(data?.students || []);
+        } catch (error) {
+            console.error('Error fetching students:', error);
+        }
+    };
+   useEffect(() => {
+      fetchStudents();
+    }, []); 
       
 
     const filteredStudents = students.filter((student) =>
@@ -103,7 +98,7 @@ export default function StudentDashboard() {
                         <StudentForm
                             isOpen={isFormOpen}
                             onClose={closeModal}
-                            onStudentAdded={handleStudentAdded} // 👈 real-time update
+                            onStudentAdded={handleStudentAdded}
                         />
                     )}
 
