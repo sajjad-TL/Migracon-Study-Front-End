@@ -9,7 +9,6 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
   const [shouldRender, setShouldRender] = useState(isOpen);
   const { user } = useContext(UserContext);
 
-
   const initialFormState = {
     firstName: "",
     lastName: "",
@@ -26,13 +25,12 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
     countryOfInterest: "",
     serviceOfInterest: "",
     conditionsAccepted: false,
-    agentId: user?.agentId || "",
   };
 
   const [formData, setFormData] = useState(initialFormState);
 
   useEffect(() => {
-  console.log('User in student form: ', user)
+    console.log("User in student form: ", user);
 
     if (!isOpen) {
       const timeout = setTimeout(() => {
@@ -63,6 +61,11 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
       return;
     }
 
+    if (!formData.conditionsAccepted) {
+      toast.error("Please accept the consent confirmation.");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:5000/student/add-new", {
         method: "POST",
@@ -84,9 +87,9 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
       }
 
       toast.success("Student added successfully!");
-      onStudentAdded(data); // Send full new student object to dashboard
-      onClose(); // Close modal
-      setFormData(initialFormState); // Reset form
+      onStudentAdded(data); // ✅ pass newly added student object
+      onClose(); // ✅ close modal
+      setFormData(initialFormState); // ✅ reset form
     } catch (err) {
       console.error(err);
       toast.error("Failed to add student!");
@@ -117,12 +120,12 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
             <h3 className="text-lg font-semibold mb-2">Personal information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col">
-                <label htmlFor="firstName" className="font-semibold">First name</label>
-                <input id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
+                <label htmlFor="firstName" className="font-semibold">First name *</label>
+                <input required id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
               </div>
               <div className="flex flex-col">
-                <label htmlFor="lastName" className="font-semibold">Last name</label>
-                <input id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
+                <label htmlFor="lastName" className="font-semibold">Last name *</label>
+                <input required id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
               </div>
             </div>
 
@@ -138,7 +141,7 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
 
             <div className="flex flex-col pt-4">
               <label htmlFor="citizenOf" className="font-semibold">Country of citizenship *</label>
-              <select name="citizenOf" value={formData.citizenOf} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
+              <select name="citizenOf" value={formData.citizenOf} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2" required>
                 <option value="">Please choose a country</option>
                 <option value="USA">USA</option>
                 <option value="Canada">Canada</option>
@@ -171,21 +174,20 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
             <h3 className="text-lg font-semibold mb-2">Contact information</h3>
             <div className="flex flex-col pt-2">
               <label htmlFor="email" className="font-semibold">Email *</label>
-              <input id="email" name="email" value={formData.email} onChange={handleChange} type="email" className="border rounded px-3 py-2" />
+              <input required id="email" name="email" value={formData.email} onChange={handleChange} type="email" className="border rounded px-3 py-2" />
             </div>
 
             <div className="flex flex-col pt-2">
               <label htmlFor="phone" className="font-semibold">Phone number *</label>
-              <input id="phone" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} type="tel" className="border rounded px-3 py-2" />
+              <input required id="phone" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} type="tel" className="border rounded px-3 py-2" />
             </div>
           </div>
 
           {/* Additional Info */}
           <div className="mb-6">
-            
             <div className="flex flex-col pt-4">
               <label htmlFor="status" className="font-semibold">Status *</label>
-              <select name="status" value={formData.status} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2">
+              <select name="status" value={formData.status} onChange={handleChange} className="border bg-blue-100 rounded px-3 py-2" required>
                 <option value="">Please choose a status</option>
                 <option value="Active">Active</option>
                 <option value="In Active">In Active</option>
