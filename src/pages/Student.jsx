@@ -4,6 +4,7 @@ import EditProfileModal from '../Model/EditProfileModal'; // ✅ Import Edit Mod
 import { BsReverseLayoutTextSidebarReverse } from "react-icons/bs";
 import { CiGrid41 } from "react-icons/ci";
 import { UserContext } from '../context/userContext';
+import StudentNavbar from '../layouts/StudentNavbar';
 
 const StatusBadge = ({ status }) => {
   const colors = {
@@ -20,8 +21,8 @@ const StatusBadge = ({ status }) => {
 
 export default function StudentDashboard() {
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false); // ✅ New
-  const [selectedStudent, setSelectedStudent] = useState(null); // ✅ New
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState('table');
@@ -106,6 +107,8 @@ export default function StudentDashboard() {
 
   return (
     <div className="p-6 space-y-6">
+        <StudentNavbar user={user} />
+
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
@@ -270,7 +273,7 @@ export default function StudentDashboard() {
   isOpen={isEditModalOpen}
   onClose={() => setIsEditModalOpen(false)}
   agentData={selectedStudent}
-  onStudentUpdated={handleUpdateStudent} // ✅ Correct prop name
+  onStudentUpdated={handleUpdateStudent}
 />
 
     </div>

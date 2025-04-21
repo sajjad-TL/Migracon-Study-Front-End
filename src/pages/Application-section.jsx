@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Filter, ChevronDown, X, Plus } from 'lucide-react';
 import { FaFlag } from "react-icons/fa";
+import ApplicationNavbar from '../layouts/ApplicationNavbar';
 
 export default function ApplicationManagementInterface() {
   const [showBanner, setShowBanner] = useState(true);
+  const user = JSON.parse(localStorage.getItem('user')) || {}; // Make sure to retrieve 'user' from localStorage
+
 
   const applications = [
     {
@@ -94,6 +97,8 @@ export default function ApplicationManagementInterface() {
 
   return (
     <div className="font-sans text-gray-800 bg-white min-h-screen">
+              <ApplicationNavbar user={user} />
+
       {/* Banner */}
       {showBanner && (
         <div className="bg-green-100 px-4 py-2 flex justify-between items-center">
