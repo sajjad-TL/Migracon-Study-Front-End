@@ -1,10 +1,11 @@
 import React, { useState, useContext, useEffect } from 'react';
 import StudentForm from '../Model/StudentForm';
-import EditProfileModal from '../Model/EditProfileModal'; // ✅ Import Edit Modal
+import EditProfileModal from '../Model/EditProfileModal';
 import { BsReverseLayoutTextSidebarReverse } from "react-icons/bs";
 import { CiGrid41 } from "react-icons/ci";
 import { UserContext } from '../context/userContext';
 import StudentNavbar from '../layouts/StudentNavbar';
+import FilterModal from '../Model/FilterModal';
 
 const StatusBadge = ({ status }) => {
   const colors = {
@@ -19,9 +20,12 @@ const StatusBadge = ({ status }) => {
   );
 };
 
+
+
 export default function StudentDashboard() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -29,6 +33,7 @@ export default function StudentDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState([]);
   const [studentData, setStudentData] = useState(null);
+  const [selectedFilters, setSelectedFilters] = useState([]);
 
   const { user } = useContext(UserContext);
   const agentId = user?.agentId;
@@ -43,14 +48,12 @@ export default function StudentDashboard() {
   };
 
   const handleStudentAdded = () => {
-    fetchStudents()
+    fetchStudents();
     setIsFormOpen(false);
-    fetchStudents()
-  }
-  
+  };
+
   const handleUpdateStudent = (updatedStudent) => {
     setStudentData(updatedStudent);
-  
     setStudents(prev =>
       prev.map(s =>
         s._id === updatedStudent._id
@@ -63,12 +66,9 @@ export default function StudentDashboard() {
           : s
       )
     );
-  
-    setIsEditModalOpen(false); // ✅ close modal after update
+    setIsEditModalOpen(false);
   };
-  
 
-  
   const fetchStudents = async () => {
     try {
       const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
@@ -83,18 +83,23 @@ export default function StudentDashboard() {
       console.error("Error fetching students:", error);
     }
   };
-  
+
   useEffect(() => {
     if (!agentId) return;
     fetchStudents();
   }, []);
 
-  const filteredStudents = students.filter((student) =>
-    Object.values(student).some((value) =>
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch = Object.values(student).some((value) =>
       typeof value === 'string' &&
       value.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
+    );
+
+    const matchesFilter =
+      selectedFilters.length === 0 || selectedFilters.includes(student.status);
+
+    return matchesSearch && matchesFilter;
+  });
 
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
   const handlePageClick = (page) => {
@@ -111,12 +116,7 @@ export default function StudentDashboard() {
 
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[
-          { label: 'Total Students', value: students.length, icon: '👥' },
-          { label: 'Active Applications', value: '1,234', icon: '📄' },
-          { label: 'Completed', value: '892', icon: '✅' },
-          { label: 'New This Month', value: '325', icon: '➕' },
-        ].map((stat, i) => (
+        {[{ label: 'Total Students', value: students.length, icon: '👥' }, { label: 'Active Applications', value: '1,234', icon: '📄' }, { label: 'Completed', value: '892', icon: '✅' }, { label: 'New This Month', value: '325', icon: '➕' }].map((stat, i) => (
           <div key={i} className="bg-white shadow rounded-xl p-4 flex items-center gap-4">
             <div className="text-3xl">{stat.icon}</div>
             <div>
@@ -129,10 +129,21 @@ export default function StudentDashboard() {
 
       {/* Students */}
       <div className="bg-white shadow rounded-xl p-4">
-        <div className="flex flex-col md:flex-row justify-between items-center mb-4 gap-2">
+        <div className="flex flex-col md:flex-row items-center mb-4 gap-2">
           <button onClick={openModal} className="bg-black text-white px-4 py-2 rounded-md font-medium">
             + Add New Student
           </button>
+          <input
+            type="text"
+            placeholder="Search students..."
+            value={searchTerm}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1);
+            }}
+            className="border px-3 py-2 rounded-md w-full md:w-64"
+          />
+
           {isFormOpen && (
             <StudentForm
               isOpen={isFormOpen}
@@ -141,18 +152,13 @@ export default function StudentDashboard() {
             />
           )}
 
-          <div className="flex items-center gap-2 w-full md:w-auto">
-            <input
-              type="text"
-              placeholder="Search students..."
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
-              className="border px-3 py-2 rounded-md w-full md:w-64"
-            />
-            <button className="border px-3 py-2 rounded-md">Filters</button>
+          <div className="flex items-center gap-2 w-full md:w-auto ms-auto">
+            <button
+              className="border px-3 py-2 rounded-md"
+              onClick={() => setIsFilterModalOpen(true)}
+            >
+              Filters
+            </button>
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('table')}
@@ -170,7 +176,7 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* Table/Grid View */}
+        {/* Table or Grid View */}
         {viewMode === 'table' ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -198,12 +204,7 @@ export default function StudentDashboard() {
                     <td className="p-2">{s.education}</td>
                     <td className="p-2">{s.applications}</td>
                     <td className="p-2"><StatusBadge status={s.status} /></td>
-                    <td
-                      className="p-2 text-indigo-600 font-medium cursor-pointer"
-                      onClick={() => openEditModal(s)}
-                    >
-                      Edit
-                    </td>
+                    <td className="p-2 text-indigo-600 font-medium cursor-pointer" onClick={() => openEditModal(s)}>Edit</td>
                   </tr>
                 ))}
               </tbody>
@@ -224,12 +225,7 @@ export default function StudentDashboard() {
                 <div className="text-sm">Education: <strong>{s.education}</strong></div>
                 <div className="text-sm">Applications: <strong>{s.applications}</strong></div>
                 <div className="text-sm">Status: <StatusBadge status={s.status} /></div>
-                <div
-                  className="text-sm text-indigo-600 font-medium cursor-pointer mt-2"
-                  onClick={() => openEditModal(s)}
-                >
-                  Edit
-                </div>
+                <div className="text-sm text-indigo-600 font-medium cursor-pointer mt-2" onClick={() => openEditModal(s)}>Edit</div>
               </div>
             ))}
           </div>
@@ -241,13 +237,7 @@ export default function StudentDashboard() {
             Showing {startIndex + 1} to {Math.min(endIndex, filteredStudents.length)} of {filteredStudents.length} results
           </div>
           <div className="flex gap-1">
-            <button
-              onClick={() => handlePageClick(currentPage - 1)}
-              disabled={currentPage === 1}
-              className="px-3 py-1 border rounded-md disabled:opacity-50"
-            >
-              Previous
-            </button>
+            <button onClick={() => handlePageClick(currentPage - 1)} disabled={currentPage === 1} className="px-3 py-1 border rounded-md disabled:opacity-50">Previous</button>
             {Array.from({ length: totalPages }, (_, i) => (
               <button
                 key={i}
@@ -257,25 +247,25 @@ export default function StudentDashboard() {
                 {i + 1}
               </button>
             ))}
-            <button
-              onClick={() => handlePageClick(currentPage + 1)}
-              disabled={currentPage === totalPages}
-              className="px-3 py-1 border rounded-md disabled:opacity-50"
-            >
-              Next
-            </button>
+            <button onClick={() => handlePageClick(currentPage + 1)} disabled={currentPage === totalPages} className="px-3 py-1 border rounded-md disabled:opacity-50">Next</button>
           </div>
         </div>
       </div>
 
-      {/* ✅ Edit Modal */}
+      {/* Modals */}
       <EditProfileModal
-  isOpen={isEditModalOpen}
-  onClose={() => setIsEditModalOpen(false)}
-  agentData={selectedStudent}
-  onStudentUpdated={handleUpdateStudent}
-/>
+        isOpen={isEditModalOpen}
+        onClose={() => setIsEditModalOpen(false)}
+        agentData={selectedStudent}
+        onStudentUpdated={handleUpdateStudent}
+      />
 
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+      />
     </div>
   );
 }
