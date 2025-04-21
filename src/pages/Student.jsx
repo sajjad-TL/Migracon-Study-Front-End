@@ -43,6 +43,7 @@ export default function StudentDashboard() {
   const handleStudentAdded = (newStudent) => {
     fetchStudents()
     setIsFormOpen(false);
+    fetchStudents()
   };
 
   const handleUpdateStudent = (updatedData) => {
