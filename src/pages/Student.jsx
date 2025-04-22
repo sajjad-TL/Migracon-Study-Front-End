@@ -1,11 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import StudentForm from '../Model/StudentForm';
-import EditProfileModal from '../Model/EditProfileModal';
+// import EditProfileModal from '../Model/EditProfileModal';
 import { BsReverseLayoutTextSidebarReverse } from "react-icons/bs";
 import { CiGrid41 } from "react-icons/ci";
 import { UserContext } from '../context/userContext';
 import StudentNavbar from '../layouts/StudentNavbar';
 import FilterModal from '../Model/FilterModal';
+import EditStudent from '../Model/EditStudent'
 
 const StatusBadge = ({ status }) => {
   const colors = {
@@ -32,6 +33,7 @@ export default function StudentDashboard() {
   const [viewMode, setViewMode] = useState('table');
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState([]);
+  
   const [studentData, setStudentData] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
@@ -58,11 +60,11 @@ export default function StudentDashboard() {
       prev.map(s =>
         s._id === updatedStudent._id
           ? {
-              ...s,
-              ...updatedStudent,
-              name: `${updatedStudent.firstName} ${updatedStudent.lastName}`,
-              avatar: s.avatar || `https://i.pravatar.cc/40?u=${s._id}`,
-            }
+            ...s,
+            ...updatedStudent,
+            name: `${updatedStudent.firstName} ${updatedStudent.lastName}`,
+            avatar: s.avatar || `https://i.pravatar.cc/40?u=${s._id}`,
+          }
           : s
       )
     );
@@ -154,11 +156,26 @@ export default function StudentDashboard() {
 
           <div className="flex items-center gap-2 w-full md:w-auto ms-auto">
             <button
-              className="border px-3 py-2 rounded-md"
+              className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
               onClick={() => setIsFilterModalOpen(true)}
             >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-funnel mr-1"
+              >
+                <path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z" />
+              </svg>
               Filters
             </button>
+
             <div className="flex gap-2">
               <button
                 onClick={() => setViewMode('table')}
@@ -253,7 +270,7 @@ export default function StudentDashboard() {
       </div>
 
       {/* Modals */}
-      <EditProfileModal
+      <EditStudent
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}
         agentData={selectedStudent}
