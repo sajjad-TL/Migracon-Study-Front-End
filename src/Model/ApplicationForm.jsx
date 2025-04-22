@@ -44,18 +44,20 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
       alert("Please select a student first.");
       return;
     }
-
+  
     try {
       const res = await fetch(`http://localhost:5000/student/${selectedStudentId}/new-application`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-
+  
       const result = await res.json();
       if (res.ok) {
         alert("Application added successfully");
-        refreshApplications(); // Trigger refresh
+        if (typeof refreshApplications === "function") {
+          refreshApplications(); // Only call if it's a valid function
+        }
         onClose();
       } else {
         alert(result.message || "Failed to add application");
@@ -65,6 +67,7 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
       alert("Something went wrong.");
     }
   };
+  
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
