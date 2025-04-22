@@ -6,7 +6,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
     firstName: "",
     lastName: "",
     email: "",
-    phoneNumber: "",
+    phone: "",
     profilePicture: null
   });
 
@@ -16,7 +16,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
         firstName: agentData.firstName || "",
         lastName: agentData.lastName || "",
         email: agentData.email || "",
-        phoneNumber: agentData.phoneNumber || "",
+        phone: agentData.phone || "",
         profilePicture: null,
         status: agentData.status || "Pending",
       });
@@ -46,7 +46,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          phoneNumber: formData.phoneNumber,
+          phone: formData.phone,
           status: formData.status,
         }),
       });
@@ -145,9 +145,9 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
           <div>
             <label className="block text-sm font-medium">Mobile</label>
             <input
-              name="phoneNumber"
+              name="phone"
               type="tel"
-              value={formData.phoneNumber}
+              value={formData.phone}
               onChange={handleChange}
               onInput={(e) => {
                 e.target.value = e.target.value.replace(/[^0-9]/g, '');
