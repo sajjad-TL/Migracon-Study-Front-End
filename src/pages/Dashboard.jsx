@@ -259,21 +259,21 @@ export default function Dashboard() {
       <div>
         <nav className="w-[98.9%] bg-white shadow-md">
           <div className="max-w-7xl pl-[5rem] pr-[1rem] py-3 flex justify-between items-center relative">
-          <ul className="hidden md:flex space-x-6 text-gray-500 font-medium">
-      {navItems.map((item) => (
-        <li key={item}>
-          <button
-            onClick={() => handleClick(item)}
-            className={`relative pb-2 transition-colors ${active === item ? "text-black" : "hover:text-black"}`}
-          >
-            {item}
-            {active === item && (
-              <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-black rounded-md"></span>
-            )}
-          </button>
-        </li>
-      ))}
-    </ul>
+            <ul className="hidden md:flex space-x-6 text-gray-500 font-medium">
+              {navItems.map((item) => (
+                <li key={item}>
+                  <button
+                    onClick={() => handleClick(item)}
+                    className={`relative pb-2 transition-colors ${active === item ? "text-black" : "hover:text-black"}`}
+                  >
+                    {item}
+                    {active === item && (
+                      <span className="absolute left-0 -bottom-1 w-full h-[2px] bg-black rounded-md"></span>
+                    )}
+                  </button>
+                </li>
+              ))}
+            </ul>
 
             <div className="relative" ref={dropdownRef}>
               <div className="flex flex-row gap-8 items-center cursor-pointer">
@@ -308,12 +308,12 @@ export default function Dashboard() {
 
           </div>
         </nav>
-        <div className="flex flex-col lg:flex-row w-full">
+        <div className="flex flex-col lg:flex-row max-w-[21rem] sm:max-w-[22rem] md:max-w-[30rem] lg:max-w-[110rem] w-full">
 
 
           {/* Main Content */}
 
-          <main className="flex-1 p-4 sm:p-6 space-y-6 w-full  overflow-y-auto">
+          <main className="flex-1 p-4 sm:p-6 space-y-6 w-full overflow-y-auto">
             {/* TopNav */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
               <div className="text-xl font-bold">Agent Dashboard</div>
@@ -709,7 +709,7 @@ export default function Dashboard() {
 
 
           {/* Right Sidebar */}
-          <aside className="bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem] w-full max-w-md mx-auto lg:mx-0">
+          <aside className="bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem] w-[18rem] xl:w-[27rem] mx-auto lg:mx-0 lg:w-[20rem]">
             {/* Your Balance Section */}
             <div className="bg-white p-4 rounded-lg shadow">
               <div className="text-sm text-black mb-2 font-bold">Your balance</div>
@@ -748,7 +748,7 @@ export default function Dashboard() {
             {/* Account Manager */}
 
             {agentData && (
-              <div className="bg-white p-4 rounded-lg shadow flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+              <div className="bg-white p-4 rounded-lg shadow flex flex-col xl:flex-row xl:justify-between xl:items-center gap-4">
                 <div>
                   <div className="font-semibold mb-4">Your account manager</div>
                   <div className="text-sm text-gray-500 space-y-2">
@@ -762,7 +762,7 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </div>
-                <div className="flex items-center gap-4 mt-4 md:mt-0">
+                <div className="flex items-center md:flex-none gap-4 mt-4 md:mt-0">
                   <img
                     alt="Profile"
                     className="w-10 h-10 rounded-full ms-auto"
