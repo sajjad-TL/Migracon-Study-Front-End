@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Filter, ChevronDown, X, Plus } from 'lucide-react';
 import { FaFlag } from "react-icons/fa";
 import ApplicationNavbar from '../layouts/ApplicationNavbar';
+import ApplicationForm from '../Model/ApplicationForm';
 
 export default function ApplicationManagementInterface() {
   const [showBanner, setShowBanner] = useState(true);
-  const user = JSON.parse(localStorage.getItem('user')) || {}; // Make sure to retrieve 'user' from localStorage
+  const user = JSON.parse(localStorage.getItem('user')) || {};
+  const [showModal, setShowModal] = useState(false);
 
 
   const applications = [
@@ -137,9 +139,18 @@ export default function ApplicationManagementInterface() {
             <button className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center">
               <Filter size={16} className="mr-1" />  Filters
             </button>
-            <button className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm flex items-center">
-              <Plus size={16} className="mr-3" /> Add Application
-            </button>
+            <div>
+      <button 
+        onClick={() => setShowModal(true)}
+        className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm flex items-center"
+      >
+        <Plus size={16} className="mr-3" /> Add Application
+      </button>
+
+      {showModal && (
+        <ApplicationForm onClose={() => setShowModal(false)} />
+      )}
+    </div>
           </div>
 
         </div>
