@@ -150,7 +150,7 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
 
             <div className="flex flex-col pt-4">
               <label htmlFor="passportNumber" className="font-semibold">Passport number</label>
-              <input id="passportNumber"  name="passportNumber" value={formData.passportNumber} onChange={handleChange} type="number" className="border rounded px-3 py-2" />
+              <input id="passportNumber"  name="passportNumber" value={formData.passportNumber} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
             </div>
 
             <div className="flex flex-col pt-4">
@@ -178,9 +178,21 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
             </div>
 
             <div className="flex flex-col pt-2">
-              <label htmlFor="phone" className="font-semibold">Phone number *</label>
-              <input required id="phone" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} type="number" className="border rounded px-3 py-2" />
-            </div>
+  <label htmlFor="phone" className="font-semibold">Phone number *</label>
+  <input
+    required
+    id="phone"
+    name="phoneNumber"
+    value={formData.phoneNumber}
+    onChange={handleChange}
+    type="text"
+    inputMode="numeric"
+    className="border rounded px-3 py-2"
+    onInput={(e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    }}
+  />
+</div>
           </div>
 
           {/* Additional Info */}

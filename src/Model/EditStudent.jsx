@@ -149,6 +149,9 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
               type="tel"
               value={formData.phoneNumber}
               onChange={handleChange}
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+              }}
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
             />
           </div>

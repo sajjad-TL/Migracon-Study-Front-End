@@ -18,11 +18,11 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
         email: agentData.email || "",
         phone: agentData.phone || "",
         password: "",
-        profilePicture: null, 
+        profilePicture: null,
       });
     }
   }, [agentData]);
-  
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -79,7 +79,11 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
 
           <div>
             <label className="block text-sm font-medium">Mobile</label>
-            <input name="phone" type="tel" value={formData.phone} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            <input name="phone" type="tel" value={formData.phone} onChange={(e) => {
+              const onlyNumbers = e.target.value.replace(/\D/g, "");
+              handleChange({ target: { name: "phone", value: onlyNumbers } });
+            }}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
           </div>
 
           <div className="flex justify-end mt-4">
