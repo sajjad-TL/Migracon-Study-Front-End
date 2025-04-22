@@ -4,7 +4,7 @@ import { FaFlag } from "react-icons/fa";
 import ApplicationNavbar from '../layouts/ApplicationNavbar';
 import ApplicationForm from '../Model/ApplicationForm';
 
-export default function ApplicationManagementInterface() {
+export default function Application() {
   const [showBanner, setShowBanner] = useState(true);
   const user = JSON.parse(localStorage.getItem('user')) || {};
   const [showModal, setShowModal] = useState(false);
