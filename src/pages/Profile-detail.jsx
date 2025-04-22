@@ -266,7 +266,7 @@ const ProfileDetail = () => {
                           className="w-5 h-5 ms-auto"
                           src="https://placehold.co/20x20"
                         />
-                        <span>{agentData?.phone || 'N/A'}</span>
+                        <span>{agentData?.phoneNumber || 'N/A'}</span>
                       </div>
                     </div>
                   </div>
