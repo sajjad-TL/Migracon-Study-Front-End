@@ -10,12 +10,35 @@ const FilterModal = ({
   setFilterValues,
 }) => {
   const [shouldRender, setShouldRender] = useState(isOpen);
-  const [localFilters, setLocalFilters] = useState({});
-  const [localInputValues, setLocalInputValues] = useState({});
+  
+  // Initialize with existing values
+  const [localFilters, setLocalFilters] = useState(() => {
+    const initialFilters = {};
+    ["Active", "Pending", "In Active"].forEach(status => {
+      initialFilters[status] = selectedFilters.includes(status);
+    });
+    return initialFilters;
+  });
+  
+  // Initialize with existing input values
+  const [localInputValues, setLocalInputValues] = useState(() => ({ ...filterValues }));
+
+  // Reset local state when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      const initialFilters = {};
+      ["Active", "Pending", "In Active"].forEach(status => {
+        initialFilters[status] = selectedFilters.includes(status);
+      });
+      setLocalFilters(initialFilters);
+      setLocalInputValues({ ...filterValues });
+    }
+  }, [isOpen, selectedFilters, filterValues]);
 
   const checkboxFilters = ["Active", "Pending", "In Active"];
   const inputFields = ["id", "student", "firstName", "lastName", "email"];
 
+  // Rest of your component...
   useEffect(() => {
     if (!isOpen) {
       const timeout = setTimeout(() => setShouldRender(false), 300);
@@ -65,15 +88,15 @@ const FilterModal = ({
 
   return (
     <div
-      className={`modal-overlay fixed inset-0 z-50 flex items-start justify-start transition-opacity duration-300 ${
-        isOpen ? "bg-black bg-opacity-50 opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+    className={`modal-overlay fixed inset-0 z-50 flex items-start justify-start transition-opacity duration-300 ${
+      isOpen ? "bg-black bg-opacity-50 opacity-100" : "opacity-0 pointer-events-none"
+    }`}
       onClick={handleOutsideClick}
     >
       <div
-        className={`bg-white w-full max-w-md max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg transform transition-transform duration-300 ${
-          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        }`}
+       className={`bg-white w-full max-w-md max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg transform transition-transform duration-300 ${
+        isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+      }`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex justify-between items-center border-b pb-4 mb-4">
@@ -111,7 +134,7 @@ const FilterModal = ({
                 onChange={(e) => handleInputChange(field, e.target.value)}
                 className="border px-3 py-2 rounded-md text-sm"
                 placeholder={`Enter ${field}`}
-              />
+                />
             </div>
           ))}
         </div>

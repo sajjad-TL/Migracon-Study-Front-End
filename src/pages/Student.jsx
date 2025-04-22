@@ -28,7 +28,7 @@ export default function StudentDashboard() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
-
+  const [filterValues, setFilterValues] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState('table');
   const [searchTerm, setSearchTerm] = useState('');
@@ -92,15 +92,42 @@ export default function StudentDashboard() {
   }, []);
 
   const filteredStudents = students.filter((student) => {
+    // Match text search
     const matchesSearch = Object.values(student).some((value) =>
       typeof value === 'string' &&
       value.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    const matchesFilter =
-      selectedFilters.length === 0 || selectedFilters.includes(student.status);
-
-    return matchesSearch && matchesFilter;
+  
+    // Match checkbox filters (status)
+    const matchesStatusFilter =
+      selectedFilters.length === 0 || 
+      !selectedFilters.includes("Active") && 
+      !selectedFilters.includes("Pending") && 
+      !selectedFilters.includes("In Active") || 
+      selectedFilters.includes(student.status);
+  
+    // Match input field filters
+    const matchesInputFilters = Object.entries(filterValues).every(([field, value]) => {
+      if (!value || value.trim() === "") return true;
+      
+      // Handle different field types
+      switch(field) {
+        case 'id':
+          return student._id && student._id.toLowerCase().includes(value.toLowerCase());
+        case 'firstName':
+          return student.firstName && student.firstName.toLowerCase().includes(value.toLowerCase());
+        case 'lastName':
+          return student.lastName && student.lastName.toLowerCase().includes(value.toLowerCase());
+        case 'email':
+          return student.email && student.email.toLowerCase().includes(value.toLowerCase());
+        case 'student':
+          return student.name && student.name.toLowerCase().includes(value.toLowerCase());
+        default:
+          return true;
+      }
+    });
+  
+    return matchesSearch && matchesStatusFilter && matchesInputFilters;
   });
 
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
@@ -277,12 +304,14 @@ export default function StudentDashboard() {
         onStudentUpdated={handleUpdateStudent}
       />
 
-      <FilterModal
-        isOpen={isFilterModalOpen}
-        onClose={() => setIsFilterModalOpen(false)}
-        selectedFilters={selectedFilters}
-        setSelectedFilters={setSelectedFilters}
-      />
+<FilterModal
+  isOpen={isFilterModalOpen}
+  onClose={() => setIsFilterModalOpen(false)}
+  selectedFilters={selectedFilters}
+  setSelectedFilters={setSelectedFilters}
+  filterValues={filterValues}
+  setFilterValues={setFilterValues}
+/>
     </div>
   );
 }

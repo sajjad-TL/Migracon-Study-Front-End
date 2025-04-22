@@ -87,13 +87,14 @@ const ProfileDetail = () => {
 
       if (data.success) {
         console.log('Update api repsonse : ',data)
-        const { agentId, firstName, lastName, profilePicture } = data.agent;
+        const { agentId, firstName, lastName, profilePicture, phone } = data.agent;
         const name = `${firstName} ${lastName}`;
 
         setUser({
           agentId,
           name,
           profilePicture,
+          phone
         });
 
 
@@ -266,7 +267,7 @@ const ProfileDetail = () => {
                           className="w-5 h-5 ms-auto"
                           src="https://placehold.co/20x20"
                         />
-                        <span>{agentData?.phoneNumber || 'N/A'}</span>
+                        <span>{agentData?.phone || 'N/A'}</span>
                       </div>
                     </div>
                   </div>
