@@ -5,7 +5,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
     firstName: "",
     lastName: "",
     email: "",
-    phoneNumber: "",
+    phone: "",
     password: "",
     profilePicture: null,
   });
@@ -16,7 +16,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
         firstName: agentData.firstName || "",
         lastName: agentData.lastName || "",
         email: agentData.email || "",
-        phoneNumber: agentData.phoneNumber || "",
+        phone: agentData.phone || "",
         password: "",
         profilePicture: null, 
       });
@@ -79,7 +79,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
 
           <div>
             <label className="block text-sm font-medium">Mobile</label>
-            <input name="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
+            <input name="phone" type="tel" value={formData.phone} onChange={handleChange} className="mt-1 block w-full border border-gray-300 rounded-md p-2" />
           </div>
 
           <div className="flex justify-end mt-4">
