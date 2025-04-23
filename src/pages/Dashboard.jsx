@@ -337,8 +337,7 @@ export default function Dashboard() {
             </div>
 
             {/* Recent Applications & Tasks */}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="flex flex-col lg:flex-row gap-4 ">
               <Card title={<span className="text-xl font-bold">Recent Applications</span>} colSpan={2}>
                 <AppRow
                   image={img1}
@@ -391,6 +390,8 @@ export default function Dashboard() {
                 </div>
               </Card>
             </div>
+
+
 
             {/* Quick Actions */}
             <div className="flex flex-wrap gap-4">
