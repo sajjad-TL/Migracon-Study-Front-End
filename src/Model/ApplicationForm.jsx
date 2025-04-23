@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { XCircle } from "lucide-react";
 import { UserContext } from '../context/userContext';
+import { toast } from "react-toastify";
 
 export default function ApplicationForm({ onClose, refreshApplications }) {
   const { user } = useContext(UserContext);
@@ -17,6 +18,7 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
     status: "Pending",
     requirements: "",
     currentStage: "",
+    requirementspartner: "",
   });
 
   useEffect(() => {
@@ -28,7 +30,7 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
         const data = await res.json();
         if (res.ok) setStudents(data.students || []);
       } catch (err) {
-        console.error("Error fetching students:", err);
+        toast.error("Error fetching students:", err);
       }
     };
 
@@ -54,7 +56,7 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
   
       const result = await res.json();
       if (res.ok) {
-        alert("Application added successfully");
+        toast.success("Application added successfully");
         if (typeof refreshApplications === "function") {
           refreshApplications(); // Only call if it's a valid function
         }
@@ -63,7 +65,7 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
         alert(result.message || "Failed to add application");
       }
     } catch (err) {
-      console.error(err);
+      toast.error(err);
       alert("Something went wrong.");
     }
   };
@@ -132,6 +134,17 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
               value={formData.requirements}
               onChange={handleChange}
               placeholder="IELTS 7.0, Resume, etc."
+              className="border rounded px-3 py-2"
+            />
+          </div>
+
+          <div className="flex flex-col md:col-span-2">
+            <label className="font-semibold mb-1">Requirements Partner</label>
+            <textarea
+              name="requirementspartner"
+              value={formData.requirementspartner}
+              onChange={handleChange}
+              placeholder="Email, etc."
               className="border rounded px-3 py-2"
             />
           </div>
