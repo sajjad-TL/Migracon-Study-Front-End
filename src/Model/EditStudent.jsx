@@ -128,18 +128,18 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
           </div>
 
           <div>
-  <label className="block text-sm font-medium">Status</label>
-  <select
-    name="status"
-    value={formData.status}
-    onChange={handleChange}
-    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-  >
-    <option value="Active">Active</option>
-    <option value="In Active">In Active</option>
-    <option value="Pending">Pending</option>
-  </select>
-</div>
+            <label className="block text-sm font-medium">Status</label>
+            <select
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            >
+              <option value="Active">Active</option>
+              <option value="In Active">In Active</option>
+              <option value="Pending">Pending</option>
+            </select>
+          </div>
 
 
           <div>

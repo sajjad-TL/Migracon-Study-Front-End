@@ -62,7 +62,7 @@ export default function ProgramSchool() {
         </div>
       </div>
 
-      <div className="max-w-[105rem] mx-auto p-4">
+      <div className=" mx-auto p-4">
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="relative mb-4">
             <Search className="absolute left-3 top-3 text-gray-400" size={20} />
