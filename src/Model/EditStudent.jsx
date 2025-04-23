@@ -6,17 +6,23 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
     firstName: "",
     lastName: "",
     email: "",
-    profilePicture: null
+    profilePicture: null,
+    education: "",
   });
 
   useEffect(() => {
     if (agentData) {
+      console.log(agentData, "shae"
+
+      )
       setFormData({
         firstName: agentData.firstName || "",
         lastName: agentData.lastName || "",
         email: agentData.email || "",
         profilePicture: null,
         status: agentData.status || "Pending",
+        education: agentData.program || "",
+
       });
     }
   }, [agentData]);
@@ -45,6 +51,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
           lastName: formData.lastName,
           email: formData.email,
           status: formData.status,
+          education: formData.education,
         }),
       });
 
@@ -119,6 +126,17 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
               name="email"
               type="email"
               value={formData.email}
+              onChange={handleChange}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium">Program</label>
+            <input
+              name="education"
+              type="text"
+              value={formData.education}
               onChange={handleChange}
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
             />

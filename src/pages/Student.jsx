@@ -84,7 +84,8 @@ export default function StudentDashboard() {
         lastName: s.lastName,   // 👈 And this
         avatar: `https://i.pravatar.cc/40?u=${s._id}`,
         email: s.email,
-        education: s.education || "N/A",
+        education: s.applications?.map(app => app.program).join(', ') || "N/A",
+      
         status: s.status,
         applicationCount: s.applicationCount || 0,
       }));
@@ -256,7 +257,7 @@ export default function StudentDashboard() {
                     </td>
                     <td className="p-2">{s._id}</td>
                     <td className="p-2">{s.education}</td>
-                    <td className="p-2">{s.applications}</td>
+                    <td className="p-2">{s.applicationCount}</td>
                     <td className="p-2"><StatusBadge status={s.status} /></td>
                     <td className="p-2 text-indigo-600 font-medium cursor-pointer" onClick={() => openEditModal(s)}>Edit</td>
                   </tr>
