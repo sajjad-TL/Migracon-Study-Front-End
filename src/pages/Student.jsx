@@ -80,8 +80,8 @@ export default function StudentDashboard() {
       const normalized = (data?.students || []).map(s => ({
         _id: s._id,
         name: `${s.firstName} ${s.lastName}`,
-        firstName: s.firstName, // 👈 Add this
-        lastName: s.lastName,   // 👈 And this
+        firstName: s.firstName,
+        lastName: s.lastName, 
         avatar: `https://i.pravatar.cc/40?u=${s._id}`,
         email: s.email,
         education: s.applications?.map(app => app.program).join(', ') || "N/A",
@@ -109,7 +109,6 @@ export default function StudentDashboard() {
       value.toLowerCase().includes(searchTerm.toLowerCase())
     );
   
-    // Match checkbox filters (status)
     const matchesStatusFilter =
       selectedFilters.length === 0 || 
       !selectedFilters.includes("Active") && 
