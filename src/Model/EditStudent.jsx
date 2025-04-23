@@ -6,7 +6,6 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
     firstName: "",
     lastName: "",
     email: "",
-    phone: "",
     profilePicture: null
   });
 
@@ -16,7 +15,6 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
         firstName: agentData.firstName || "",
         lastName: agentData.lastName || "",
         email: agentData.email || "",
-        phone: agentData.phone || "",
         profilePicture: null,
         status: agentData.status || "Pending",
       });
@@ -46,7 +44,6 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
           firstName: formData.firstName,
           lastName: formData.lastName,
           email: formData.email,
-          phone: formData.phone,
           status: formData.status,
         }),
       });
@@ -77,7 +74,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-xl shadow-xl p-6 w-full max-w-xl">
         <div className="flex justify-between items-center border-b pb-2 mb-4">
-          <h2 className="text-xl font-semibold">Edit Profile</h2>
+          <h2 className="text-xl font-semibold">Edit Student </h2>
           <button onClick={onClose} className="text-gray-600 hover:text-red-500 text-xl font-bold">
             &times;
           </button>
@@ -139,21 +136,6 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
               <option value="In Active">In Active</option>
               <option value="Pending">Pending</option>
             </select>
-          </div>
-
-
-          <div>
-            <label className="block text-sm font-medium">Mobile</label>
-            <input
-              name="phone"
-              type="tel"
-              value={formData.phone}
-              onChange={handleChange}
-              onInput={(e) => {
-                e.target.value = e.target.value.replace(/[^0-9]/g, '');
-              }}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
           </div>
 
           <div className="flex justify-end mt-4">
