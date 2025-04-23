@@ -75,16 +75,26 @@ export default function StudentDashboard() {
     try {
       const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
       const data = await res.json();
+  
+      console.log("Raw student data:", data);
       const normalized = (data?.students || []).map(s => ({
-        ...s,
+        _id: s._id,
         name: `${s.firstName} ${s.lastName}`,
-        avatar: `https://i.pravatar.cc/40?u=${s._id}`
+        firstName: s.firstName, // 👈 Add this
+        lastName: s.lastName,   // 👈 And this
+        avatar: `https://i.pravatar.cc/40?u=${s._id}`,
+        email: s.email,
+        education: s.education || "N/A",
+        status: s.status,
+        applicationCount: s.applicationCount || 0,
       }));
+  
       setStudents(normalized);
     } catch (error) {
       console.error("Error fetching students:", error);
     }
   };
+  
 
   useEffect(() => {
     if (!agentId) return;
@@ -267,7 +277,7 @@ export default function StudentDashboard() {
                 </div>
                 <div className="text-sm">ID: <strong>{s._id}</strong></div>
                 <div className="text-sm">Education: <strong>{s.education}</strong></div>
-                <div className="text-sm">Applications: <strong>{s.applications}</strong></div>
+                <div className="text-sm">Applications: <strong>{s.applicationCount}</strong></div>
                 <div className="text-sm">Status: <StatusBadge status={s.status} /></div>
                 <div className="text-sm text-indigo-600 font-medium cursor-pointer mt-2" onClick={() => openEditModal(s)}>Edit</div>
               </div>
@@ -304,14 +314,14 @@ export default function StudentDashboard() {
         onStudentUpdated={handleUpdateStudent}
       />
 
-<FilterModal
-  isOpen={isFilterModalOpen}
-  onClose={() => setIsFilterModalOpen(false)}
-  selectedFilters={selectedFilters}
-  setSelectedFilters={setSelectedFilters}
-  filterValues={filterValues}
-  setFilterValues={setFilterValues}
-/>
+      <FilterModal
+        isOpen={isFilterModalOpen}
+        onClose={() => setIsFilterModalOpen(false)}
+        selectedFilters={selectedFilters}
+        setSelectedFilters={setSelectedFilters}
+        filterValues={filterValues}
+        setFilterValues={setFilterValues}
+      />
     </div>
   );
 }
