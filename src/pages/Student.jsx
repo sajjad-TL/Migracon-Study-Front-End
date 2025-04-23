@@ -255,8 +255,14 @@ export default function StudentDashboard() {
                       </div>
                     </td>
                     <td className="p-2">{s._id}</td>
-                    <td className="p-2">{s.education}</td>
-                    <td className="p-2">{s.applicationCount}</td>
+             <td className="p-2">
+  {s.education && s.education !== "N/A" ? (
+    s.education
+  ) : (
+    <span className="text-gray-500 italic">No education info</span>
+  )}
+</td>
+                  <td className="p-2">{s.applicationCount}</td>
                     <td className="p-2"><StatusBadge status={s.status} /></td>
                     <td className="p-2 text-indigo-600 font-medium cursor-pointer" onClick={() => openEditModal(s)}>Edit</td>
                   </tr>
