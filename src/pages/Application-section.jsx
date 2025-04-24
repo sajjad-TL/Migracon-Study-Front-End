@@ -10,9 +10,56 @@ export default function Application() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem('user')) || {};
+  
+
+
+
   const [showFilters, setShowFilters] = useState(false);
+  const [filteredApplications, setFilteredApplications] = useState([]);
 
 
+  const [filters, setFilters] = useState({
+    paymentDate: '',
+    applicationId: '',
+    studentId: '',
+    firstName: '',
+    lastName: '',
+    applyDate: '',
+    program: '',
+    institute: '',
+    startDate: '',
+    requirementspartner: '',
+    status: '',
+    stage: '',
+  });
+  
+
+const handleApplyFilters = () => {
+  const filtered = applications.filter((app) => {
+    const formatDate = (dateStr) => new Date(dateStr).toISOString().split('T')[0];
+
+    return (
+      (!filters.paymentDate || formatDate(app.paymentDate) === filters.paymentDate) &&
+      (!filters.applicationId || app.applicationId?.toLowerCase().includes(filters.applicationId.toLowerCase())) &&
+      (!filters.studentId || app.studentId?.toLowerCase().includes(filters.studentId.toLowerCase())) &&
+      (!filters.firstName || app.firstName?.toLowerCase().includes(filters.firstName.toLowerCase())) &&
+      (!filters.lastName || app.lastName?.toLowerCase().includes(filters.lastName.toLowerCase())) &&
+      (!filters.applyDate || formatDate(app.applyDate) === filters.applyDate) &&
+      (!filters.program || app.program?.toLowerCase() === filters.program.toLowerCase()) &&
+      (!filters.institute || app.institute?.toLowerCase() === filters.institute.toLowerCase()) &&
+      (!filters.startDate || formatDate(app.startDate) === filters.startDate) &&
+      (!filters.requirements || app.requirements === filters.requirements) &&
+      (!filters.status || app.status?.toLowerCase() === filters.status.toLowerCase()) &&
+      (!filters.stage || app.stage?.toLowerCase() === filters.stage.toLowerCase())
+    );
+  });
+
+  console.log("Filtered Applications:", filtered);
+  setApplications(filtered);
+};
+
+  
+  
 
   const fetchApplications = async () => {
     try {
@@ -68,9 +115,13 @@ export default function Application() {
         <div className="flex flex-row items-center justify-between mb-4">
           <h1 className="text-xl font-medium mb-4">Applications</h1>
           <div className="flex space-x-2">
-            <button className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center">
-              Apply Filters
-            </button>
+          <button
+  onClick={handleApplyFilters}
+  className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
+>
+  Apply Filters
+</button>
+
             <button
   onClick={() => setShowFilters(!showFilters)}
   className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
@@ -100,108 +151,136 @@ export default function Application() {
           {/* Filter Form */}
           {showFilters && (
 
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Payment Date</label>
-            <div className="flex">
-              <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
-            </div>
-          </div>
+<div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">Payment Date</label>
+  <input
+    type="date"
+    className="border border-gray-300 rounded p-2 text-sm w-full"
+    value={filters.paymentDate || ''}
+    onChange={(e) => setFilters({ ...filters, paymentDate: e.target.value })}
+  />
+</div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">App ID</label>
-            <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
-          </div>
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">App ID</label>
+  <input
+    type="text"
+    className="border border-gray-300 rounded p-2 text-sm"
+    value={filters.applicationId || ''}
+    onChange={(e) => setFilters({ ...filters, applicationId: e.target.value })}
+  />
+</div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Student ID</label>
-            <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
-          </div>
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">Student ID</label>
+  <input
+    type="text"
+    className="border border-gray-300 rounded p-2 text-sm"
+    value={filters.studentId || ''}
+    onChange={(e) => setFilters({ ...filters, studentId: e.target.value })}
+  />
+</div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">First Name</label>
-            <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
-          </div>
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">First Name</label>
+  <input
+    type="text"
+    className="border border-gray-300 rounded p-2 text-sm"
+    value={filters.firstName || ''}
+    onChange={(e) => setFilters({ ...filters, firstName: e.target.value })}
+  />
+</div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Last Name</label>
-            <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
-          </div>
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">Last Name</label>
+  <input
+    type="text"
+    className="border border-gray-300 rounded p-2 text-sm"
+    value={filters.lastName || ''}
+    onChange={(e) => setFilters({ ...filters, lastName: e.target.value })}
+  />
+</div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Apply Date</label>
-            <div className="flex">
-              <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
-            </div>
-          </div>
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">Apply Date</label>
+  <input
+    type="date"
+    className="border border-gray-300 rounded p-2 text-sm w-full"
+    value={filters.applyDate || ''}
+    onChange={(e) => setFilters({ ...filters, applyDate: e.target.value })}
+  />
+</div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Program</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select Program</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
+<div className="flex flex-col">
+    <label className="text-xs uppercase text-gray-500 mb-1">Program</label>
+    <input
+      type="text"
+      className="border border-gray-300 rounded p-2 text-sm w-full"
+      value={filters.program || ''}
+      onChange={(e) => setFilters({ ...filters, program: e.target.value })}
+    />
+  </div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">School</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select School</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
+  <div className="flex flex-col">
+    <label className="text-xs uppercase text-gray-500 mb-1">School</label>
+    <input
+      type="text"
+      className="border border-gray-300 rounded p-2 text-sm w-full"
+      value={filters.institute || ''}
+      onChange={(e) => setFilters({ ...filters, institute: e.target.value })}
+    />
+  </div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Start Date</label>
-            <div className="flex">
-              <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
-            </div>
-          </div>
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">Start Date</label>
+  <input
+    type="date"
+    className="border border-gray-300 rounded p-2 text-sm w-full"
+    value={filters.startDate || ''}
+    onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+  />
+</div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Recruitment Partner</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select Partner</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
+<div className="flex flex-col">
+    <label className="text-xs uppercase text-gray-500 mb-1">Recruitment Partner</label>
+    <input
+      type="text"
+      className="border border-gray-300 rounded p-2 text-sm w-full"
+      value={filters.requirementspartner || ''}
+      onChange={(e) => setFilters({ ...filters, requirements: e.target.value })}
+    />
+  </div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Status</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select Status</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">Status</label>
+  <select
+    className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white"
+    value={filters.status || ''}
+    onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+  >
+    <option value="">Select Status</option>
+    <option value="Accepted">Accepted</option>
+    <option value="pending">Pending</option>
+    <option value="rejected">Rejected</option>
+  </select>
+</div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Current Stage</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select Stage</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
-        </div>
+<div className="flex flex-col">
+  <label className="text-xs uppercase text-gray-500 mb-1">Current Stage</label>
+  <select
+    className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white"
+    value={filters.stage || ''}
+    onChange={(e) => setFilters({ ...filters, stage: e.target.value })}
+  >
+    <option value="">Select Stage</option>
+    <option value="initial">Initial</option>
+    <option value="review">Review</option>
+    <option value="final">Final</option>
+  </select>
+</div>
+</div>
+
 )}
 
         {loading ? (
@@ -241,7 +320,7 @@ export default function Application() {
                       <td className="py-2 px-3 border-b">{app.program}</td>
                       <td className="py-2 px-3 border-b">{app.institute}</td>
                      
-                      <td className="py-2 px-3 border-b">{app.startDate}</td>
+                      <td className="py-2 px-3 border-b">{app.startDate ? new Date(app.startDate).toLocaleDateString() : '-'}</td>
                       <td className="py-2 px-3 border-b text-blue-600">
                         {app.requirementspartner}</td>
                       <td className={`py-2 px-3 border-b ${getStatusColor(app.status)}`}>{app.status}</td>
