@@ -71,6 +71,7 @@ export default function StudentDashboard() {
     setIsEditModalOpen(false);
   };
 
+  
   const fetchStudents = async () => {
     try {
       const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
@@ -85,10 +86,11 @@ export default function StudentDashboard() {
         avatar: `https://i.pravatar.cc/40?u=${s._id}`,
         email: s.email,
         education: s.applications?.map(app => app.program).join(', ') || "N/A",
-      
         status: s.status,
         applicationCount: s.applicationCount || 0,
+        applications: s.applications || [], // 👈 Add this line
       }));
+      
   
       setStudents(normalized);
     } catch (error) {
@@ -98,10 +100,9 @@ export default function StudentDashboard() {
   
 
   useEffect(() => {
-    if (!agentId) return;
-    fetchStudents();
-  }, []);
-
+    if (agentId) fetchStudents();
+  }, [agentId]);
+  
   const filteredStudents = students.filter((student) => {
     // Match text search
     const matchesSearch = Object.values(student).some((value) =>
@@ -116,6 +117,11 @@ export default function StudentDashboard() {
       !selectedFilters.includes("In Active") || 
       selectedFilters.includes(student.status);
   
+
+
+      
+
+
     // Match input field filters
     const matchesInputFilters = Object.entries(filterValues).every(([field, value]) => {
       if (!value || value.trim() === "") return true;
@@ -139,6 +145,10 @@ export default function StudentDashboard() {
   
     return matchesSearch && matchesStatusFilter && matchesInputFilters;
   });
+  const activeApplicationsCount = students.reduce((count, student) => {
+    const activeApps = (student.applications || []).filter(app => app.status?.toLowerCase() === 'accepted');
+    return count + activeApps.length;
+  }, 0);
 
   const totalPages = Math.ceil(filteredStudents.length / studentsPerPage);
   const handlePageClick = (page) => {
@@ -155,7 +165,7 @@ export default function StudentDashboard() {
 
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[{ label: 'Total Students', value: students.length, icon: '👥' }, { label: 'Active Applications', value: '1,234', icon: '📄' }, { label: 'Completed', value: '892', icon: '✅' }, { label: 'New This Month', value: '325', icon: '➕' }].map((stat, i) => (
+        {[{ label: 'Total Students', value: students.length, icon: '👥' }, {label: 'Active Applications', value: activeApplicationsCount, icon: '📄' }, { label: 'Completed', value: '892', icon: '✅' }, { label: 'New This Month', value: '325', icon: '➕' }].map((stat, i) => (
           <div key={i} className="bg-white shadow rounded-xl p-4 flex items-center gap-4">
             <div className="text-3xl">{stat.icon}</div>
             <div>
