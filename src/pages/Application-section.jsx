@@ -17,6 +17,7 @@ export default function Application() {
   const fetchApplications = async () => {
     try {
       const response = await axios.get("http://localhost:5000/student/getAllApplications");
+      console.log(response,"adss")
       setApplications(response.data.applications || []);
     } catch (error) {
       console.error("Failed to fetch applications", error);
@@ -24,9 +25,9 @@ export default function Application() {
       setLoading(false);
     }
   };
-  
+
   useEffect(() => {
-   
+
     fetchApplications();
   }, []);
 
@@ -38,6 +39,8 @@ export default function Application() {
       default: return 'text-gray-600';
     }
   };
+
+
 
   return (
     <div className="font-sans text-gray-800 bg-white min-h-screen">
@@ -72,11 +75,11 @@ export default function Application() {
               Apply Filters
             </button>
             <button
-  onClick={() => setShowFilters(!showFilters)}
-  className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
->
-  <Filter size={16} className="mr-1" /> Filters
-</button>
+              onClick={() => setShowFilters(!showFilters)}
+              className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
+            >
+              <Filter size={16} className="mr-1" /> Filters
+            </button>
             <div>
               <button
                 onClick={() => setShowModal(true)}
@@ -85,124 +88,124 @@ export default function Application() {
                 <Plus size={16} className="mr-3" /> Add Application
               </button>
               {showModal && (
-  <ApplicationForm
-    onClose={() => {
-      setShowModal(false);
-      fetchApplications(); // <- Refresh applications when modal is closed
-    }}
-  />
-)}
+                <ApplicationForm
+                  onClose={() => {
+                    setShowModal(false);
+                    fetchApplications();
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>
 
 
-          {/* Filter Form */}
-          {showFilters && (
+        {/* Filter Form */}
+        {showFilters && (
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Payment Date</label>
-            <div className="flex">
-              <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Payment Date</label>
+              <div className="flex">
+                <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
+              </div>
             </div>
-          </div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">App ID</label>
-            <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Student ID</label>
-            <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">First Name</label>
-            <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Last Name</label>
-            <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Apply Date</label>
-            <div className="flex">
-              <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">App ID</label>
+              <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
             </div>
-          </div>
 
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Program</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select Program</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Student ID</label>
+              <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">First Name</label>
+              <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Last Name</label>
+              <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Apply Date</label>
+              <div className="flex">
+                <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Program</label>
+              <div className="relative">
+                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
+                  <option>Select Program</option>
+                </select>
+                <div className="absolute right-2 top-2.5 pointer-events-none">
+                  <ChevronDown size={16} className="text-gray-500" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">School</label>
+              <div className="relative">
+                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
+                  <option>Select School</option>
+                </select>
+                <div className="absolute right-2 top-2.5 pointer-events-none">
+                  <ChevronDown size={16} className="text-gray-500" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Start Date</label>
+              <div className="flex">
+                <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Recruitment Partner</label>
+              <div className="relative">
+                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
+                  <option>Select Partner</option>
+                </select>
+                <div className="absolute right-2 top-2.5 pointer-events-none">
+                  <ChevronDown size={16} className="text-gray-500" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Status</label>
+              <div className="relative">
+                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
+                  <option>Select Status</option>
+                </select>
+                <div className="absolute right-2 top-2.5 pointer-events-none">
+                  <ChevronDown size={16} className="text-gray-500" />
+                </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Current Stage</label>
+              <div className="relative">
+                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
+                  <option>Select Stage</option>
+                </select>
+                <div className="absolute right-2 top-2.5 pointer-events-none">
+                  <ChevronDown size={16} className="text-gray-500" />
+                </div>
               </div>
             </div>
           </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">School</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select School</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Start Date</label>
-            <div className="flex">
-              <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Recruitment Partner</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select Partner</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Status</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select Status</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col">
-            <label className="text-xs uppercase text-gray-500 mb-1">Current Stage</label>
-            <div className="relative">
-              <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                <option>Select Stage</option>
-              </select>
-              <div className="absolute right-2 top-2.5 pointer-events-none">
-                <ChevronDown size={16} className="text-gray-500" />
-              </div>
-            </div>
-          </div>
-        </div>
-)}
+        )}
 
         {loading ? (
           <p>Loading applications...</p>
@@ -240,14 +243,14 @@ export default function Application() {
                       <td className="py-2 px-3 border-b">{app.lastName}</td>
                       <td className="py-2 px-3 border-b">{app.program}</td>
                       <td className="py-2 px-3 border-b">{app.institute}</td>
-                     
+
                       <td className="py-2 px-3 border-b">{app.startDate}</td>
                       <td className="py-2 px-3 border-b text-blue-600">
                         {app.requirementspartner}</td>
                       <td className={`py-2 px-3 border-b ${getStatusColor(app.status)}`}>{app.status}</td>
                       <td className="py-2 px-3 border-b">{app.requirements}</td>
 
-                      
+
                       <td className="py-2 px-3 border-b">{app.currentStage}</td>
                     </tr>
                   ))

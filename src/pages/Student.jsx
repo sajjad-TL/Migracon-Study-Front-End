@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import StudentForm from '../Model/StudentForm';
-// import EditProfileModal from '../Model/EditProfileModal';
 import { BsReverseLayoutTextSidebarReverse } from "react-icons/bs";
 import { CiGrid41 } from "react-icons/ci";
 import { UserContext } from '../context/userContext';
