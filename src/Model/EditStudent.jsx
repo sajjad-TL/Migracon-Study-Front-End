@@ -7,20 +7,13 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
     lastName: "",
     email: "",
     profilePicture: null,
-    status: "Pending",
-    education: [
-      {
-        institute: "",
-        degree: "",
-        passingYear: ""
-      }
-    ],
+    status: "Pending"
   });
 
   useEffect(() => {
     if (agentData) {
       console.log("Incoming agentData:", agentData);
-  
+
       setFormData({
         firstName: agentData.firstName || "",
         lastName: agentData.lastName || "",
@@ -30,16 +23,16 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
         education: Array.isArray(agentData.education)
           ? agentData.education
           : [
-              {
-                institute: "",
-                degree: "",
-                passingYear: "",
-              },
-            ],
+            {
+              institute: "",
+              degree: "",
+              passingYear: "",
+            },
+          ],
       });
     }
   }, [agentData]);
-  
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -49,20 +42,7 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
-  const handleEducationChange = (index, e) => {
-    const { name, value } = e.target;
-    const newEducation = [...formData.education];
-    newEducation[index][name] = value;
-    setFormData((prev) => ({ ...prev, education: newEducation }));
-  };
-  
-  const addEducationField = () => {
-    setFormData((prev) => ({
-      ...prev,
-      education: [...prev.education, { institute: "", degree: "", passingYear: "" }]
-    }));
-  };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -157,42 +137,6 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
             />
           </div>
-
-          {formData.education.map((edu, index) => (
-  <div key={index} className="grid grid-cols-3 gap-2 mb-2">
-    <input
-      type="text"
-      name="institute"
-      placeholder="Institute"
-      value={edu.institute}
-      onChange={(e) => handleEducationChange(index, e)}
-      className="p-2 border rounded"
-    />
-    <input
-      type="text"
-      name="degree"
-      placeholder="Degree"
-      value={edu.degree}
-      onChange={(e) => handleEducationChange(index, e)}
-      className="p-2 border rounded"
-    />
-    <input
-      type="text"
-      name="passingYear"
-      placeholder="Passing Year"
-      value={edu.passingYear}
-      onChange={(e) => handleEducationChange(index, e)}
-      className="p-2 border rounded"
-    />
-  </div>
-))}
-<button
-  type="button"
-  onClick={addEducationField}
-  className="text-blue-600 text-sm"
->
-  + Add another education
-</button>
 
 
           <div>

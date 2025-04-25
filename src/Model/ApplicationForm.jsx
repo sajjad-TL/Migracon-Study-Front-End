@@ -124,6 +124,8 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
               <option value="Pending">Pending</option>
               <option value="Accepted">Accepted</option>
               <option value="Rejected">Rejected</option>
+              <option value="Withdrawn">Withdrawn</option>
+              <option value="not-paid">not paid</option>
             </select>
           </div>
 
