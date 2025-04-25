@@ -11,41 +11,21 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
     lastName: "",
     email: "",
     profilePicture: null,
-<<<<<<< HEAD
-    status: "Pending",
-    education: "",
-    program: "",
-    institute: "",
-    startDate: "",
-    appStatus: "",
-=======
     status: "Pending"
->>>>>>> e828a3f262fe88860362eab7e37457129447bf17
   });
 
   const [applicationId, setApplicationId] = useState("");
 
   useEffect(() => {
     if (agentData) {
-<<<<<<< HEAD
-      const application = agentData.applications?.[0]; // Assuming you want the first application
-=======
       console.log("Incoming agentData:", agentData);
 
->>>>>>> e828a3f262fe88860362eab7e37457129447bf17
       setFormData({
         firstName: agentData.firstName || "",
         lastName: agentData.lastName || "",
         email: agentData.email || "",
         profilePicture: null,
         status: agentData.status || "Pending",
-<<<<<<< HEAD
-        education: agentData.education || "",
-        program: application?.program || "",
-        institute: application?.institute || "",
-        startDate: application?.startDate?.slice(0, 10) || "",
-        appStatus: application?.status || "",
-=======
         education: Array.isArray(agentData.education)
           ? agentData.education
           : [
@@ -55,18 +35,13 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
               passingYear: "",
             },
           ],
->>>>>>> e828a3f262fe88860362eab7e37457129447bf17
       });
   
       setApplicationId(application?.applicationId || "");
     }
   }, [agentData]);
-<<<<<<< HEAD
-  
-=======
 
 
->>>>>>> e828a3f262fe88860362eab7e37457129447bf17
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "profilePicture") {
@@ -186,19 +161,6 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
             />
           </div>
 
-<<<<<<< HEAD
-          <div>
-            <label className="block text-sm font-medium">Education</label>
-            <input
-              name="education"
-              type="text"
-              value={formData.education}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            />
-          </div>
-=======
->>>>>>> e828a3f262fe88860362eab7e37457129447bf17
 
           <div>
             <label className="block text-sm font-medium">Status</label>
@@ -281,8 +243,4 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
   );
 };
 
-<<<<<<< HEAD
 export default EditStudent;
-=======
-export default EditProfileModal;
->>>>>>> e828a3f262fe88860362eab7e37457129447bf17
