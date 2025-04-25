@@ -27,9 +27,9 @@ const ProfileDetail = () => {
   const dropdownRef = useRef();
 
   useEffect(() => {
-        fetchAgentData();
-        console.log('Agent Data : ', agentData)
-        console.log('Context User: ', user)
+    fetchAgentData();
+    console.log('Agent Data : ', agentData)
+    console.log('Context User: ', user)
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
@@ -64,10 +64,10 @@ const ProfileDetail = () => {
   const handleUpdate = async (formData) => {
     console.log('Raw Form Data: ', formData);
     const sendData = new FormData();
-  
+
     for (let key in formData) {
       const value = formData[key];
-  
+
       // Skip empty strings and nulls (unless it's a file)
       if (key === "profilePicture" && value instanceof File) {
         sendData.append(key, value);
@@ -75,7 +75,7 @@ const ProfileDetail = () => {
         sendData.append(key, value);
       }
     }
-  
+
     try {
       console.log('Agend id in handle update func', user.agentId)
       const response = await fetch(`http://localhost:5000/agent/update/${user.agentId}`, {
@@ -86,7 +86,7 @@ const ProfileDetail = () => {
       const data = await response.json();
 
       if (data.success) {
-        console.log('Update api repsonse : ',data)
+        console.log('Update api repsonse : ', data)
         const { agentId, firstName, lastName, profilePicture, phone } = data.agent;
         const name = `${firstName} ${lastName}`;
 
@@ -107,8 +107,8 @@ const ProfileDetail = () => {
       alert("Something went wrong!");
     }
   };
-  
-  
+
+
   const tabs = [
     { key: "profile", label: "Profile Information" },
     { key: "business", label: "Business Information" },
@@ -139,7 +139,7 @@ const ProfileDetail = () => {
               <div className="flex items-center space-x-3 sm:space-x-4">
                 <FaBell className="text-gray-500 cursor-pointer text-lg sm:text-xl" />
                 <img
-                  src={user?.profilePicture ? `${user.profilePicture}?v${Date.now()}` :  "https://randomuser.me/api/portraits/women/44.jpg"}
+                  src={user?.profilePicture ? `${user.profilePicture}?v${Date.now()}` : "https://randomuser.me/api/portraits/women/44.jpg"}
                   alt="User"
                   className="w-8 h-8 rounded-full cursor-pointer"
                   onClick={() => setDropdownOpen((prev) => !prev)}
@@ -177,8 +177,8 @@ const ProfileDetail = () => {
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
                     className={`px-3 sm:px-4 py-2 rounded text-sm sm:text-base transition ${activeTab === tab.key
-                        ? "bg-blue-100 text-blue-700"
-                        : "text-gray-500 hover:text-blue-600"
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-500 hover:text-blue-600"
                       }`}
                   >
                     {tab.label}
@@ -203,8 +203,8 @@ const ProfileDetail = () => {
                       <img
                         alt="Company Logo"
                         className="w-10 h-10 rounded-full"
-                        src={user?.profilePicture ? `${user.profilePicture}?v${Date.now()}` :  "https://randomuser.me/api/portraits/women/44.jpg"}
-                        />
+                        src={user?.profilePicture ? `${user.profilePicture}?v${Date.now()}` : "https://randomuser.me/api/portraits/women/44.jpg"}
+                      />
                       <div>
                         <p className="text-gray-900 font-semibold text-xs m-0">
                           Migracon Inc.
@@ -238,8 +238,8 @@ const ProfileDetail = () => {
                         <img
                           alt="Profile"
                           className="w-10 h-10 rounded-full ms-auto"
-                          src={user?.profilePicture ? `${user.profilePicture}?v${Date.now()}` :  "https://randomuser.me/api/portraits/women/44.jpg"}
-  />
+                          src={user?.profilePicture ? `${user.profilePicture}?v${Date.now()}` : "https://randomuser.me/api/portraits/women/44.jpg"}
+                        />
                       </div>
 
                       <div className="text-sm text-gray-500 font-medium">Password</div>

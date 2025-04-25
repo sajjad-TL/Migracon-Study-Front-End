@@ -316,47 +316,47 @@ export default function Application() {
           <div className="w-full overflow-x-auto">
             <table className="w-full table-auto bg-white border border-gray-200 text-sm rounded shadow-sm">
               <thead className="bg-gray-50">
-              <tr>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    PAYMENT DATE
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    APP ID
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    STUDENT ID
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    APPLY DATE
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    FIRST NAME
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    LAST NAME
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    PROGRAM
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    SCHOOL
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    START DATE
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    RECRUITMENT PARTNER
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    STATUS
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    REQUIREMENTS
-  </th>
-  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-    CURRENT STAGE
-  </th>
-</tr>
+                <tr>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    PAYMENT DATE
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    APP ID
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    STUDENT ID
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    APPLY DATE
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    FIRST NAME
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    LAST NAME
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    PROGRAM
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    SCHOOL
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    START DATE
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    RECRUITMENT PARTNER
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    STATUS
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    REQUIREMENTS
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    CURRENT STAGE
+                  </th>
+                </tr>
 
               </thead>
               <tbody>

@@ -33,7 +33,7 @@ export default function StudentDashboard() {
   const [viewMode, setViewMode] = useState('table');
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState([]);
-  
+
   const [studentData, setStudentData] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
@@ -71,18 +71,18 @@ export default function StudentDashboard() {
     setIsEditModalOpen(false);
   };
 
-  
+
   const fetchStudents = async () => {
     try {
       const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
       const data = await res.json();
-  
+
       console.log("Raw student data:", data);
       const normalized = (data?.students || []).map(s => ({
         _id: s._id,
         name: `${s.firstName} ${s.lastName}`,
         firstName: s.firstName,
-        lastName: s.lastName, 
+        lastName: s.lastName,
         avatar: `https://i.pravatar.cc/40?u=${s._id}`,
         email: s.email,
         education: s.applications?.map(app => app.program).join(', ') || "N/A",
@@ -90,44 +90,44 @@ export default function StudentDashboard() {
         applicationCount: s.applicationCount || 0,
         applications: s.applications || [], // 👈 Add this line
       }));
-      
-  
+
+
       setStudents(normalized);
     } catch (error) {
       console.error("Error fetching students:", error);
     }
   };
-  
+
 
   useEffect(() => {
     if (agentId) fetchStudents();
   }, [agentId]);
-  
+
   const filteredStudents = students.filter((student) => {
     // Match text search
     const matchesSearch = Object.values(student).some((value) =>
       typeof value === 'string' &&
       value.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  
+
     const matchesStatusFilter =
-      selectedFilters.length === 0 || 
-      !selectedFilters.includes("Active") && 
-      !selectedFilters.includes("Pending") && 
-      !selectedFilters.includes("In Active") || 
+      selectedFilters.length === 0 ||
+      !selectedFilters.includes("Active") &&
+      !selectedFilters.includes("Pending") &&
+      !selectedFilters.includes("In Active") ||
       selectedFilters.includes(student.status);
-  
 
 
-      
+
+
 
 
     // Match input field filters
     const matchesInputFilters = Object.entries(filterValues).every(([field, value]) => {
       if (!value || value.trim() === "") return true;
-      
+
       // Handle different field types
-      switch(field) {
+      switch (field) {
         case 'id':
           return student._id && student._id.toLowerCase().includes(value.toLowerCase());
         case 'firstName':
@@ -142,7 +142,7 @@ export default function StudentDashboard() {
           return true;
       }
     });
-  
+
     return matchesSearch && matchesStatusFilter && matchesInputFilters;
   });
   const activeApplicationsCount = students.reduce((count, student) => {
@@ -161,11 +161,11 @@ export default function StudentDashboard() {
 
   return (
     <div className="p-6 space-y-6">
-        <StudentNavbar user={user} />
+      <StudentNavbar user={user} />
 
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[{ label: 'Total Students', value: students.length, icon: '👥' }, {label: 'Active Applications', value: activeApplicationsCount, icon: '📄' }, { label: 'Completed', value: '892', icon: '✅' }, { label: 'New This Month', value: '325', icon: '➕' }].map((stat, i) => (
+        {[{ label: 'Total Students', value: students.length, icon: '👥' }, { label: 'Active Applications', value: activeApplicationsCount, icon: '📄' }, { label: 'Completed', value: '892', icon: '✅' }, { label: 'New This Month', value: '325', icon: '➕' }].map((stat, i) => (
           <div key={i} className="bg-white shadow rounded-xl p-4 flex items-center gap-4">
             <div className="text-3xl">{stat.icon}</div>
             <div>
@@ -265,14 +265,14 @@ export default function StudentDashboard() {
                       </div>
                     </td>
                     <td className="p-2">{s._id}</td>
-             <td className="p-2">
-  {s.education && s.education !== "N/A" ? (
-    s.education
-  ) : (
-    <span className="text-gray-500 italic">No education info</span>
-  )}
-</td>
-                  <td className="p-2">{s.applicationCount}</td>
+                    <td className="p-2">
+                      {s.education && s.education !== "N/A" ? (
+                        s.education
+                      ) : (
+                        <span className="text-gray-500 italic">No education info</span>
+                      )}
+                    </td>
+                    <td className="p-2">{s.applicationCount}</td>
                     <td className="p-2"><StatusBadge status={s.status} /></td>
                     <td className="p-2 text-indigo-600 font-medium cursor-pointer" onClick={() => openEditModal(s)}>Edit</td>
                   </tr>

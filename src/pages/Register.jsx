@@ -87,7 +87,7 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat"  style={{ backgroundImage: `url(${bgImage})` }}>
+    <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${bgImage})` }}>
       <div className="bg-white rounded-xl shadow-lg w-full max-w-[37rem] p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Register as a Recruitment Partner</h2>

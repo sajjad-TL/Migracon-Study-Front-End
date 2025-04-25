@@ -98,14 +98,12 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
 
   return (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ${
-        isOpen ? "bg-black bg-opacity-50 opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ${isOpen ? "bg-black bg-opacity-50 opacity-100" : "opacity-0 pointer-events-none"
+        }`}
     >
       <div
-        className={`bg-white w-full max-w-2xl max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg transform transition-transform duration-300 ${
-          isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
-        }`}
+        className={`bg-white w-full max-w-2xl max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg transform transition-transform duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+          }`}
       >
         <div className="flex flex-row justify-between items-center">
           <div className="bg-white z-10 px-6 pt-6 pb-2 border-b">
@@ -150,7 +148,7 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
 
             <div className="flex flex-col pt-4">
               <label htmlFor="passportNumber" className="font-semibold">Passport number</label>
-              <input id="passportNumber"  name="passportNumber" value={formData.passportNumber} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
+              <input id="passportNumber" name="passportNumber" value={formData.passportNumber} onChange={handleChange} type="text" className="border rounded px-3 py-2" />
             </div>
 
             <div className="flex flex-col pt-4">
@@ -178,21 +176,21 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
             </div>
 
             <div className="flex flex-col pt-2">
-  <label htmlFor="phone" className="font-semibold">Phone number *</label>
-  <input
-    required
-    id="phone"
-    name="phoneNumber"
-    value={formData.phoneNumber}
-    onChange={handleChange}
-    type="text"
-    inputMode="numeric"
-    className="border rounded px-3 py-2"
-    onInput={(e) => {
-      e.target.value = e.target.value.replace(/[^0-9]/g, '');
-    }}
-  />
-</div>
+              <label htmlFor="phone" className="font-semibold">Phone number *</label>
+              <input
+                required
+                id="phone"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                type="text"
+                inputMode="numeric"
+                className="border rounded px-3 py-2"
+                onInput={(e) => {
+                  e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                }}
+              />
+            </div>
           </div>
 
           {/* Additional Info */}

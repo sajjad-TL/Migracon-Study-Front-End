@@ -12,7 +12,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { setUser} = useContext(UserContext)
+  const { setUser } = useContext(UserContext)
 
   const handleLoginSuccess = async (response) => {
     try {

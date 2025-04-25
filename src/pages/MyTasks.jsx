@@ -137,9 +137,9 @@ export default function StudentTaskDashboard() {
           <Info size={12} className="ml-1" />
         </div>
         <div className="text-xs text-gray-700 mb-3">Due date coming soon</div>
-        
+
         <div className="text-sm font-medium text-blue-500 mb-4">{task.title}</div>
-        
+
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div>
             <div className="text-gray-500">Intake:</div>
@@ -193,7 +193,7 @@ export default function StudentTaskDashboard() {
       <div className="p-4">
         <h1 className="text-xl font-medium mb-1">My tasks</h1>
         <p className="text-sm text-gray-600 mb-4">You have 20 uncompleted tasks</p>
-        
+
         {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-4">
           <div className="flex-1 min-w-[150px]">
@@ -245,7 +245,7 @@ export default function StudentTaskDashboard() {
             </div>
           </div>
         </div>
-        
+
         {/* Status and task options */}
         <div className="flex justify-between items-center mb-4">
           <div className="text-sm text-gray-600">
@@ -275,7 +275,7 @@ export default function StudentTaskDashboard() {
             </div>
           </div>
         </div>
-        
+
         {/* Task cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {tasks.map(renderTaskCard)}
