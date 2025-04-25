@@ -11,14 +11,75 @@ export default function Application() {
   const [loading, setLoading] = useState(true);
   const user = JSON.parse(localStorage.getItem('user')) || {};
   const [showFilters, setShowFilters] = useState(false);
+  const [originalApplications, setOriginalApplications] = useState([]);
+
+
+  const [filters, setFilters] = useState({
+    paymentDate: '',
+    applicationId: '',
+    studentId: '',
+    firstName: '',
+    lastName: '',
+    applyDate: '',
+    program: '',
+    institute: '',
+    startDate: '',
+    requirementspartner: '',
+    status: '',
+    stage: '',
+  });
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '';
+
+    // If the input is already in YYYY-MM-DD (from input field), use it as is
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      return dateStr;
+    }
+
+    const date = new Date(dateStr);
+
+    // This forces local time without time zone shifts
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  };
+
+
+
+  const handleApplyFilters = () => {
+    const filtered = originalApplications.filter((app) => {
+      return (
+        (!filters.paymentDate || formatDate(app.paymentDate) === formatDate(filters.paymentDate)) &&
+        (!filters.applicationId || app.applicationId?.toLowerCase().includes(filters.applicationId.toLowerCase())) &&
+        (!filters.studentId || app.studentId?.toLowerCase().includes(filters.studentId.toLowerCase())) &&
+        (!filters.firstName || app.firstName?.toLowerCase().includes(filters.firstName.toLowerCase())) &&
+        (!filters.lastName || app.lastName?.toLowerCase().includes(filters.lastName.toLowerCase())) &&
+        (!filters.applyDate || formatDate(app.applyDate) === formatDate(filters.applyDate)) &&
+        (!filters.program || app.program?.toLowerCase() === filters.program.toLowerCase()) &&
+        (!filters.institute || app.institute?.toLowerCase() === filters.institute.toLowerCase()) &&
+        (!filters.startDate || formatDate(app.startDate) === formatDate(filters.startDate)) &&
+        (!filters.requirementspartner || app.requirementspartner?.toLowerCase() === filters.requirementspartner.toLowerCase()) &&
+        (!filters.status || app.status?.toLowerCase() === filters.status.toLowerCase()) &&
+        (!filters.stage || app.stage?.toLowerCase() === filters.stage.toLowerCase())
+      );
+    });
+
+    setApplications(filtered);
+  };
+
+
 
 
 
   const fetchApplications = async () => {
     try {
       const response = await axios.get("http://localhost:5000/student/getAllApplications");
-      console.log(response,"adss")
-      setApplications(response.data.applications || []);
+      const apps = response.data.applications || [];
+      setApplications(apps);
+      setOriginalApplications(apps);
     } catch (error) {
       console.error("Failed to fetch applications", error);
     } finally {
@@ -31,15 +92,22 @@ export default function Application() {
     fetchApplications();
   }, []);
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'Accepted': return 'text-green-600';
-      case 'Withdrawn': return 'text-amber-600';
-      case 'Not Paid': return 'text-gray-600';
-      default: return 'text-gray-600';
+  const getStatusStyle = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'accepted':
+        return 'bg-green-100 text-green-800 border border-green-300 rounded-full px-2 py-0.5 text-xs font-medium';
+      case 'withdrawn':
+        return 'bg-amber-100 text-amber-800 border border-amber-300 rounded-full px-2 py-0.5 text-xs font-medium';
+      case 'not paid':
+        return 'bg-gray-100 text-gray-800 border border-gray-300 rounded-full px-2 py-0.5 text-xs font-medium';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 border border-yellow-300 rounded-full px-2 py-0.5 text-xs font-medium';
+      case 'rejected':
+        return 'bg-red-100 text-red-800 border border-red-300 rounded-full px-2 py-0.5 text-xs font-medium';
+      default:
+        return 'bg-gray-100 text-gray-700 border border-gray-300 rounded-full px-2 py-0.5 text-xs font-medium';
     }
   };
-
 
 
   return (
@@ -71,9 +139,13 @@ export default function Application() {
         <div className="flex flex-row items-center justify-between mb-4">
           <h1 className="text-xl font-medium mb-4">Applications</h1>
           <div className="flex space-x-2">
-            <button className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center">
+            <button
+              onClick={handleApplyFilters}
+              className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
+            >
               Apply Filters
             </button>
+
             <button
               onClick={() => setShowFilters(!showFilters)}
               className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
@@ -91,7 +163,7 @@ export default function Application() {
                 <ApplicationForm
                   onClose={() => {
                     setShowModal(false);
-                    fetchApplications();
+                    fetchApplications(); // <- Refresh applications when modal is closed
                   }}
                 />
               )}
@@ -106,152 +178,221 @@ export default function Application() {
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Payment Date</label>
-              <div className="flex">
-                <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
-              </div>
+              <input
+                type="date"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.paymentDate || ''}
+                onChange={(e) => setFilters({ ...filters, paymentDate: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">App ID</label>
-              <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm"
+                value={filters.applicationId || ''}
+                onChange={(e) => setFilters({ ...filters, applicationId: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Student ID</label>
-              <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm"
+                value={filters.studentId || ''}
+                onChange={(e) => setFilters({ ...filters, studentId: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">First Name</label>
-              <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm"
+                value={filters.firstName || ''}
+                onChange={(e) => setFilters({ ...filters, firstName: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Last Name</label>
-              <input type="text" className="border border-gray-300 rounded p-2 text-sm" />
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm"
+                value={filters.lastName || ''}
+                onChange={(e) => setFilters({ ...filters, lastName: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Apply Date</label>
-              <div className="flex">
-                <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
-              </div>
+              <input
+                type="date"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.applyDate || ''}
+                onChange={(e) => setFilters({ ...filters, applyDate: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Program</label>
-              <div className="relative">
-                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                  <option>Select Program</option>
-                </select>
-                <div className="absolute right-2 top-2.5 pointer-events-none">
-                  <ChevronDown size={16} className="text-gray-500" />
-                </div>
-              </div>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.program || ''}
+                onChange={(e) => setFilters({ ...filters, program: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">School</label>
-              <div className="relative">
-                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                  <option>Select School</option>
-                </select>
-                <div className="absolute right-2 top-2.5 pointer-events-none">
-                  <ChevronDown size={16} className="text-gray-500" />
-                </div>
-              </div>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.institute || ''}
+                onChange={(e) => setFilters({ ...filters, institute: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Start Date</label>
-              <div className="flex">
-                <input type="date" placeholder="mm/dd/yyyy" className="border border-gray-300 rounded-3 p-2 text-sm w-full" />
-              </div>
+              <input
+                type="date"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.startDate || ''}
+                onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Recruitment Partner</label>
-              <div className="relative">
-                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                  <option>Select Partner</option>
-                </select>
-                <div className="absolute right-2 top-2.5 pointer-events-none">
-                  <ChevronDown size={16} className="text-gray-500" />
-                </div>
-              </div>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.requirementspartner || ''}
+                onChange={(e) =>
+                  setFilters({ ...filters, requirementspartner: e.target.value })}
+              />
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Status</label>
-              <div className="relative">
-                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                  <option>Select Status</option>
-                </select>
-                <div className="absolute right-2 top-2.5 pointer-events-none">
-                  <ChevronDown size={16} className="text-gray-500" />
-                </div>
-              </div>
+              <select
+                className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white"
+                value={filters.status || ''}
+                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+              >
+                <option value="">Select Status</option>
+                <option value="Accepted">Accepted</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+                <option value="Withdrawn">Withdrawn</option>
+                <option value="not-paid">not paid</option>
+              </select>
             </div>
 
             <div className="flex flex-col">
               <label className="text-xs uppercase text-gray-500 mb-1">Current Stage</label>
-              <div className="relative">
-                <select className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white">
-                  <option>Select Stage</option>
-                </select>
-                <div className="absolute right-2 top-2.5 pointer-events-none">
-                  <ChevronDown size={16} className="text-gray-500" />
-                </div>
-              </div>
+              <select
+                className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white"
+                value={filters.stage || ''}
+                onChange={(e) => setFilters({ ...filters, stage: e.target.value })}
+              >
+                <option value="">Select Stage</option>
+                <option value="initial">Initial</option>
+                <option value="review">Review</option>
+                <option value="final">Final</option>
+              </select>
             </div>
           </div>
+
         )}
 
         {loading ? (
           <p>Loading applications...</p>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 text-sm">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="py-2 px-3 text-[15px] text-left font-medium text-gray-500 uppercase tracking-wider border-b">Payment Date</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">App ID</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Student ID</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Apply Date</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">First Name</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Last Name</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Program</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">School</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Start Date</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Recruitment Partner</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Status</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Requirements</th>
-                  <th className="py-2 px-3 text-left font-medium text-gray-500 uppercase tracking-wider border-b">Current Stage</th>
-                </tr>
+          <div className="w-full overflow-x-auto">
+            <table className="w-full table-auto bg-white border border-gray-200 text-sm rounded shadow-sm">
+              <thead className="bg-gray-50">
+              <tr>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    PAYMENT DATE
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    APP ID
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    STUDENT ID
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    APPLY DATE
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    FIRST NAME
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    LAST NAME
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    PROGRAM
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    SCHOOL
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    START DATE
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    RECRUITMENT PARTNER
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    STATUS
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    REQUIREMENTS
+  </th>
+  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+    CURRENT STAGE
+  </th>
+</tr>
+
               </thead>
               <tbody>
-
-                {Array.isArray(applications) && applications.length > 0 ? (
+                {applications.length > 0 ? (
                   applications.map((app, index) => (
                     <tr key={index} className="hover:bg-gray-50">
-                      <td className="py-2 px-3 border-b">{app.paymentDate ? new Date(app.paymentDate).toLocaleDateString() : '-'}</td>
-
-                      <td className="py-2 px-3 border-b text-blue-600">{app.applicationId}</td>
-                      <td className="py-2 px-3 border-b">{app.studentId}</td>
-                      <td className="py-2 px-3 border-b">{app.applyDate ? new Date(app.applyDate).toLocaleDateString() : '-'}</td>
-                      <td className="py-2 px-3 border-b">{app.firstName}</td>
-                      <td className="py-2 px-3 border-b">{app.lastName}</td>
-                      <td className="py-2 px-3 border-b">{app.program}</td>
-                      <td className="py-2 px-3 border-b">{app.institute}</td>
-
-                      <td className="py-2 px-3 border-b">{app.startDate}</td>
-                      <td className="py-2 px-3 border-b text-blue-600">
-                        {app.requirementspartner}</td>
-                      <td className={`py-2 px-3 border-b ${getStatusColor(app.status)}`}>{app.status}</td>
-                      <td className="py-2 px-3 border-b">{app.requirements}</td>
+                      <td className="py-2 px-2 border-b">{app.paymentDate ? new Date(app.paymentDate).toLocaleDateString() : '-'}</td>
+                      <td className="py-2 px-2 border-b text-blue-600">{app.applicationId}</td>
+                      <td className="py-2 px-2 border-b">{app.studentId}</td>
+                      <td className="py-2 px-2 border-b">{app.applyDate ? new Date(app.applyDate).toLocaleDateString() : '-'}</td>
+                      <td className="py-2 px-2 border-b">{app.firstName}</td>
+                      <td className="py-2 px-2 border-b">{app.lastName}</td>
+                      <td className="py-2 px-2 border-b">{app.program}</td>
+                      <td className="py-2 px-2 border-b">
+                        <div className="flex items-center space-x-1 whitespace-nowrap">
+                          <span className="text-red-500">⚑</span>
+                          <span>{app.institute?.replace(/\s+/g, ' ').trim()}</span>
+                        </div>
+                      </td>
 
 
-                      <td className="py-2 px-3 border-b">{app.currentStage}</td>
+
+                      <td className="py-2 px-2 border-b">{app.startDate ? new Date(app.startDate).toLocaleDateString() : '-'}</td>
+                      <td className="py-2 px-2 border-b">{app.requirementspartner}</td>
+                      <td className="py-2 px-2 border-b">
+                        <span className={getStatusStyle(app.status)}>
+                          {app.status || '—'}
+                        </span>
+                      </td>
+                      <td className="py-2 px-2 border-b">
+                        <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full inline-block">
+                          {app.requirements || '—'}
+                        </span>
+                      </td>
+
+                      <td className="py-2 px-2 border-b">{app.currentStage}</td>
                     </tr>
                   ))
                 ) : (
@@ -264,6 +405,7 @@ export default function Application() {
               </tbody>
             </table>
           </div>
+
         )}
       </div>
     </div>
