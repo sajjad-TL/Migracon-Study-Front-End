@@ -19,7 +19,7 @@ const ApplicationNavbar = ({ user }) => {
 
 
     return (
-        <div className="w-full  py-7 px-4 md:px-8 shadow-sm">
+        <div className="w-full  py-4 px-4 md:px-8  border-b">
             <div className="flex justify-between items-center">
                 {/* Left side: Back + Breadcrumbs */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -37,8 +37,14 @@ const ApplicationNavbar = ({ user }) => {
                 {/* Right side: Notifications + Profile */}
                 <div className="relative" ref={dropdownRef}>
                     <div className="flex flex-row gap-8 items-center cursor-pointer">
-                        <IoMdNotifications className="text-2xl text-gray-500" />
-                        <img
+                        <Link to="/notifications">
+                            <div className="relative cursor-pointer">
+                                <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                                    6
+                                </span>
+                            </div>
+                        </Link>                        <img
                             src={user.profilePicture ? `${user.profilePicture}?v${Date.now()}` : "https://randomuser.me/api/portraits/women/44.jpg"}
 
                             className="w-10 h-10 rounded-full"

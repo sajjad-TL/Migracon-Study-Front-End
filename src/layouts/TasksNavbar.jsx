@@ -2,9 +2,10 @@ import { useRef, useState, useEffect } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { IoMdNotifications } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
+import { HiMenuAlt3 } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
 
-const StudentNavbar = ({ user }) => {
+const TasksNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     
@@ -12,33 +13,6 @@ const StudentNavbar = ({ user }) => {
     const dropdownRef = useRef();
     const sidebarRef = useRef();
 
-    // Close dropdown when clicking outside
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setDropdownOpen(false);
-            }
-        }
-        
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [dropdownRef]);
-
-    // Close sidebar when clicking outside
-    useEffect(() => {
-        function handleClickOutside(event) {
-            if (sidebarRef.current && !sidebarRef.current.contains(event.target) && sidebarOpen) {
-                setSidebarOpen(false);
-            }
-        }
-        
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, [sidebarRef, sidebarOpen]);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -46,14 +20,14 @@ const StudentNavbar = ({ user }) => {
         window.location.href = "/login";
     };
 
-  
+    
 
     return (
-        <div className="w-full pb-3 px-4 md:px-8 border-b">
+        <div className="w-full py-4 px-4 md:px-8 border-b">
             <div className="flex justify-between items-center">
                 {/* Left side: Hamburger + Back + Breadcrumbs */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                    
+                   
                     <div
                         className="flex items-center gap-2 cursor-pointer"
                         onClick={() => navigate('/dashboard')}
@@ -62,7 +36,7 @@ const StudentNavbar = ({ user }) => {
                         <span className="text-gray-500 hover:text-black transition">Dashboard</span>
                     </div>
                     <span className="mx-1">/</span>
-                    <span className="font-medium text-black border-b-2 border-black pb-1">Student</span>
+                    <span className="font-medium text-black border-b-2 border-black pb-1">Tasks</span>
                 </div>
 
                 {/* Right side: Notifications + Profile */}
@@ -184,5 +158,5 @@ const StudentNavbar = ({ user }) => {
     );
 };
 
-export default StudentNavbar;
+export default TasksNavbar;
 
