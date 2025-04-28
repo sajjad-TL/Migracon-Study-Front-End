@@ -148,7 +148,9 @@ const ProfileDetail = () => {
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white rounded-lg shadow-lg z-50">
                   <ul className="py-2 text-sm text-gray-700">
+                    <Link to="/UserSetting">
                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                    </Link>
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
                       onClick={handleLogout}
