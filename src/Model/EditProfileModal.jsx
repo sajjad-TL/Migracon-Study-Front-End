@@ -35,8 +35,8 @@ const EditProfileModal = ({ isOpen, onClose, agentData, onSubmit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData); // Send data to parent
-    onClose(); // Close modal after submit
+    onSubmit(formData);
+    onClose();
   };
 
   if (!isOpen) return null;

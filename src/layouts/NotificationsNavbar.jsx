@@ -1,18 +1,16 @@
-import { useRef, useState, useEffect, useContext } from "react";
+import { useRef, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
-import { IoMdNotifications } from "react-icons/io";
-import { Link, useNavigate } from "react-router-dom";
-import { HiMenuAlt3 } from "react-icons/hi";
+import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 
 const NotificationsNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    
+
     const dropdownRef = useRef();
     const sidebarRef = useRef();
 
-  
+
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -20,15 +18,15 @@ const NotificationsNavbar = ({ user }) => {
         window.location.href = "/login";
     };
 
-   
+
 
     return (
         <div className="w-full py-4 px-4 md:px-8 border-b">
-            
+
             <div className="flex justify-between items-center">
                 {/* Left side: Hamburger + Back + Breadcrumbs */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-              
+
                     <div
                         className="flex items-center gap-2 cursor-pointer"
                         onClick={() => navigate('/dashboard')}
@@ -42,8 +40,8 @@ const NotificationsNavbar = ({ user }) => {
 
                 {/* Right side: Notifications + Profile */}
                 <div className="flex items-center gap-4">
-                   
-                    
+
+
                     <div className="relative" ref={dropdownRef}>
                         <img
                             src={user?.profilePicture ? `${user.profilePicture}?v=${Date.now()}` : "https://randomuser.me/api/portraits/women/44.jpg"}
@@ -79,15 +77,14 @@ const NotificationsNavbar = ({ user }) => {
             </div>
 
             {/* Sidebar */}
-            <div 
+            <div
                 ref={sidebarRef}
-                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
-                    sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
+                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                    }`}
             >
                 <div className="flex items-center justify-between p-4 border-b">
                     <h2 className="text-lg font-semibold">Menu</h2>
-                    <button 
+                    <button
                         onClick={() => setSidebarOpen(false)}
                         className="text-gray-500 hover:text-gray-700"
                     >
@@ -124,7 +121,7 @@ const NotificationsNavbar = ({ user }) => {
                     </ul>
                 </nav>
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
-                    <div 
+                    <div
                         className="flex items-center gap-3 cursor-pointer"
                         onClick={handleLogout}
                     >
@@ -140,10 +137,10 @@ const NotificationsNavbar = ({ user }) => {
                     </div>
                 </div>
             </div>
-            
+
             {/* Overlay */}
             {sidebarOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-40"
                     onClick={() => setSidebarOpen(false)}
                 ></div>

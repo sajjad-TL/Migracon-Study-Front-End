@@ -65,9 +65,8 @@ const Layout = () => {
                 key={text}
                 to={path}
                 onClick={() => setIsSidebarOpen(false)}
-                className={`nav-link d-flex justify-content-between align-items-center py-2 px-2 rounded ${
-                  isActive ? "fw-semibold" : ""
-                }`}
+                className={`nav-link d-flex justify-content-between align-items-center py-2 px-2 rounded ${isActive ? "fw-semibold" : ""
+                  }`}
                 style={{
                   color: isActive ? "#000" : "#000",
                   backgroundColor: isActive ? "#f8f9fa" : "transparent",

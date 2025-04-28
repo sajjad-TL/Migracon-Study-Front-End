@@ -33,7 +33,7 @@ export default function StudentDashboard() {
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState([]);
 
-  const [studentData, setStudentData] = useState(null);
+  const [setStudentData] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const { user } = useContext(UserContext);
@@ -87,7 +87,7 @@ export default function StudentDashboard() {
         education: s.applications?.map(app => app.program).join(', ') || "N/A",
         status: s.status,
         applicationCount: s.applicationCount || 0,
-        applications: s.applications || [], // 👈 Add this line
+        applications: s.applications || [],
       }));
 
 
@@ -103,7 +103,6 @@ export default function StudentDashboard() {
   }, [agentId]);
 
   const filteredStudents = students.filter((student) => {
-    // Match text search
     const matchesSearch = Object.values(student).some((value) =>
       typeof value === 'string' &&
       value.toLowerCase().includes(searchTerm.toLowerCase())
@@ -116,16 +115,8 @@ export default function StudentDashboard() {
       !selectedFilters.includes("In Active") ||
       selectedFilters.includes(student.status);
 
-
-
-
-
-
-    // Match input field filters
     const matchesInputFilters = Object.entries(filterValues).every(([field, value]) => {
       if (!value || value.trim() === "") return true;
-
-      // Handle different field types
       switch (field) {
         case 'id':
           return student._id && student._id.toLowerCase().includes(value.toLowerCase());

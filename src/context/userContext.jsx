@@ -1,4 +1,3 @@
-// userContext.jsx
 import { createContext, useState, useEffect } from "react";
 
 export const UserContext = createContext({});
@@ -14,13 +13,12 @@ export const UserProvider = ({ children }) => {
     }
   });
 
-  // Update localStorage when user value is changed or updated
   useEffect(() => {
     if (user && Object.keys(user).length > 0) {
       setUser(user)
       localStorage.setItem("user", JSON.stringify(user));
     } else {
-      localStorage.removeItem("user"); 
+      localStorage.removeItem("user");
     }
   }, [user]);
 

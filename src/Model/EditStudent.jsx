@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { UserContext } from "../context/userContext";
 
 const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
-  const { user } = useContext(UserContext);
-  const agentId = user?.agentId;
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -36,8 +33,8 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
             },
           ],
       });
-  
-      setApplicationId(application?.applicationId || "");
+
+      setApplicationId(applicationId?.applicationId || "");
     }
   }, [agentData]);
 
@@ -53,7 +50,7 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     // Prepare the payload
     const payload = {
       studentId: agentData._id,
@@ -63,7 +60,7 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
       education: formData.education,
       status: formData.status
     };
-    
+
     // Add application data if we have an applicationId
     if (applicationId) {
       payload.updatedApplication = {
@@ -74,7 +71,7 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
         status: formData.appStatus,
       };
     }
-    
+
     console.log("Submitting payload:", payload);
 
     try {
@@ -181,7 +178,7 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
               <div className="border-t pt-4 mt-4">
                 <h3 className="text-lg font-medium">Application Details</h3>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium">Program</label>
                 <input
@@ -192,7 +189,7 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium">Institute</label>
                 <input
@@ -203,7 +200,7 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium">Start Date</label>
                 <input
@@ -214,7 +211,7 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
                   className="mt-1 block w-full border border-gray-300 rounded-md p-2"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium">Application Status</label>
                 <select

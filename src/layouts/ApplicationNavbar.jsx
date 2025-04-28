@@ -3,7 +3,6 @@ import { IoMdArrowBack } from "react-icons/io";
 import { IoMdNotifications } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 
-
 const ApplicationNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Filter, ChevronDown, X, Plus } from 'lucide-react';
+import { Filter, X, Plus } from 'lucide-react';
 import ApplicationNavbar from '../layouts/ApplicationNavbar';
 import ApplicationForm from '../Model/ApplicationForm';
 
@@ -31,15 +31,12 @@ export default function Application() {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return '';
-
-    // If the input is already in YYYY-MM-DD (from input field), use it as is
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
       return dateStr;
     }
 
     const date = new Date(dateStr);
 
-    // This forces local time without time zone shifts
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
@@ -163,7 +160,7 @@ export default function Application() {
                 <ApplicationForm
                   onClose={() => {
                     setShowModal(false);
-                    fetchApplications(); // <- Refresh applications when modal is closed
+                    fetchApplications();
                   }}
                 />
               )}

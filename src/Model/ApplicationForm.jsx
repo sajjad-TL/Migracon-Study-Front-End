@@ -43,7 +43,7 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
 
   const handleSubmit = async () => {
     if (!selectedStudentId) {
-      alert("Please select a student first.");
+      toast.error("Please select a student first.");
       return;
     }
 
@@ -62,11 +62,11 @@ export default function ApplicationForm({ onClose, refreshApplications }) {
         }
         onClose();
       } else {
-        alert(result.message || "Failed to add application");
+        toast.error(result.message || "Failed to add application");
       }
     } catch (err) {
       toast.error(err);
-      alert("Something went wrong.");
+
     }
   };
 

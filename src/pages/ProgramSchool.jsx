@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
-import { Search, ChevronDown, Filter, ChevronLeft, ChevronRight, Bell, HelpCircle } from 'lucide-react';
+import { Search, ChevronDown, Filter, ChevronLeft, ChevronRight, HelpCircle } from 'lucide-react';
 import ProgramsNavbar from '../layouts/ProgramsNavbar';
 import { UserContext } from '../context/userContext';
 
 export default function ProgramSchool() {
-  const [programs, setPrograms] = useState([
+  const [programs] = useState([
     {
       university: 'University of Toronto',
       location: 'Toronto, Canada',
@@ -49,7 +49,7 @@ export default function ProgramSchool() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-            <ProgramsNavbar user={user} />
+      <ProgramsNavbar user={user} />
 
 
       <div className=" mx-auto p-4">
@@ -106,9 +106,9 @@ export default function ProgramSchool() {
         <div className="bg-white shadow-sm rounded-md p-4  mx-auto" >
 
           <div className="flex justify-between items-center mb-4">
-            <div className="text-sm text-gray-600">2000+ programs found</div>
+            <div className='flex flex-row gap-4 items-center'>
+              <div className="text-sm text-gray-600">2000+ programs found</div>
 
-            <div className="flex items-center space-x-4">
               <div className="flex items-center">
                 <span className="text-sm mr-2">Sort</span>
                 <div className="relative">
@@ -128,6 +128,10 @@ export default function ProgramSchool() {
                   ></div>
                 </div>
               </div>
+            </div>
+
+
+            <div className="flex items-center space-x-4">
 
               <button className="flex items-center text-sm border rounded-md px-3 py-1">
                 <Filter size={14} className="mr-1" />

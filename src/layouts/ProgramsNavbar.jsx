@@ -1,14 +1,13 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import { IoMdArrowBack } from "react-icons/io";
 import { IoMdNotifications } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
-import { HiMenuAlt3 } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";
 
 const ProgramsNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    
+
     const navigate = useNavigate();
     const dropdownRef = useRef();
     const sidebarRef = useRef();
@@ -26,7 +25,7 @@ const ProgramsNavbar = ({ user }) => {
             <div className="flex justify-between items-center">
                 {/* Left side: Hamburger + Back + Breadcrumbs */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                   
+
                     <div
                         className="flex items-center gap-2 cursor-pointer"
                         onClick={() => navigate('/dashboard')}
@@ -41,14 +40,14 @@ const ProgramsNavbar = ({ user }) => {
                 {/* Right side: Notifications + Profile */}
                 <div className="flex items-center gap-4">
                     <Link to="/notifications">
-                                     <div className="relative cursor-pointer">
-                                       <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
-                                       <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                                         6
-                                       </span>
-                                     </div>
-                                   </Link>
-                    
+                        <div className="relative cursor-pointer">
+                            <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                                6
+                            </span>
+                        </div>
+                    </Link>
+
                     <div className="relative" ref={dropdownRef}>
                         <img
                             src={user?.profilePicture ? `${user.profilePicture}?v=${Date.now()}` : "https://randomuser.me/api/portraits/women/44.jpg"}
@@ -84,15 +83,14 @@ const ProgramsNavbar = ({ user }) => {
             </div>
 
             {/* Sidebar */}
-            <div 
+            <div
                 ref={sidebarRef}
-                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
-                    sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
+                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                    }`}
             >
                 <div className="flex items-center justify-between p-4 border-b">
                     <h2 className="text-lg font-semibold">Menu</h2>
-                    <button 
+                    <button
                         onClick={() => setSidebarOpen(false)}
                         className="text-gray-500 hover:text-gray-700"
                     >
@@ -129,7 +127,7 @@ const ProgramsNavbar = ({ user }) => {
                     </ul>
                 </nav>
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
-                    <div 
+                    <div
                         className="flex items-center gap-3 cursor-pointer"
                         onClick={handleLogout}
                     >
@@ -145,10 +143,10 @@ const ProgramsNavbar = ({ user }) => {
                     </div>
                 </div>
             </div>
-            
+
             {/* Overlay */}
             {sidebarOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-40"
                     onClick={() => setSidebarOpen(false)}
                 ></div>

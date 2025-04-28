@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { ChevronLeft, Filter, ChevronDown, MoreVertical, Info, HelpCircle } from 'lucide-react';
+import { Filter, ChevronDown, MoreVertical, Info, HelpCircle } from 'lucide-react';
 import TasksNavbar from '../layouts/TasksNavbar';
 import { UserContext } from '../context/userContext';
 

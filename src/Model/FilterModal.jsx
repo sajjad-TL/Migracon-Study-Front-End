@@ -59,26 +59,22 @@ const FilterModal = ({
 
   const handleInputChange = (field, value) => {
     const updatedInputs = { ...localInputValues, [field]: value };
-
     setLocalInputValues(updatedInputs);
 
-    // 💡 Instantly apply filter if "id" field changes
-    if (field === "id") {
-      if (value.trim() !== "") {
-        setFilterValues({ ...filterValues, id: value });
-        setSelectedFilters((prev) =>
-          prev.includes("id") ? prev : [...prev, "id"]
-        );
-      } else {
-        // If input is cleared, remove "id" from filters
-        const updatedSelected = selectedFilters.filter((f) => f !== "id");
-        const updatedFilterValues = { ...filterValues };
-        delete updatedFilterValues.id;
-        setFilterValues(updatedFilterValues);
-        setSelectedFilters(updatedSelected);
+    if (value.trim() !== "") {
+      setFilterValues({ ...filterValues, [field]: value });
+      if (!selectedFilters.includes(field)) {
+        setSelectedFilters([...selectedFilters, field]);
       }
+    } else {
+      const updatedSelected = selectedFilters.filter((f) => f !== field);
+      const updatedFilterValues = { ...filterValues };
+      delete updatedFilterValues[field];
+      setFilterValues(updatedFilterValues);
+      setSelectedFilters(updatedSelected);
     }
   };
+
 
   const handleOutsideClick = (event) => {
     if (event.target.classList.contains("modal-overlay")) {
@@ -91,8 +87,8 @@ const FilterModal = ({
   return (
     <div
       className={`modal-overlay fixed inset-0 z-50 flex items-start justify-start transition-opacity duration-300 ${isOpen
-          ? "bg-black bg-opacity-50 opacity-100"
-          : "opacity-0 pointer-events-none"
+        ? "bg-black bg-opacity-50 opacity-100"
+        : "opacity-0 pointer-events-none"
         }`}
       onClick={handleOutsideClick}
     >

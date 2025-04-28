@@ -54,7 +54,7 @@ const ProfileDetail = () => {
       if (user?.agentId) {
         const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
         console.log('Get agent api response : ', response)
-        setAgentData(response.data.agent); // Store agent data here
+        setAgentData(response.data.agent);
       }
     } catch (error) {
       console.error('Error fetching agent data:', error);
@@ -68,7 +68,6 @@ const ProfileDetail = () => {
     for (let key in formData) {
       const value = formData[key];
 
-      // Skip empty strings and nulls (unless it's a file)
       if (key === "profilePicture" && value instanceof File) {
         sendData.append(key, value);
       } else if (key !== "profilePicture" && value !== "" && value !== null && value !== undefined) {

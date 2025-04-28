@@ -5,8 +5,8 @@ import { UserContext } from '../context/userContext';
 
 export default function Notification() {
 
-      const { user } = useContext(UserContext);
-    
+  const { user } = useContext(UserContext);
+
   const notifications = [
     {
       id: 1,
@@ -58,7 +58,6 @@ export default function Notification() {
     }
   ];
 
-  // Function to get badge color based on notification type
   const getBadgeColor = (type) => {
     switch (type) {
       case 'joined':
@@ -74,7 +73,6 @@ export default function Notification() {
     }
   };
 
-  // Function to get notification label based on type
   const getNotificationLabel = (type) => {
     switch (type) {
       case 'joined':
@@ -92,36 +90,36 @@ export default function Notification() {
 
   return (
     <>
-    <NotificationsNavbar user={user} />
+      <NotificationsNavbar user={user} />
 
-    <div className="bg-gray-100 min-h-screen flex justify-center items-center p-4">
+      <div className="bg-gray-100 min-h-screen flex justify-center items-center p-4">
 
-      <div className="bg-white rounded-lg shadow-md w-full max-w-2xl">
-        {notifications.map((notification) => (
-          <div key={notification.id} className="border-b border-gray-200 p-4 relative">
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <div className="flex items-center mb-1">
-                  <span className={`text-xs text-white px-2 py-1 rounded ${getBadgeColor(notification.type)}`}>
-                    {getNotificationLabel(notification.type)}
-                  </span>
+        <div className="bg-white rounded-lg shadow-md w-full max-w-2xl">
+          {notifications.map((notification) => (
+            <div key={notification.id} className="border-b border-gray-200 p-4 relative">
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex items-center mb-1">
+                    <span className={`text-xs text-white px-2 py-1 rounded ${getBadgeColor(notification.type)}`}>
+                      {getNotificationLabel(notification.type)}
+                    </span>
+                  </div>
+                  <h3 className="font-medium text-gray-800">{notification.title}</h3>
+                  <p className="text-sm text-gray-600 mt-1">{notification.description}</p>
+                  <p className="text-sm text-red-600 mt-2">{notification.user}</p>
                 </div>
-                <h3 className="font-medium text-gray-800">{notification.title}</h3>
-                <p className="text-sm text-gray-600 mt-1">{notification.description}</p>
-                <p className="text-sm text-red-600 mt-2">{notification.user}</p>
+                <div className="flex items-center text-gray-400">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span className="text-xs">{notification.time}</span>
+                </div>
               </div>
-              <div className="flex items-center text-gray-400">
-                <Clock className="h-4 w-4 mr-1" />
-                <span className="text-xs">{notification.time}</span>
-              </div>
+              <button className="absolute top-4 left-0 bg-gray-200 rounded-full p-1">
+                <X className="h-4 w-4 text-gray-500" />
+              </button>
             </div>
-            <button className="absolute top-4 left-0 bg-gray-200 rounded-full p-1">
-              <X className="h-4 w-4 text-gray-500" />
-            </button>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </div>
     </>
   );
 }

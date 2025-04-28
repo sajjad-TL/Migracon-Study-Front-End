@@ -87,9 +87,9 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
       }
 
       toast.success("Student added successfully!");
-      onStudentAdded(data); // ✅ pass newly added student object
-      onClose(); // ✅ close modal
-      setFormData(initialFormState); // ✅ reset form
+      onStudentAdded(data);
+      onClose();
+      setFormData(initialFormState);
     } catch (err) {
       console.error(err);
       toast.error("Failed to add student!");

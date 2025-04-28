@@ -1,206 +1,3 @@
-// import { IoDocumentText } from "react-icons/io5";
-// import { FaFileArrowUp } from "react-icons/fa6";
-// import { IoDocumentTextSharp } from "react-icons/io5";
-
-// const getStatusClasses = (status) => {
-//   switch (status) {
-//     case "Under Review":
-//       return "bg-green-100 text-green-600";
-//     case "Pending Documents":
-//       return "bg-yellow-100 text-yellow-600";
-//     case "Offer Received":
-//       return "bg-blue-100 text-blue-600";
-//     case "Rejected":
-//       return "bg-red-100 text-red-600";
-//     default:
-//       return "bg-gray-100 text-gray-600";
-//   }
-// };
-
-// // Data for Application Statuses chart
-
-// // Performance data - number of students over time
-
-// export default function Dashboard() {
-//   const navigate = useNavigate();
-
-//   return (
-//     <div className="flex min-h-screen bg-gray-100">
-
-//       {/* navbar */}
-//       <div>
-//         <nav className="w-[98.9%] bg-white shadow-md">
-//           <div className="max-w-7xl pl-[5rem] pr-[1rem] py-3 flex justify-between items-center relative">
-//
-//
-//         </nav>
-//         <div className="flex flex-col lg:flex-row max-w-[21rem] sm:max-w-[22rem] md:max-w-[30rem] lg:max-w-[110rem] w-full">
-
-//           {/* Main Content */}
-
-//           <main className="flex-1 p-4 sm:p-6 space-y-6 w-full overflow-y-auto">
-//             {/* TopNav */}
-//             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-//               <div className="text-xl font-bold">Agent Dashboard</div>
-//             </div>
-
-//             {/* Stats */}
-
-//             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-//               <StatCard
-//                 title="Active Tasks"
-//                 value="38"
-//                 icon={<BsFillBagCheckFill className="text-[#1543a7] text-3xl" />}
-//               />
-//               <StatCard title="Approved Applications" value="156" icon="✅" />
-//               <StatCard
-//                 title="Applications"
-//                 value="48"
-//                 icon={<IoDocumentText className="text-[#1a5ef0] text-3xl" />}
-//               />
-//               <StatCard title="Rejected Applications" value="2" icon="❌" />
-//             </div>
-
-//             {/* Recent Applications & Tasks */}
-//             <div className="flex flex-col lg:flex-row gap-4 ">
-//               <Card title={<span className="text-xl font-bold">Recent Applications</span>} colSpan={2}>
-//                 <AppRow
-//                   image={img1}
-//                   name="Sarah Chen"
-//                   uni="University of Toronto - CS"
-//                   status="Under Review"
-//                 />
-//                 <AppRow
-//                   image={img1}
-//                   name="Mohammed Al-Rashid"
-//                   uni="McGill - Business Admin"
-//                   status="Pending Documents"
-//                 />
-//                 <AppRow
-//                   image={img1}
-//                   name="Priya Patel"
-//                   uni="UBC - Engineering"
-//                   status="Offer Received"
-//                 />
-//                 <div className="mt-4 border border-gray-300 rounded p-3 flex justify-center">
-//                   <button className="text-black font-semibold text-sm hover:underline">
-//                     View all
-//                   </button>
-//                 </div>
-//               </Card>
-
-//               <Card title={<span className="text-xl font-bold">Tasks Due Soon</span>}>
-//                 <TaskRow
-//                   image={<FaFileArrowUp className="text-2xl" />}
-//                   title="Upload IELTS Results"
-//                   para="For Sarah Chen"
-//                   due="Today"
-//                 />
-//                 <TaskRow
-//                   image={}
-//                   title="Review SOP Draft"
-//                   para="From Muhammad Al-Rashid"
-//                   due="Tomorrow"
-//                 />
-//                 <TaskRow
-//                   image={}
-//                   title="Submit Fee Payment"
-//                   para="For Priya Patel"
-//                   due="In 3 days"
-//                 />
-//                 <div className="mt-4 border border-gray-300 rounded p-3 flex justify-center">
-//                   <button className="text-black font-semibold text-sm hover:underline">
-//                     View all tasks
-//                   </button>
-//                 </div>
-//               </Card>
-//             </div>
-
-//             {/* Quick Actions */}
-//             <div className="flex flex-wrap gap-4">
-//               <div className="bg-white p-4 shadow rounded-lg w-full">
-//                 <h2 className="font-bold pb-4 text-lg">Quick Actions</h2>
-//                 <div className="flex flex-wrap gap-2 mt-1 px-3">
-//
-//                 </div>
-//               </div>
-//             </div>
-
-//             {/* Task Management Chart */}
-//             <div className="bg-white rounded-lg p-4 shadow">
-//               <div className="bg-white rounded-lg p-4">
-//                 <h2 className="text-lg font-semibold mb-2">Task Management</h2>
-//                 <div className="flex flex-wrap gap-4 border-b">
-//                   {semesters.map((sem, index) => (
-//                     <button
-//                       key={index}
-//                       className={`pb-2 text-sm font-medium ${sem === "Summer 2025"
-//                         ? "border-b-2 border-black text-black"
-//                         : "text-gray-500"
-//                         }`}
-//                     >
-//                       {sem}
-//                     </button>
-//                   ))}
-//                 </div>
-//               </div>
-//               <h3 className="font-semibold mb-2 mt-12 ml-0 sm:ml-5">
-//                 Application Statistics - Summer 2025
-//               </h3>
-
-//               <div className="h-64 w-full">
-//
-//               </div>
-
-//               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center text-sm mt-4">
-//
-//               </div>
-//             </div>
-
-//             {/* First Chart Section */}
-//
-//           </main>
-
-//           {/* Right Sidebar */}
-//           <aside className="bg-gray-100 p-4 space-y-4 mt-4 lg:mt-[3.7rem] w-[18rem] xl:w-[27rem] mx-auto lg:mx-0 lg:w-[20rem]">
-//             {/* Your Balance Section */}
-//             <div className="bg-white p-4 rounded-lg shadow">
-//               <div className="text-sm text-black mb-2 font-bold">Your balance</div>
-//
-//               <button className="mt-2 w-full bg-blue-100 text-black font-semibold py-2 rounded text-sm">
-//                 Request commission withdrawal
-//               </button>
-//             </div>
-
-//             {/* Popular Links */}
-//             <div className="bg-white p-4 rounded-lg shadow">
-//               <div className="text-sm font-medium mb-2">Popular links</div>
-//               <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-black leading-[2]">
-//                 <li className="flex items-center gap-2">
-//                   <MdOutlineWhatsapp className="text-green-500 text-2xl" />
-//                   <a href="https://wa.me/923016108979" target="_blank" className="cursor-pointer text-black">WhatsApp chat</a>
-//                 </li>
-//                 <li className="flex items-center gap-2">
-//                   <IoDocumentTextSharp className="text-2xl" />
-//                   Assist - knowledge base
-//                 </li>
-//                 <li className="flex flex-row items-center gap-2">
-//                   <BsCalculatorFill className="text-2xl" />
-//                   <span>Canadian visa calculator</span>
-//                 </li>
-//               </ul>
-//             </div>
-
-//             {/* Account Manager */}
-
-//
-//           </aside>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 import React, { useState, useRef, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { BsFillBagCheckFill, BsCalculatorFill } from "react-icons/bs";
@@ -244,7 +41,7 @@ export default function AgentDashboard() {
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
   const [studentFilter, setStudentFilter] = useState("Student");
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState("2024");
   const [yearRevenue, setYearRevenue] = useState("2025");
 
@@ -297,7 +94,6 @@ export default function AgentDashboard() {
 
   const handleClick = (item) => {
     setActive(item);
-    // Navigate to the corresponding page
     if (item === "Dashboard") navigate("/dashboard");
     if (item === "Student") navigate("/students");
     if (item === "Application") navigate("/application");
@@ -421,7 +217,6 @@ export default function AgentDashboard() {
     { month: "Dec", students: 93 },
   ];
 
-  // Revenue data - total amount by month
   const revenueData = [
     { month: "Jan", revenue: 32000 },
     { month: "Feb", revenue: 35000 },
@@ -437,7 +232,6 @@ export default function AgentDashboard() {
     { month: "Dec", revenue: 70000 },
   ];
 
-  // Month buttons for performance section
   const months = [
     ["Jan", "Feb", "Mar"],
     ["Apr", "May", "Jun"],
@@ -1230,7 +1024,7 @@ export default function AgentDashboard() {
                       : "https://randomuser.me/api/portraits/women/44.jpg"
                   }
                 />
-                <div className="font-semibold pr-4">
+                <div className="font-semibold pr-6">
                   {agentData.firstName || "No name"}
                 </div>
               </div>
