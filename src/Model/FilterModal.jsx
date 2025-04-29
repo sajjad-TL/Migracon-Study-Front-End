@@ -93,7 +93,7 @@ const FilterModal = ({
       onClick={handleOutsideClick}
     >
       <div
-        className={`bg-white w-full max-w-md max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 rounded-lg shadow-lg transform transition-transform duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
+        className={`bg-white w-full max-w-md h-[80rem] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 p-6 shadow-lg transform transition-transform duration-300 ${isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0"
           }`}
         onClick={(e) => e.stopPropagation()}
       >

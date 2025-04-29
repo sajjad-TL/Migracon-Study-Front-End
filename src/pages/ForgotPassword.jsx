@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { requestResetCode } from '../api/authApi';
+import { toast } from "react-toastify"
 export default function ForgotPassword() {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
@@ -16,11 +17,15 @@ export default function ForgotPassword() {
       await requestResetCode(email);
       localStorage.setItem('resetEmail', email);
       navigate('/verify-code');
+      toast.success("Check your verification code in Email")
     } catch (err) {
       setError(err.response?.data?.message || 'Something went wrong');
       setIsSubmitting(false);
     }
   };
+
+
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">

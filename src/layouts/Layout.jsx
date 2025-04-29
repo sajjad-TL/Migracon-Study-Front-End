@@ -19,7 +19,7 @@ const navItem = [
   { icon: <HiAcademicCap size={22} />, text: "TrainHub", path: "/trainhub" },
   { icon: <FaArrowTrendUp size={22} />, text: "Growth Hub", path: "/growth", badge: "New" },
   { icon: <PiTestTubeFill size={22} />, text: "Test Solutions", path: "/test-solutions" },
-  { icon: <IoPersonAdd size={22} />, text: "Add Student", path: "/add-student" },
+  { icon: <IoPersonAdd size={22} />, text: "Add Student", path: "/students/add" },
   { icon: <FaHandHoldingUsd size={22} />, text: "Start Loan Application", path: "/loan" },
   { icon: <FaBuildingColumns size={22} />, text: "Start GIC Application", path: "/gic" },
 ];

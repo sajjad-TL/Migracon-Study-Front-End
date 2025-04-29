@@ -28,8 +28,7 @@ const ProfileDetail = () => {
 
   useEffect(() => {
     fetchAgentData();
-    console.log('Agent Data : ', agentData)
-    console.log('Context User: ', user)
+
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
@@ -53,7 +52,6 @@ const ProfileDetail = () => {
     try {
       if (user?.agentId) {
         const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
-        console.log('Get agent api response : ', response)
         setAgentData(response.data.agent);
       }
     } catch (error) {
@@ -62,7 +60,6 @@ const ProfileDetail = () => {
   };
 
   const handleUpdate = async (formData) => {
-    console.log('Raw Form Data: ', formData);
     const sendData = new FormData();
 
     for (let key in formData) {
@@ -76,7 +73,6 @@ const ProfileDetail = () => {
     }
 
     try {
-      console.log('Agend id in handle update func', user.agentId)
       const response = await fetch(`http://localhost:5000/agent/update/${user.agentId}`, {
         method: "PATCH",
         body: sendData,
@@ -85,7 +81,6 @@ const ProfileDetail = () => {
       const data = await response.json();
 
       if (data.success) {
-        console.log('Update api repsonse : ', data)
         const { agentId, firstName, lastName, profilePicture, phone } = data.agent;
         const name = `${firstName} ${lastName}`;
 

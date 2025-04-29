@@ -13,6 +13,7 @@ export const UserProvider = ({ children }) => {
     }
   });
 
+
   useEffect(() => {
     if (user && Object.keys(user).length > 0) {
       setUser(user)
