@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import SettingsNavbar from "../layouts/SettingsNavbar";
+import { UserContext } from '../context/userContext';
 
 const UserSettings = () => {
+  const { user1 } = useContext(UserContext);
+
   const [user, setUser] = useState({
     name: "John Doe",
     email: "john@example.com",
@@ -40,6 +44,9 @@ const UserSettings = () => {
   };
 
   return (
+    <div>
+    <SettingsNavbar user={user1} />
+
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
       <h2 className="text-2xl font-semibold mb-6">User Settings</h2>
 
@@ -150,6 +157,7 @@ const UserSettings = () => {
           {isSaving ? "Saving..." : "Save Settings"}
         </button>
       </div>
+    </div>
     </div>
   );
 };
