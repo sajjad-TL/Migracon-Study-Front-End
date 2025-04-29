@@ -27,13 +27,12 @@ const NotificationsNavbar = ({ user }) => {
                 {/* Left side: Hamburger + Back + Breadcrumbs */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
 
-                    <div
-                        className="flex items-center gap-2 cursor-pointer"
-                        onClick={() => navigate('/dashboard')}
-                    >
+
+                    <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
                         <IoMdArrowBack className="text-xl" />
                         <span className="text-gray-500 hover:text-black transition">Dashboard</span>
-                    </div>
+                    </Link>
+                    
                     <span className="mx-1">/</span>
                     <span className="font-medium text-black border-b-2 border-black pb-1">Notifications</span>
                 </div>
@@ -61,8 +60,8 @@ const NotificationsNavbar = ({ user }) => {
                                     <Link to="/ProfileDetail">
                                         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
                                     </Link>
-                                    <Link to="UserSetting">
-                                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                                    <Link to="/UserSetting">
+                                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
                                     </Link>
                                     <li className="border-t"></li>
                                     <li
@@ -115,11 +114,11 @@ const NotificationsNavbar = ({ user }) => {
                                 Reports
                             </Link>
                         </li>
-                        <li>
-                            <Link  to="/UserSetting" className="block py-2 px-4 rounded hover:bg-gray-100">
-                                Settings
-                            </Link>
-                        </li>
+                        <Link to="/UserSetting">
+                            <li className="block py-2 px-4 rounded hover:bg-gray-100"></li>
+                            Settings
+                        </Link>
+
                     </ul>
                 </nav>
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t">

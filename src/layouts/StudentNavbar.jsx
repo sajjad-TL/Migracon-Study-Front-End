@@ -95,7 +95,7 @@ const StudentNavbar = ({ user }) => {
                                     <Link to="/ProfileDetail">
                                         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
                                     </Link>
-                                    <Link to="UserSetting">
+                                    <Link to="/UserSetting">
                                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
                                     </Link>
                                     <li className="border-t"></li>

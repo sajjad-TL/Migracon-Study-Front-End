@@ -115,13 +115,13 @@ const ProfileDetail = () => {
   ];
 
   return (
-    <div className="container mr-10">
+    <div className="container-fluid mr-10">
       <div className="bg-gray-50 ">
         {/* Header */}
         <header className="bg-white shadow-sm">
           <div
             className="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4 sm:gap-0"
-            style={{ borderBottom: "2px solid #bebebe" }}
+            
           >
             {/* Breadcrumb */}
             <div className="flex items-center flex-wrap gap-1 text-sm sm:text-base text-gray-500">
