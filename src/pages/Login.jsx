@@ -5,6 +5,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import { GoogleLogin } from '@react-oauth/google';
 import { UserContext } from '../context/userContext';
+import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 
 const Login = () => {
@@ -28,13 +30,16 @@ const Login = () => {
 
       if (data?.token) {
         localStorage.setItem("token", data.token);
-        console.log('Context of google stored user', data)
         setUser(data);
         setError(null);
         navigate("/dashboard");
+        toast.success("user login successfully")
       } else {
         setError(data.message || 'Something went wrong');
+        toast.error("user not login")
+
       }
+
     } catch (err) {
       console.error(err);
       setError('Error with the Google login API');
@@ -44,6 +49,8 @@ const Login = () => {
 
   const handleLoginError = (error) => {
     setError('Failed to login with Google');
+    toast.error("user not login")
+
   };
 
 
@@ -67,12 +74,15 @@ const Login = () => {
       if (res.status === 200) {
 
         localStorage.setItem("token", res.data.token);
-        console.log('Context of normal login user', res.data)
         setUser(res.data)
         navigate("/dashboard");
+        toast.success("User login successfully")
+
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Try again.");
+      toast.error("Incorrect Email and Password")
+
     }
   };
 
@@ -122,9 +132,9 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-3 text-gray-500"
+                className="absolute right-3 top-5 text-gray-500"
               >
-                {showPassword ? '🙈' : '👁️'}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
             <button
@@ -151,6 +161,7 @@ const Login = () => {
           <div className="space-y-2">
             <GoogleLogin
               onSuccess={handleLoginSuccess}
+
               onError={handleLoginError}
             />
             <button className="w-full flex items-center justify-center border rounded-lg py-2 hover:bg-gray-100">

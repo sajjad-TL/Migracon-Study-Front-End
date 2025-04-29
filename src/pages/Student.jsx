@@ -20,8 +20,6 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-
-
 export default function StudentDashboard() {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -76,7 +74,6 @@ export default function StudentDashboard() {
       const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
       const data = await res.json();
 
-      console.log("Raw student data:", data);
       const normalized = (data?.students || []).map(s => ({
         _id: s._id,
         name: `${s.firstName} ${s.lastName}`,

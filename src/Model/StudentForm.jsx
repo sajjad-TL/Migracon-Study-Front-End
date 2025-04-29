@@ -30,7 +30,6 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
   const [formData, setFormData] = useState(initialFormState);
 
   useEffect(() => {
-    console.log("User in student form: ", user);
 
     if (!isOpen) {
       const timeout = setTimeout(() => {

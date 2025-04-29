@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { TfiEmail } from "react-icons/tfi";
 import { MdLocalPhone } from "react-icons/md";
+import { toast } from "react-toastify";
 
 export default function AgentDashboard() {
   const [activeTab, setActiveTab] = useState("Summer 2025");
@@ -74,7 +75,11 @@ export default function AgentDashboard() {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "/login";
+    toast.success("User logged out successfully!");
+
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
   };
 
   const ActionButton = ({ label, icon: Icon, isActive, onClick }) => (
@@ -239,16 +244,7 @@ export default function AgentDashboard() {
     ["Oct", "Nov", "Dec"],
   ];
 
-  const semesters = [
-    "Summer 2025",
-    "Fall 2025",
-    "Winter 2026",
-    "Spring 2026",
-    "Summer 2026",
-    "Fall 2026",
-    "Winter 2027",
-    "Spring 2027",
-  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}

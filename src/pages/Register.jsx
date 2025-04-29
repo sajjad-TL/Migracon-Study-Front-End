@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import bgImage from '../assets/Auth-banner.png';
+import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'react-toastify';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -80,9 +82,11 @@ const Register = () => {
 
       if (res.status === 201) {
         navigate('/login');
+        toast.success("User Register Successfully")
       }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed. Please try again.');
+      toast.error("Registration failed. Please try again.")
     }
   };
 
@@ -150,8 +154,8 @@ const Register = () => {
                 type={showPassword ? 'text' : 'password'}
                 className="p-3 border rounded-lg w-full"
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-gray-500">
-                {showPassword ? '🙈' : '👁️'}
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-5 text-gray-500">
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>
