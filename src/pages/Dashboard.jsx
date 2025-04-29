@@ -300,9 +300,11 @@ export default function AgentDashboard() {
                         Profile
                       </li>
                     </Link>
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                    <Link to="/UserSetting">
+                    <li  className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
                       Settings
                     </li>
+                    </Link>
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
                       onClick={handleLogout}

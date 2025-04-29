@@ -15,7 +15,7 @@ import EditProfileModal from '../Model/EditProfileModal'
 import MyTasks from '../pages/MyTasks';
 import ProgramSchool from '../pages/ProgramSchool';
 import Notification from '../pages/Notifications';
-import EditStudent from '../Model/EditStudent';
+import UserSetting from '../pages/UserSettings'
 
 const AppRoutes = () => {
   return (
@@ -47,7 +47,7 @@ const AppRoutes = () => {
           <Route path="mytasks" element={<MyTasks />} />
           <Route path="programs" element={<ProgramSchool />} />
           <Route path="notifications" element={<Notification />} />
-          <Route path="students/add" element={<EditStudent />} />
+          <Route path="UserSetting" element={<UserSetting />} />
           {/* Add more nested routes here if needed */}
         </Route>
       </Routes>

@@ -68,7 +68,9 @@ const TasksNavbar = ({ user }) => {
                                     <Link to="/ProfileDetail">
                                         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
                                     </Link>
+                                    <Link to="UserSetting">
                                     <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                                    </Link>
                                     <li className="border-t"></li>
                                     <li
                                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
@@ -121,8 +123,8 @@ const TasksNavbar = ({ user }) => {
                             </Link>
                         </li>
                         <li>
-                            <Link to="/settings" className="block py-2 px-4 rounded hover:bg-gray-100">
-                                Settings
+                            <Link to="/UserSetting" className="block py-2 px-4 rounded hover:bg-gray-100">
+                            Settings
                             </Link>
                         </li>
                     </ul>
