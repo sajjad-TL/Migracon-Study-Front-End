@@ -94,9 +94,9 @@ export default function Notification() {
 
       <div className="bg-gray-100 min-h-screen flex justify-center items-center p-4">
 
-        <div className="bg-white rounded-lg shadow-md w-full max-w-2xl">
+        <div className="bg-white rounded-lg shadow-md w-full max-w-10xl">
           {notifications.map((notification) => (
-            <div key={notification.id} className="border-b border-gray-200 p-4 relative">
+            <div key={notification.id} className="border-b border-gray-200 p- relative mb-3">
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center mb-1">
