@@ -16,6 +16,7 @@ import MyTasks from '../pages/MyTasks';
 import ProgramSchool from '../pages/ProgramSchool';
 import Notification from '../pages/Notifications';
 import UserSetting from '../pages/UserSettings'
+import Payments from '../pages/Payments';
 
 const AppRoutes = () => {
   return (
@@ -48,6 +49,7 @@ const AppRoutes = () => {
           <Route path="programs" element={<ProgramSchool />} />
           <Route path="notifications" element={<Notification />} />
           <Route path="UserSetting" element={<UserSetting />} />
+          <Route path="payments" element={<Payments />} />
           {/* Add more nested routes here if needed */}
         </Route>
       </Routes>

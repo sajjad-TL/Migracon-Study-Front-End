@@ -119,12 +119,15 @@ const ProfileDetail = () => {
             
           >
             {/* Breadcrumb */}
-            <div className="flex items-center flex-wrap gap-1 text-sm sm:text-base text-gray-500">
+            <div className="flex flex-row items-center flex-wrap gap-2 text-sm sm:text-base text-gray-500">
               <Link to="/dashboard" className="text-gray-500">
+                <div className="flex flex-row gap-1 items-center">
                 <FaArrowLeft />
+                <span>Home</span>
+                </div>
               </Link>
-              <span>Home</span>
-              <span>/</span>
+
+              <span> / </span>
               <span className="text-gray-900 font-semibold">Dashboard</span>
             </div>
 
