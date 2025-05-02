@@ -116,14 +116,14 @@ const ProfileDetail = () => {
         <header className="bg-white shadow-sm">
           <div
             className="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4 sm:gap-0"
-            
+
           >
             {/* Breadcrumb */}
             <div className="flex flex-row items-center flex-wrap gap-2 text-sm sm:text-base text-gray-500">
               <Link to="/dashboard" className="text-gray-500">
                 <div className="flex flex-row gap-1 items-center">
-                <FaArrowLeft />
-                <span>Home</span>
+                  <FaArrowLeft />
+                  <span>Home</span>
                 </div>
               </Link>
 
@@ -147,7 +147,7 @@ const ProfileDetail = () => {
                 <div className="absolute right-0 mt-2 w-40 sm:w-48 bg-white rounded-lg shadow-lg z-50">
                   <ul className="py-2 text-sm text-gray-700">
                     <Link to="/UserSetting">
-                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
                     </Link>
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"

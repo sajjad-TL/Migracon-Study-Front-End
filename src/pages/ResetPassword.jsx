@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { resetPassword } from '../api/authApi';
 import { useNavigate } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react'; // Lucide-react icons ka use
+import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
 
 export default function ResetPassword() {
