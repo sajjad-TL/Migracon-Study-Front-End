@@ -116,21 +116,19 @@ export default function PaymentsPage() {
       <div className="px-4">
         <div className="flex border-b">
           <button
-            className={`py-4 px-4 ${
-              activeTab === "Purchases"
+            className={`py-4 px-4 ${activeTab === "Purchases"
                 ? "text-blue-600 border-b-2 border-blue-600 font-medium"
                 : "text-gray-500"
-            }`}
+              }`}
             onClick={() => setActiveTab("Purchases")}
           >
             Purchases
           </button>
           <button
-            className={`py-4 px-4 ${
-              activeTab === "ApplyCredits"
+            className={`py-4 px-4 ${activeTab === "ApplyCredits"
                 ? "text-blue-600 border-b-2 border-blue-600 font-medium"
                 : "text-gray-500"
-            }`}
+              }`}
             onClick={() => setActiveTab("ApplyCredits")}
           >
             ApplyCredits

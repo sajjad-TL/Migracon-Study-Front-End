@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import SettingsNavbar from "../layouts/SettingsNavbar";
 import { UserContext } from "../context/userContext";
-import EditProfileModal from "../Model/EditProfileModal"; // make sure this path is correct
+import EditProfileModal from "../Model/EditProfileModal";
 import axios from "axios";
 
 const UserSettings = () => {

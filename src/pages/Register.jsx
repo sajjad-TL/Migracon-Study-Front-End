@@ -155,7 +155,7 @@ const Register = () => {
                 className="p-3 border rounded-lg w-full"
               />
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-5 text-gray-500">
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>
