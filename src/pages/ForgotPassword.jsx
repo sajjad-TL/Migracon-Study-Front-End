@@ -25,10 +25,6 @@ export default function ForgotPassword() {
   };
 
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 379cf065fa7324f10a84ec0a50cefdcdb47e384b
 
   return (
     <div className="flex h-screen">

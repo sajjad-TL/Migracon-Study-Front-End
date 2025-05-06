@@ -91,33 +91,33 @@ const Register = () => {
       toast.error("Registration failed. Please try again.")
     }
   };
-const handleClick = ()=>{
-navigate('/login')
-}
+  const handleClick = () => {
+    navigate('/login')
+  }
 
-const password = form.password || '';
-const { firstName, lastName } = form;
+  const password = form.password || '';
+  const { firstName, lastName } = form;
 
-const checks = {
-  length: password.length >= 12,
-  lower: /[a-z]/.test(password),
-  upper: /[A-Z]/.test(password),
-  number: /\d/.test(password),
-  symbol: /[^A-Za-z0-9]/.test(password),
-  noFirstName: !firstName || !password.toLowerCase().includes(firstName.toLowerCase()),
-  noLastName: !lastName || !password.toLowerCase().includes(lastName.toLowerCase())
-};
+  const checks = {
+    length: password.length >= 12,
+    lower: /[a-z]/.test(password),
+    upper: /[A-Z]/.test(password),
+    number: /\d/.test(password),
+    symbol: /[^A-Za-z0-9]/.test(password),
+    noFirstName: !firstName || !password.toLowerCase().includes(firstName.toLowerCase()),
+    noLastName: !lastName || !password.toLowerCase().includes(lastName.toLowerCase())
+  };
 
-const renderCheck = (condition, text) => (
-  <div className="flex items-center gap-2 text-sm text-gray-700">
-    {condition ? (
-      <CheckCircle className="text-green-600" size={16} />
-    ) : (
-      <Circle className="text-gray-400" size={16} />
-    )}
-    {text}
-  </div>
-);
+  const renderCheck = (condition, text) => (
+    <div className="flex items-center gap-2 text-sm text-gray-700">
+      {condition ? (
+        <CheckCircle className="text-green-600" size={16} />
+      ) : (
+        <Circle className="text-gray-400" size={16} />
+      )}
+      {text}
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${bgImage})` }}>
@@ -173,66 +173,49 @@ const renderCheck = (condition, text) => (
             <input name="confirmEmail" value={form.confirmEmail} onChange={handleChange} type="email" className="p-3 border rounded-lg w-full" />
           </div>
           <div className="flex flex-col">
-<<<<<<< HEAD
-  <label className="mb-1 text-sm font-medium text-gray-700">
-    Password <span className="text-red-500">*</span>
-  </label>
-=======
             <label className="mb-1 text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
             <div className="relative">
-              <input
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                type={showPassword ? 'text' : 'password'}
-                className="p-3 border rounded-lg w-full"
-              />
+
               <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-5 text-gray-500">
                 {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>
->>>>>>> 379cf065fa7324f10a84ec0a50cefdcdb47e384b
+          <div className="relative">
+            <input
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              type={showPassword ? 'text' : 'password'}
+              className="p-3 border rounded-lg w-full"
+            />
 
-  <div className="relative">
-    <input
-      name="password"
-      value={form.password}
-      onChange={handleChange}
-      type={showPassword ? 'text' : 'password'}
-      className="p-3 border rounded-lg w-full"
-    />
-    <button
-      type="button"
-      onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-3 top-5 text-gray-500"
-    >
-      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-    </button>
-  </div>
-
-  <div className="grid grid-cols-2 gap-2 mt-3">
-    {renderCheck(checks.length, 'At least 12 characters')}
-    {renderCheck(checks.lower, 'A lowercase letter')}
-    {renderCheck(checks.upper, 'An uppercase letter')}
-    {renderCheck(checks.number, 'A number')}
-    {renderCheck(checks.symbol, 'A symbol')}
-  
-  </div>
-</div>
-
-          <div className="text-sm text-blue-600 mt-4 space-x-4">
-            <a href="#" className="underline">Terms and Conditions</a>
-            <a href="#" className="underline">Privacy Policy</a>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-5 text-gray-500"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
+          <div className="grid grid-cols-2 gap-2 mt-3">
+            {renderCheck(checks.length, 'At least 12 characters')}
+            {renderCheck(checks.lower, 'A lowercase letter')}
+            {renderCheck(checks.upper, 'An uppercase letter')}
+            {renderCheck(checks.number, 'A number')}
+            {renderCheck(checks.symbol, 'A symbol')}
+            </div>
 
-          <div className="flex items-start gap-2 mt-4 text-sm">
-            <input name="consentAccepted" checked={form.consentAccepted} onChange={handleChange} type="checkbox" className="mt-1" />
-            <p className="text-gray-700">
-              I have reviewed and consented to the ApplyBoard Terms and Conditions and Privacy Policy. The foregoing information/application/document(s) are true and complete.
-            </p>
-          </div>
-
+            <div className="text-sm text-blue-600 mt-4 space-x-4">
+              <a href="#" className="underline">Terms and Conditions</a>
+              <a href="#" className="underline">Privacy Policy</a>
+            </div>
+            <div className="flex items-start gap-2 mt-4 text-sm">
+              <input name="consentAccepted" checked={form.consentAccepted} onChange={handleChange} type="checkbox" className="mt-1" />
+              <p className="text-gray-700">
+                I have reviewed and consented to the ApplyBoard Terms and Conditions and Privacy Policy. The foregoing information/application/document(s) are true and complete.
+              </p>
+            </div>
           <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 mt-4">
             Submit
           </button>
