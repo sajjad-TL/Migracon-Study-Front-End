@@ -173,9 +173,26 @@ const renderCheck = (condition, text) => (
             <input name="confirmEmail" value={form.confirmEmail} onChange={handleChange} type="email" className="p-3 border rounded-lg w-full" />
           </div>
           <div className="flex flex-col">
+<<<<<<< HEAD
   <label className="mb-1 text-sm font-medium text-gray-700">
     Password <span className="text-red-500">*</span>
   </label>
+=======
+            <label className="mb-1 text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
+            <div className="relative">
+              <input
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                type={showPassword ? 'text' : 'password'}
+                className="p-3 border rounded-lg w-full"
+              />
+              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-5 text-gray-500">
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
+          </div>
+>>>>>>> 379cf065fa7324f10a84ec0a50cefdcdb47e384b
 
   <div className="relative">
     <input

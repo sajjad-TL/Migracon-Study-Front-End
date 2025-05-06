@@ -1,122 +1,120 @@
 import { useContext } from 'react';
-import { X, Clock } from 'lucide-react';
+import { X, Clock, UserPlus, MessageSquare, Users } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { format } from 'timeago.js';
 import NotificationsNavbar from '../layouts/NotificationsNavbar';
 import { UserContext } from '../context/userContext';
 
 export default function Notification() {
-
   const { user } = useContext(UserContext);
 
   const notifications = [
     {
       id: 1,
       type: 'joined',
-      title: 'New Registration: Finibus Bonorum et Malorum',
-      description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
+      title: 'New user registration',
+      description: 'Alfen Deu has just joined your workspace.',
       user: 'Alfen Deu',
-      time: '24 Nov 2018 at 9:30 AM'
+      time: '2025-05-04T13:30:00Z'
     },
     {
       id: 2,
       type: 'message',
-      title: 'Darren Smith sent new message',
-      description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
-      user: 'Darren',
-      time: '24 Nov 2018 at 9:30 AM'
+      title: 'New message from Darren',
+      description: 'Hey, are we still on for the project deadline?',
+      user: 'Darren Smith',
+      time: '2025-05-04T14:30:00Z'
     },
     {
       id: 3,
       type: 'comment',
-      title: 'Arin Gansihram Commented on post',
-      description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
+      title: 'New comment on your post',
+      description: 'Arin commented: “This is super helpful, thanks!”',
       user: 'Arin Gansihram',
-      time: '24 Nov 2018 at 9:30 AM'
+      time: '2025-05-04T15:00:00Z'
     },
     {
       id: 4,
       type: 'connect',
-      title: 'Jullet Den Connect Alfen Depk',
-      description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
+      title: 'New connection',
+      description: 'Jullet Den connected with you.',
       user: 'Jullet Den',
-      time: '24 Nov 2018 at 9:30 AM'
-    },
-    {
-      id: 5,
-      type: 'connect',
-      title: 'Jullet Den Connect Alfen Depk',
-      description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
-      user: 'Jullet Den',
-      time: '24 Nov 2018 at 9:30 AM'
-    },
-    {
-      id: 6,
-      type: 'message',
-      title: 'Darren Smith sent new message',
-      description: 'Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium',
-      user: 'Jullet Den',
-      time: '24 Nov 2018 at 9:30 AM'
+      time: '2025-05-04T16:00:00Z'
     }
   ];
 
-  const getBadgeColor = (type) => {
+  const getGradient = (type) => {
     switch (type) {
-      case 'joined':
-        return 'bg-green-500';
-      case 'message':
-        return 'bg-orange-500';
-      case 'comment':
-        return 'bg-purple-600';
-      case 'connect':
-        return 'bg-blue-500';
-      default:
-        return 'bg-gray-500';
+      case 'joined': return 'from-green-400 to-green-600';
+      case 'message': return 'from-orange-400 to-orange-600';
+      case 'comment': return 'from-purple-500 to-purple-700';
+      case 'connect': return 'from-blue-500 to-blue-700';
+      default: return 'from-gray-400 to-gray-600';
     }
   };
 
-  const getNotificationLabel = (type) => {
+  const getIcon = (type) => {
     switch (type) {
-      case 'joined':
-        return 'Joined New User';
-      case 'message':
-        return 'Message';
-      case 'comment':
-        return 'Comment';
-      case 'connect':
-        return 'Connect';
-      default:
-        return 'Notification';
+      case 'joined': return <UserPlus className="text-white" size={16} />;
+      case 'message': return <MessageSquare className="text-white" size={16} />;
+      case 'comment': return <MessageSquare className="text-white" size={16} />;
+      case 'connect': return <Users className="text-white" size={16} />;
+      default: return <Users className="text-white" size={16} />;
     }
   };
 
   return (
     <>
       <NotificationsNavbar user={user} />
+      <div className="bg-gradient-to-br from-gray-100 to-white min-h-screen p-6 flex justify-center">
+        <div className="w-full max-w-5xl grid gap-4 sm:grid-cols-2">
+          {notifications.map((notif, index) => (
+            <motion.div
+              key={notif.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="relative bg-white/60 backdrop-blur-lg border border-gray-200 rounded-md p-3 hover:shadow-xl transition-all duration-300 group min-h-[120px] overflow-hidden"
+            >
+              {/* Dismiss Button */}
+              <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition">
+                <X size={14} />
+              </button>
 
-      <div className="bg-gray-100 min-h-screen flex justify-center items-center p-4">
-
-        <div className="bg-white rounded-lg shadow-md w-full max-w-10xl">
-          {notifications.map((notification) => (
-            <div key={notification.id} className="border-b border-gray-200 p- relative mb-3">
-              <div className="flex justify-between items-start p-12">
-                <div className="flex-1">
-                  <div className="flex items-center mb-1">
-                    <span className={`text-xs text-white px-2 py-1 rounded ${getBadgeColor(notification.type)}`}>
-                      {getNotificationLabel(notification.type)}
-                    </span>
+              <div className="flex items-start space-x-3">
+                {/* Icon with Pulse */}
+                <div className="relative">
+                  <div className={`bg-gradient-to-br ${getGradient(notif.type)} p-2 rounded-full`}>
+                    {getIcon(notif.type)}
                   </div>
-                  <h3 className="font-medium text-gray-800">{notification.title}</h3>
-                  <p className="text-sm text-gray-600 mt-1">{notification.description}</p>
-                  <p className="text-sm text-red-600 mt-2">{notification.user}</p>
+                  <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-400 border-2 border-white rounded-full animate-ping"></span>
                 </div>
-                <div className="flex items-center text-gray-400">
-                  <Clock className="h-4 w-4 mr-1" />
-                  <span className="text-xs">{notification.time}</span>
+
+                {/* Text Content */}
+                <div className="flex-1 overflow-hidden">
+                  <h4 className="text-sm font-semibold text-gray-800 leading-tight truncate">
+                    {notif.title}
+                  </h4>
+                  <p className="text-xs text-gray-600 line-clamp-1">
+                    {notif.description}
+                  </p>
+
+                  <div className="flex justify-between items-center mt-1 text-xs text-gray-500">
+                    <span className="font-medium text-gray-700 truncate">{notif.user}</span>
+                    <div className="flex items-center space-x-1">
+                      <Clock size={12} />
+                      <span className="text-[10px]">{format(notif.time)}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <button className="absolute top-4 left-5 bg-gray-200 rounded-full p-1">
-                <X className="h-4 w-4 text-gray-500" />
-              </button>
-            </div>
+
+              {/* Hover Action Row */}
+              <div className="absolute bottom-1 right-4 opacity-0 group-hover:opacity-100 transition duration-300 text-[11px] text-blue-500 cursor-pointer flex gap-3">
+                <span className="hover:underline">Mark as read</span>
+                <span className="hover:underline">Reply</span>
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>

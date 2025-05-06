@@ -963,7 +963,7 @@ export default function AgentDashboard() {
             <h3 className="font-semibold text-2xl mb-4">Popular links</h3>
             <div className="space-y-3">
               <a
-                href="http://wa.me/923016108979" target="_blank"
+                href="https://web.whatsapp.com/" target="_blank"
                 className="flex items-center gap-3 text-gray-700 hover:text-blue-600"
               >
                 <MdOutlineWhatsapp className="text-green-500 text-2xl" />

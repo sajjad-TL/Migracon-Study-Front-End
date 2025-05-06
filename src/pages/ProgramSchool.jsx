@@ -146,9 +146,8 @@ export default function ProgramSchool() {
                 <span className="text-sm mr-2">Compare</span>
                 <div className="w-10 h-5 bg-gray-200 rounded-full relative">
                   <div
-                    className={`w-5 h-5 rounded-full absolute top-0 ${
-                      compareMode ? "bg-blue-600 right-0" : "bg-white left-0"
-                    } shadow`}
+                    className={`w-5 h-5 rounded-full absolute top-0 ${compareMode ? "bg-blue-600 right-0" : "bg-white left-0"
+                      } shadow`}
                     onClick={() => setCompareMode(!compareMode)}
                   ></div>
                 </div>
@@ -223,11 +222,10 @@ export default function ProgramSchool() {
                   </p>
                   <div className="flex items-center">
                     <span
-                      className={`font-medium text-sm ${
-                        program.successRate === "Very High"
+                      className={`font-medium text-sm ${program.successRate === "Very High"
                           ? "text-green-600"
                           : "text-yellow-600"
-                      }`}
+                        }`}
                     >
                       {program.successRate}
                     </span>
