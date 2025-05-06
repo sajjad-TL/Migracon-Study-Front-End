@@ -67,57 +67,54 @@ export default function Notification() {
     <>
       <NotificationsNavbar user={user} />
       <div className="bg-gradient-to-br from-gray-100 to-white min-h-screen p-6 flex justify-center">
-        <div className="w-full max-w-5xl grid gap-4 sm:grid-cols-2">
-          {notifications.map((notif, index) => (
-            <motion.div
-              key={notif.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="relative bg-white/60 backdrop-blur-lg border border-gray-200 rounded-md p-3 hover:shadow-xl transition-all duration-300 group min-h-[120px] overflow-hidden"
-            >
-              {/* Dismiss Button */}
-              <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition">
-                <X size={14} />
-              </button>
+  <div className="w-full max-w-5xl grid gap-4 sm:grid-cols-2 items-stretch">
+    {notifications.map((notif, index) => (
+      <motion.div
+        key={notif.id}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: index * 0.1 }}
+        className="relative bg-white/60 backdrop-blur-lg border border-gray-200 rounded-md p-3 hover:shadow-xl transition-all duration-300 group min-h-[150px] h-[35vh] overflow-hidden flex flex-col"
+      >
+        {/* Dismiss Button */}
+        <button className="absolute top-2 right-2 text-gray-400 hover:text-red-500 transition">
+          <X size={14} />
+        </button>
 
-              <div className="flex items-start space-x-3">
-                {/* Icon with Pulse */}
-                <div className="relative">
-                  <div className={`bg-gradient-to-br ${getGradient(notif.type)} p-2 rounded-full`}>
-                    {getIcon(notif.type)}
-                  </div>
-                  <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-400 border-2 border-white rounded-full animate-ping"></span>
-                </div>
+        <div className="flex items-start space-x-3">
+          <div className="relative">
+            <div className={`bg-gradient-to-br ${getGradient(notif.type)} p-2 rounded-full`}>
+              {getIcon(notif.type)}
+            </div>
+            <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-400 border-2 border-white rounded-full animate-ping"></span>
+          </div>
 
-                {/* Text Content */}
-                <div className="flex-1 overflow-hidden">
-                  <h4 className="text-sm font-semibold text-gray-800 leading-tight truncate">
-                    {notif.title}
-                  </h4>
-                  <p className="text-xs text-gray-600 line-clamp-1">
-                    {notif.description}
-                  </p>
+          <div className="flex-1 overflow-hidden">
+            <h4 className="text-sm font-semibold text-gray-800 leading-tight truncate">
+              {notif.title}
+            </h4>
+            <p className="text-xs text-gray-600 line-clamp-1">{notif.description}</p>
 
-                  <div className="flex justify-between items-center mt-1 text-xs text-gray-500">
-                    <span className="font-medium text-gray-700 truncate">{notif.user}</span>
-                    <div className="flex items-center space-x-1">
-                      <Clock size={12} />
-                      <span className="text-[10px]">{format(notif.time)}</span>
-                    </div>
-                  </div>
-                </div>
+            <div className="flex justify-between items-center mt-1 text-xs text-gray-500">
+              <span className="font-medium text-gray-700 truncate">{notif.user}</span>
+              <div className="flex items-center space-x-1">
+                <Clock size={12} />
+                <span className="text-[10px]">{format(notif.time)}</span>
               </div>
-
-              {/* Hover Action Row */}
-              <div className="absolute bottom-1 right-4 opacity-0 group-hover:opacity-100 transition duration-300 text-[11px] text-blue-500 cursor-pointer flex gap-3">
-                <span className="hover:underline">Mark as read</span>
-                <span className="hover:underline">Reply</span>
-              </div>
-            </motion.div>
-          ))}
+            </div>
+          </div>
         </div>
-      </div>
+
+        <div className="absolute bottom-6 right-4 group-hover:opacity-100 transition duration-300 text-[11px] text-blue-500 cursor-pointer flex gap-3">
+          <span className="hover:underline">Mark as read</span>
+          <span className="hover:underline">Reply</span>
+        </div>
+      </motion.div>
+    ))}
+  </div>
+</div>
+
+
     </>
   );
 }
