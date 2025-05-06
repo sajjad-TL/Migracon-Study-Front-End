@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
 import { requestResetCode } from '../api/authApi';
 import { toast } from "react-toastify"
 export default function ForgotPassword() {
@@ -25,19 +25,31 @@ export default function ForgotPassword() {
   };
 
 
-  
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Forgot Password
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              Email Address
-            </label>
+    <div className="flex h-screen">
+      {/* Left blue section with faded circles */}
+      <div className="hidden md:block w-5/12 bg-blue-700 relative overflow-hidden">
+        <div className="absolute w-full h-full">
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 -left-20"></div>
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-40 -left-10"></div>
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 left-20"></div>
+        </div>
+      </div>
+      
+      {/* Right content section */}
+      <div className="w-full md:w-7/12 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-gray-800">Forgot Password</h1>
+            <p className="text-gray-600 mt-2 text-sm">
+              Enter the email address you used when joined and we'll 
+              send reset instructions to reset your password.
+            </p>
+          </div>
+          
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
             <input
               id="email"
               type="email"
@@ -47,8 +59,10 @@ export default function ForgotPassword() {
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-          </div>
-          <button
+           
+            </div>
+            
+            <button
             type="submit"
             disabled={isSubmitting}
             className={`w-full py-2 rounded text-white transition duration-200 ${isSubmitting
@@ -58,13 +72,19 @@ export default function ForgotPassword() {
           >
             {isSubmitting ? 'Sending...' : 'Send Verification Code'}
           </button>
-        </form>
-        {error && (
+          </form>
+            {error && (
           <p className="mt-4 text-center text-sm text-red-600">
             {error}
           </p>
         )}
+          <div className="text-center mt-6 text-sm">
+            <span className="text-gray-600">Back to log in page? </span>
+            <Link to="/login" className="text-blue-700 hover:underline font-medium">Back now</Link>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
+

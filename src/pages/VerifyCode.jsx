@@ -11,7 +11,6 @@ export default function VerifyCode() {
 
   const handleChange = (e) => {
     const value = e.target.value;
-    // Sirf digits allow + max 6 digits
     if (/^\d{0,6}$/.test(value)) {
       setCode(value);
     }
@@ -23,53 +22,79 @@ export default function VerifyCode() {
     try {
       await verifyResetCode(email, code);
       localStorage.setItem('resetCode', code);
+      localStorage.setItem('resetCodeVerified', 'true');
       navigate('/reset-password');
+      
       toast.success("Verified Code");
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid code');
-      toast.error("Invalid Code")
+      toast.error("Invalid Code");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          Verify Code
-        </h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="flex flex-col items-center">
-            <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-2">
-              Enter 6-Digit Code
-            </label>
-            <input
-              id="code"
-              type="text"
-              placeholder="______"
-              value={code}
-              onChange={handleChange}
-              required
-              maxLength={6}
-              className="w-48 text-center tracking-widest text-2xl font-mono px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-4 focus:ring-blue-300 transition"
-            />
+    <div className="flex h-screen">
+      {/* Left blue section with faded circles (same as ForgotPassword) */}
+      <div className="hidden md:block w-5/12 bg-blue-700 relative overflow-hidden">
+        <div className="absolute w-full h-full">
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 -left-20"></div>
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-40 -left-10"></div>
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 left-20"></div>
+        </div>
+      </div>
+
+      {/* Right content section */}
+      <div className="w-full md:w-7/12 flex items-center justify-center p-8 bg-gray-100">
+        <div className="w-full max-w-md bg-white shadow rounded-lg p-6">
+          <div className="text-center mb-8">
+            <h1 className="text-2xl font-semibold text-gray-800">Verify Code</h1>
+            <p className="text-gray-600 mt-2 text-sm">
+              Enter the 6-digit code sent to your email to verify your identity.
+            </p>
           </div>
-          <button
-            type="submit"
-            disabled={code.length !== 6}
-            className={`w-full py-3 rounded-xl font-semibold text-white transition duration-300 ${
-              code.length === 6
+
+          <form onSubmit={handleSubmit}>
+            <div className="mb-6 flex justify-center">
+              <input
+                id="code"
+                type="text"
+                placeholder="______"
+                value={code}
+                onChange={handleChange}
+                required
+                maxLength={6}
+                className="w-48 text-center tracking-widest text-2xl font-mono px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={code.length !== 6}
+              className={`w-full py-2 rounded text-white transition duration-200 ${code.length === 6
                 ? 'bg-blue-600 hover:bg-blue-700'
                 : 'bg-gray-400 cursor-not-allowed'
-            }`}
-          >
-            Verify
-          </button>
-        </form>
-        {error && (
-          <p className="mt-4 text-center text-sm text-red-600">
-            {error}
-          </p>
-        )}
+              }`}
+            >
+              Verify
+            </button>
+          </form>
+
+          {error && (
+            <p className="mt-4 text-center text-sm text-red-600">
+              {error}
+            </p>
+          )}
+
+          <div className="text-center mt-6 text-sm">
+            <span className="text-gray-600">Entered wrong email? </span>
+            <button
+              onClick={() => navigate('/forgot-password')}
+              className="text-blue-700 hover:underline font-medium"
+            >
+              Try again
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

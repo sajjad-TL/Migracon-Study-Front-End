@@ -17,6 +17,7 @@ import ProgramSchool from '../pages/ProgramSchool';
 import Notification from '../pages/Notifications';
 import UserSetting from '../pages/UserSettings'
 import Payments from '../pages/Payments';
+import ResetCodeProtectedRoute from '../components/ResetCodeProtectedRoute';
 
 const AppRoutes = () => {
   return (
@@ -27,9 +28,20 @@ const AppRoutes = () => {
         {/* Public Routes */}
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verify-code" element={<VerifyCode />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+        <Route path="/verify-code" element={<PublicRoute><VerifyCode /></PublicRoute>} />
+        <Route
+          path="/reset-password"
+          element={
+            <PublicRoute> 
+              <ResetCodeProtectedRoute>
+            <ResetPassword />
+          </ResetCodeProtectedRoute>
+          </PublicRoute>
+           
+          }
+        />
+
 
         {/* Protected Routes with Layout */}
         <Route

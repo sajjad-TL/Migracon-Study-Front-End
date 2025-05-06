@@ -97,7 +97,7 @@ export default function Notification() {
         <div className="bg-white rounded-lg shadow-md w-full max-w-10xl">
           {notifications.map((notification) => (
             <div key={notification.id} className="border-b border-gray-200 p- relative mb-3">
-              <div className="flex justify-between items-start">
+              <div className="flex justify-between items-start p-12">
                 <div className="flex-1">
                   <div className="flex items-center mb-1">
                     <span className={`text-xs text-white px-2 py-1 rounded ${getBadgeColor(notification.type)}`}>
@@ -113,7 +113,7 @@ export default function Notification() {
                   <span className="text-xs">{notification.time}</span>
                 </div>
               </div>
-              <button className="absolute top-4 left-0 bg-gray-200 rounded-full p-1">
+              <button className="absolute top-4 left-5 bg-gray-200 rounded-full p-1">
                 <X className="h-4 w-4 text-gray-500" />
               </button>
             </div>

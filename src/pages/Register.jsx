@@ -4,6 +4,8 @@ import axios from 'axios';
 import bgImage from '../assets/Auth-banner.png';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
+import { CheckCircle, Circle } from 'lucide-react';
+
 
 const Register = () => {
   const navigate = useNavigate();
@@ -89,13 +91,40 @@ const Register = () => {
       toast.error("Registration failed. Please try again.")
     }
   };
+const handleClick = ()=>{
+navigate('/login')
+}
+
+const password = form.password || '';
+const { firstName, lastName } = form;
+
+const checks = {
+  length: password.length >= 12,
+  lower: /[a-z]/.test(password),
+  upper: /[A-Z]/.test(password),
+  number: /\d/.test(password),
+  symbol: /[^A-Za-z0-9]/.test(password),
+  noFirstName: !firstName || !password.toLowerCase().includes(firstName.toLowerCase()),
+  noLastName: !lastName || !password.toLowerCase().includes(lastName.toLowerCase())
+};
+
+const renderCheck = (condition, text) => (
+  <div className="flex items-center gap-2 text-sm text-gray-700">
+    {condition ? (
+      <CheckCircle className="text-green-600" size={16} />
+    ) : (
+      <Circle className="text-gray-400" size={16} />
+    )}
+    {text}
+  </div>
+);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-cover bg-center bg-no-repeat" style={{ backgroundImage: `url(${bgImage})` }}>
       <div className="bg-white rounded-xl shadow-lg w-full max-w-[37rem] p-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-semibold">Register as a Recruitment Partner</h2>
-          <button className="text-gray-400 hover:text-black">&times;</button>
+          <button onClick={handleClick} className="text-gray-400 hover:text-black">&times;</button>
         </div>
 
         <div className="bg-blue-100 text-blue-800 p-3 rounded-md mb-6 text-sm">
@@ -143,36 +172,37 @@ const Register = () => {
             <label className="mb-1 text-sm font-medium text-gray-700">Confirm Email <span className="text-red-500">*</span></label>
             <input name="confirmEmail" value={form.confirmEmail} onChange={handleChange} type="email" className="p-3 border rounded-lg w-full" />
           </div>
-
           <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium text-gray-700">Password <span className="text-red-500">*</span></label>
-            <div className="relative">
-              <input
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                type={showPassword ? 'text' : 'password'}
-                className="p-3 border rounded-lg w-full"
-              />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-5 text-gray-500">
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-          </div>
+  <label className="mb-1 text-sm font-medium text-gray-700">
+    Password <span className="text-red-500">*</span>
+  </label>
 
-          <div className="text-sm text-gray-600 grid grid-cols-2 gap-2 mt-2">
-            <ul className="list-disc list-inside">
-              <li>At least 12 characters</li>
-              <li>A lowercase letter</li>
-              <li>An uppercase letter</li>
-              <li>A number</li>
-            </ul>
-            <ul className="list-disc list-inside">
-              <li>A symbol</li>
-              <li>Does not have your first name</li>
-              <li>Does not have your last name</li>
-            </ul>
-          </div>
+  <div className="relative">
+    <input
+      name="password"
+      value={form.password}
+      onChange={handleChange}
+      type={showPassword ? 'text' : 'password'}
+      className="p-3 border rounded-lg w-full"
+    />
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute right-3 top-5 text-gray-500"
+    >
+      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+    </button>
+  </div>
+
+  <div className="grid grid-cols-2 gap-2 mt-3">
+    {renderCheck(checks.length, 'At least 12 characters')}
+    {renderCheck(checks.lower, 'A lowercase letter')}
+    {renderCheck(checks.upper, 'An uppercase letter')}
+    {renderCheck(checks.number, 'A number')}
+    {renderCheck(checks.symbol, 'A symbol')}
+  
+  </div>
+</div>
 
           <div className="text-sm text-blue-600 mt-4 space-x-4">
             <a href="#" className="underline">Terms and Conditions</a>

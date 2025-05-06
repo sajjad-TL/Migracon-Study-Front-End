@@ -301,9 +301,9 @@ export default function AgentDashboard() {
                       </li>
                     </Link>
                     <Link to="/UserSetting">
-                    <li  className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                      Settings
-                    </li>
+                      <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
+                        Settings
+                      </li>
                     </Link>
                     <li
                       className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
@@ -331,72 +331,61 @@ export default function AgentDashboard() {
       </header>
 
       <div className="flex flex-col lg:flex-row ">
-        <main className="container mx-auto px-4 py-6">
+        <main className="container mx-auto px-4 py-4">
           <h1 className="text-3xl font-semibold text-gray-800 mb-6">
             Agent Dashboard
           </h1>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+            <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center gap-2">
                 <BsFillBagCheckFill className="text-blue-600 text-3xl" />
                 <div>
                   <div className="text-sm text-gray-500">Active Tasks</div>
                   <div className="text-xl font-semibold">38</div>
                 </div>
-
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center gap-2">
                 <div className="bg-green-400 rounded-full text-3xl">
-                  <div><TiTick className="text-white" />
-                  </div>
+                  <TiTick className="text-white" />
                 </div>
                 <div>
-                  <div className="text-sm text-gray-500">
-                    Approved Applications
-                  </div>
+                  <div className="text-sm text-gray-500">Approved Applications</div>
                   <div className="text-xl font-semibold">156</div>
                 </div>
-
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center gap-2">
-                <div className=" rounded">
-                  <IoDocumentText className="text-blue-600 text-3xl" />
-                </div>
+                <IoDocumentText className="text-blue-600 text-3xl" />
                 <div>
                   <div className="text-sm text-gray-500">Applications</div>
                   <div className="text-xl font-semibold">48</div>
                 </div>
-
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center gap-2">
                 <div className="bg-red-400 p-2 rounded-full">
                   <AiOutlineClose className="text-white" />
                 </div>
                 <div>
-
-                  <div className="text-sm text-gray-500">
-                    Rejected Applications
-                  </div>
+                  <div className="text-sm text-gray-500">Rejected Applications</div>
                   <div className="text-xl font-semibold">2</div>
                 </div>
-
               </div>
             </div>
           </div>
 
+
           {/* Two Column Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6">
             {/* Recent Applications */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex justify-between items-center mb-4">
@@ -955,7 +944,7 @@ export default function AgentDashboard() {
         </main>
 
         {/* Sidebar - Only visible on larger screens */}
-        <div className="w-full lg:w-[50%] px-5 pt-20">
+        <div className="w-full lg:w-[50%] px-6 pt-20">
           <div className="bg-white p-6 rounded-lg shadow-sm mb-6 border border-gray-100">
             <h3 className="font-semibold text-2xl mb-4">Your balance</h3>
             <div className="space-y-2 mb-4">

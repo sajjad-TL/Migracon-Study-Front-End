@@ -96,8 +96,15 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex">
-
+         <div className="hidden md:block w-5/12 bg-blue-700 relative overflow-hidden">
+        <div className="absolute w-full h-full">
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 -left-20"></div>
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-40 -left-10"></div>
+          <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 left-20"></div>
+        </div>
+      </div>
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8">
+
         <div className="w-full max-w-sm">
           <img
             src={logo}
@@ -197,7 +204,6 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="hidden md:block w-1/2 bg-cover bg-center " style={{ backgroundImage: `url(${img1})` }}></div>
     </div>
   );
 };
