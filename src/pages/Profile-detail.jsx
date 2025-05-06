@@ -26,6 +26,9 @@ const ProfileDetail = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef();
 
+  // const { user } = useContext(UserContext);
+    const agentId = user?.agentId;
+
   useEffect(() => {
     fetchAgentData();
 
@@ -108,6 +111,50 @@ const ProfileDetail = () => {
     { key: "business", label: "Business Information" },
     { key: "notifications", label: "Notification Preferences" },
   ];
+
+  const [selectedNotificationType, setSelectedNotificationType] = useState("Notes");
+  const [emailFrequency, setEmailFrequency] = useState("Immediate");
+  const [mobileNotifications, setMobileNotifications] = useState(false);
+
+  // Handle dropdown change for notification type
+  const handleNotificationTypeChange = (e) => {
+    setSelectedNotificationType(e.target.value);
+  };
+
+  // Handle dropdown change for email frequency
+  const handleEmailFrequencyChange = (e) => {
+    setEmailFrequency(e.target.value);
+  };
+
+  // Handle mobile notifications toggle
+  const handleMobileNotificationToggle = () => {
+    setMobileNotifications(!mobileNotifications);
+  };
+
+  // Handle form submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // ⚠️ Replace with dynamic userId (from auth, context, etc.)
+    const userId = agentId;
+
+    const preferences = {
+      userId,
+      notificationType: selectedNotificationType,
+      emailFrequency,
+      mobileNotifications,
+    };
+
+    try {
+      const response = await axios.post("http://localhost:5000/notification/notification-preferences", preferences);
+      console.log("Preferences saved:", response.data);
+      alert("Preferences saved successfully!");
+    } catch (error) {
+      console.error("Error saving preferences:", error.response?.data || error.message);
+      alert("Failed to save preferences. Please try again.");
+    }
+  };
+
 
   return (
     <div className="container-fluid mr-10">
@@ -366,88 +413,103 @@ const ProfileDetail = () => {
 
 
             {activeTab === "notifications" && (
-              <div className="px-4 sm:px-6 lg:px-8 py-6">
-                <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">
-                  Notification Preferences
-                </h1>
-
-                <p
-                  className="text-gray-600 mb-6 pb-2 border-b-2 border-gray-300"
-                  style={{ maxWidth: "800px" }}
-                >
-                  Manage your notifications (including alert types and frequency) to stay informed and meet every deadline.
-                </p>
-
-                {/* Notification Type */}
-                <div className="mb-6 max-w-sm">
-                  <label
-                    htmlFor="notification-type"
-                    className="block text-gray-700 font-medium mb-2"
-                  >
-                    Notification type <i className="fas fa-info-circle text-gray-400"></i>
-                  </label>
-                  <select
-                    id="notification-type"
-                    className="block w-full border border-gray-300 rounded-md p-2"
-                  >
-                    <option>Notes</option>
-                  </select>
-                  <p className="text-gray-600 mt-2">
-                    You will receive a notification when a new note has been added to an application.
-                  </p>
-                </div>
-
-                {/* Grid Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full lg:max-w-4xl">
-                  {/* Email Notifications */}
-                  <div className="bg-white p-6 rounded-lg shadow-md w-full">
-                    <h2 className="text-lg font-medium text-gray-800 mb-4">
-                      Email notifications
-                    </h2>
-                    <p className="text-gray-600 mb-4">
-                      Adjust how you would like to receive this type of notification via email.
-                    </p>
-                    <label
-                      htmlFor="frequency-options"
-                      className="block text-gray-700 font-medium mb-2"
-                    >
-                      Frequency options
-                    </label>
-                    <select
-                      id="frequency-options"
-                      className="block w-full border border-gray-300 rounded-md p-2 mb-4"
-                    >
-                      <option>Immediate</option>
-                      <option>Never</option>
-                      <option>Daily</option>
-                      <option>Weekly</option>
-                    </select>
-                  </div>
-
-                  {/* Mobile Notification Illustration */}
-                  <div className="bg-white p-6 rounded-lg shadow-md w-full flex flex-col items-center text-center">
-                    <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 w-full text-left">
-                      Mobile Push Notifications
-                    </h2>
-
-                    <img
-                      src={notification}
-                      alt="Mobile Notification"
-                      width={100}
-                      height={100}
-                      className="mb-4"
-                    />
-
-                    <p className="text-gray-600 mb-4">
-                      To receive notifications on your phone, open the ApplyBoard app. Don’t have it yet?
-                    </p>
-
-                    <button className="bg-blue-600 hover:bg-blue-700 transition-colors duration-200 text-white px-5  py-2 rounded-lg flex items-center">
-                      <i className="fas fa-download mr-2"></i> Download App
-                    </button>
-                  </div>
-                </div>
-              </div>
+         <div className="px-4 sm:px-6 lg:px-8 py-6">
+         <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">
+           Notification Preferences
+         </h1>
+         <p className="text-gray-600 mb-6 pb-2 border-b-2 border-gray-300" style={{ maxWidth: "800px" }}>
+           Manage your notifications (including alert types and frequency) to stay informed and meet every deadline.
+         </p>
+   
+         <form onSubmit={handleSubmit}>
+           {/* Notification Type */}
+           <div className="mb-6 max-w-sm">
+             <label htmlFor="notification-type" className="block text-gray-700 font-medium mb-2">
+               Notification type <i className="fas fa-info-circle text-gray-400"></i>
+             </label>
+             <select
+               id="notification-type"
+               className="block w-full border border-gray-300 rounded-md p-2"
+               value={selectedNotificationType}
+               onChange={handleNotificationTypeChange}
+             >
+               <option value="Notes">Notes</option>
+               <option value="Messages">Messages</option>
+               <option value="Reminders">Reminders</option>
+               <option value="Updates">Updates</option>
+             </select>
+             <p className="text-gray-600 mt-2">
+               You will receive a notification when a new note has been added to an application.
+             </p>
+           </div>
+   
+           {/* Email Notifications */}
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full lg:max-w-4xl">
+             {/* Email Notifications Section */}
+             <div className="bg-white p-6 rounded-lg shadow-md w-full">
+               <h2 className="text-lg font-medium text-gray-800 mb-4">Email notifications</h2>
+               <p className="text-gray-600 mb-4">
+                 Adjust how you would like to receive this type of notification via email.
+               </p>
+               <label htmlFor="frequency-options" className="block text-gray-700 font-medium mb-2">
+                 Frequency options
+               </label>
+               <select
+                 id="frequency-options"
+                 className="block w-full border border-gray-300 rounded-md p-2 mb-4"
+                 value={emailFrequency}
+                 onChange={handleEmailFrequencyChange}
+               >
+                 <option value="Immediate">Immediate</option>
+                 <option value="Never">Never</option>
+                 <option value="Daily">Daily</option>
+                 <option value="Weekly">Weekly</option>
+               </select>
+             </div>
+   
+             {/* Mobile Push Notifications Section */}
+             <div className="bg-white p-6 rounded-lg shadow-md w-full flex flex-col items-center text-center">
+               <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 w-full text-left">
+                 Mobile Push Notifications
+               </h2>
+   
+               <img
+                 src="https://via.placeholder.com/100" // Replace with actual image path
+                 alt="Mobile Notification"
+                 className="mb-4"
+               />
+   
+               <p className="text-gray-600 mb-4">
+                 To receive notifications on your phone, open the ApplyBoard app. Don’t have it yet?
+               </p>
+   
+               <button
+                 type="button"
+                 className="bg-blue-600 hover:bg-blue-700 transition-colors duration-200 text-white px-5 py-2 rounded-lg flex items-center"
+                 onClick={handleMobileNotificationToggle}
+               >
+                 {mobileNotifications ? (
+                   <i className="fas fa-check mr-2"></i>
+                 ) : (
+                   <i className="fas fa-times mr-2"></i>
+                 )}
+                 {mobileNotifications ? "Disable" : "Enable"} Mobile Notifications
+               </button>
+             </div>
+           </div>
+   
+           {/* Submit Button */}
+           <div className="flex justify-end mt-4">
+             <button
+               type="submit"
+               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+             >
+               Save Preferences
+             </button>
+           </div>
+         </form>
+       </div>
+      
 
             )}
           </div>
