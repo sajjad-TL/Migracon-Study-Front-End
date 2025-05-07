@@ -131,6 +131,25 @@ export default function AgentDashboard() {
     { name: "Jul", paid: 40, offers: 35, visas: 32, promos: 12 },
   ];
 
+
+  const [badgeCount, setBadgeCount] = useState(0);
+
+  useEffect(() => {
+    if (user?.agentId) {
+      axios
+        .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
+        .then((res) => {
+          setBadgeCount(res.data?.count || 0); // ✅ now setBadgeCount is defined
+        })
+        .catch((err) => {
+          console.error("Badge count fetch failed", err);
+          setBadgeCount(0);
+        });
+    }
+  }, [user]);
+
+
+
   const processingTimesData = [
     {
       name: "0-30 days",
@@ -274,15 +293,19 @@ export default function AgentDashboard() {
                 <Link to="/notifications">
                   <div className="relative cursor-pointer">
                     <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
-                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                      6
-                    </span>
+
+                    {badgeCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                        {badgeCount}
+                      </span>
+                    )}
                   </div>
                 </Link>
+
                 <img
                   src={
                     user.profilePicture
-                      ? `${user.profilePicture}?v${Date.now()}`
+                      ? `${user.profilePicture}?v=${Date.now()}`
                       : "https://randomuser.me/api/portraits/women/44.jpg"
                   }
                   className="w-10 h-10 rounded-full"
