@@ -18,7 +18,7 @@ const Login = () => {
 
   const handleLoginSuccess = async (response) => {
     try {
-      const res = await fetch('http://localhost:5000/api/auth/google-login', {
+      const res = await fetch('http://localhost:5000/api/other-auth/google-login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ const Login = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", form);
+      const res = await axios.post("http://localhost:5000/api/other-auth/login", form);
 
       if (res.status === 200) {
 

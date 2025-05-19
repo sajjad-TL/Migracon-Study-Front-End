@@ -41,7 +41,7 @@ export default function AgentDashboard() {
   const [activeAction, setActiveAction] = useState("Add New Student");
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
   const [studentFilter, setStudentFilter] = useState("Student");
-
+  const [showAll, setShowAll] = useState(false);
   const [mobileMenuOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState("2024");
   const [yearRevenue, setYearRevenue] = useState("2025");
@@ -71,7 +71,12 @@ export default function AgentDashboard() {
     { label: "Start Application", icon: FaFileAlt },
     { label: "View Reports", icon: FaChartBar },
   ];
-
+  const items = [
+    { label: "Paid Applications", value: 45 },
+    { label: "Final Offers", value: 38 },
+    { label: "Visas", value: 32 },
+    { label: "Promotions", value: 12 },
+  ];
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -81,14 +86,17 @@ export default function AgentDashboard() {
       navigate("/login");
     }, 1000);
   };
+  const maxVisible = 3;
 
+  const visibleItems = showAll ? items : items.slice(0, maxVisible);
+  const hiddenItems = items.length > maxVisible;
   const ActionButton = ({ label, icon: Icon, isActive, onClick }) => (
     <button
       onClick={onClick}
-      className={`flex flex-row gap-3 items-center justify-center space-x-2 text-black py-2 px-4 rounded-md hover:bg-blue-700>
+      className={`flex flex-row gap-3 items-center justify-center space-x-2 text-black py-2 px-4 rounded-md hover:bg-blue-700 text-nowrap>
       ${isActive
-          ? "bg-blue-600 text-white"
-          : "bg-white text-gray-800 border hover:bg-blue-600"
+          ? "bg-blue-600 text-white text-nowrap"
+          : "bg-white text-gray-800 border hover:bg-blue-600 text-nowrap"
         }
        hover:text-black `}
     >
@@ -256,14 +264,6 @@ export default function AgentDashboard() {
     { month: "Dec", revenue: 70000 },
   ];
 
-  const months = [
-    ["Jan", "Feb", "Mar"],
-    ["Apr", "May", "Jun"],
-    ["Jul", "Aug", "Sep"],
-    ["Oct", "Nov", "Dec"],
-  ];
-
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -353,17 +353,17 @@ export default function AgentDashboard() {
         )}
       </header>
 
-      <div className="flex flex-col lg:flex-row ">
+      <div className="flex flex-col xl:flex-row ">
         <main className="container mx-auto px-4 py-4">
           <h1 className="text-3xl font-semibold text-gray-800 mb-6">
             Agent Dashboard
           </h1>
 
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-            <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
-              <div className="flex items-center gap-2">
-                <BsFillBagCheckFill className="text-blue-600 text-3xl" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
+            <div className=" bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
+              <div className="pad flex items-center gap-2 ">
+                <BsFillBagCheckFill className="text-blue-600 text-3xl " />
                 <div>
                   <div className="text-sm text-gray-500">Active Tasks</div>
                   <div className="text-xl font-semibold">38</div>
@@ -384,9 +384,9 @@ export default function AgentDashboard() {
             </div>
 
             <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
-              <div className="flex items-center gap-2">
+              <div className="pad flex items-center gap-2">
                 <IoDocumentText className="text-blue-600 text-3xl" />
-                <div>
+                <div >
                   <div className="text-sm text-gray-500">Applications</div>
                   <div className="text-xl font-semibold">48</div>
                 </div>
@@ -418,14 +418,15 @@ export default function AgentDashboard() {
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center justify-between p-2 border-b border-gray-100">
-                  <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-full bg-gray-200">
+                <div className="flex items-center justify-between border-b border-gray-100">
+                  <div className="flex items-center justify-around space-x-3 ">
+                    <div className=" h-12 w-16 sm:h-10 sm:w-10  rounded-full bg-gray-200">
                       <img
                         src={img1}
                         alt="Student"
-                        className="rounded-full h-10 w-10"
+                        className="rounded-full  h-full w-full"
                       />
+
                     </div>
                     <div>
                       <div className="font-medium">Sarah Chen</div>
@@ -441,14 +442,15 @@ export default function AgentDashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-2 border-b border-gray-100">
-                  <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-full bg-gray-200">
+                <div className="flex items-center justify-between border-b border-gray-100 p-0 md:p-2">
+                  <div className="flex items-center space-x-3 ">
+                    <div className=" h-12 w-16 sm:h-10 sm:w-10  rounded-full bg-gray-200">
                       <img
                         src={img1}
                         alt="Student"
-                        className="rounded-full h-10 w-10"
+                        className="rounded-full  h-full w-full"
                       />
+
                     </div>
                     <div>
                       <div className="font-medium">Mohammed Al-Rashid</div>
@@ -458,20 +460,21 @@ export default function AgentDashboard() {
                     </div>
                   </div>
                   <div className="text-xs text-yellow-600 font-medium">
-                    <button className="px-2 py-1 rounded bg-yellow-50">
+                    <button className="px-2 py-1 rounded bg-yellow-50 ">
                       Pending Documents
                     </button>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-2">
+                <div className="flex items-center justify-between p-0 md:p-2">
                   <div className="flex items-center space-x-3">
-                    <div className="h-10 w-10 rounded-full bg-gray-200">
+                    <div className=" h-12 w-16 sm:h-10 sm:w-10  rounded-full bg-gray-200">
                       <img
                         src={img1}
                         alt="Student"
-                        className="rounded-full h-10 w-10"
+                        className="rounded-full  h-full w-full"
                       />
+
                     </div>
                     <div>
                       <div className="font-medium">Priya Patel</div>
@@ -565,7 +568,8 @@ export default function AgentDashboard() {
           {/* Quick Actions */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <h2 className="font-semibold text-2xl text-gray-800 mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+
+            <div className="flex overflow-x-auto space-x-3 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-4 scrollbar-hide">
               {actions.map(({ label, icon }) => (
                 <ActionButton
                   key={label}
@@ -578,25 +582,24 @@ export default function AgentDashboard() {
             </div>
           </div>
 
+
           {/* Task Management */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <h2 className="font-semibold text-2xl text-gray-800 mb-4">
               Task Management
             </h2>
-            <div className="flex flex-wrap overflow-x-auto mb-4">
+
+            <div className="flex overflow-x-auto scrollbar-hide mb-4 xl:w-[35rem]">
               {[
                 "Summer 2025",
                 "Fall 2025",
                 "Winter 2026",
                 "Spring 2026",
-                "Summer 2026",
-                "Fall 2026",
-                "Winter 2027",
-                "Spring 2027",
+
               ].map((tab) => (
                 <button
                   key={tab}
-                  className={`px-4 py-2 text-sm font-medium ${activeTab === tab
+                  className={`px-4 py-2 text-sm whitespace-nowrap font-medium ${activeTab === tab
                     ? "text-blue-600 border-b-2 border-blue-600"
                     : "text-gray-500"
                     }`}
@@ -607,12 +610,13 @@ export default function AgentDashboard() {
               ))}
             </div>
 
+
             {/* Application Statistics */}
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-2">
                 Application Statistics - Summer 2025
               </h3>
-              <div className="h-64 bg-white">
+              <div className="h-64 bg-white ">
                 {/* Chart placeholder */}
 
                 <ResponsiveContainer width="100%" height="100%">
@@ -649,25 +653,29 @@ export default function AgentDashboard() {
                   </LineChart>
                 </ResponsiveContainer>
               </div>
+              <div className="pt-2">
+                <div className="flex overflow-x-auto space-x-4 lg:grid lg:grid-cols-4 lg:gap-4 scrollbar-hide">
+                  {visibleItems.map(({ label, value }) => (
+                    <div
+                      key={label}
+                      className="bg-gray-100 rounded-md h-[4.5rem] px-2 pt-2 text-center flex-shrink-0 min-w-[8rem] lg:min-w-0"
+                    >
+                      <div className="text-nowrap">{label}</div>
+                      <strong className="text-xl">{value}</strong>
+                    </div>
+                  ))}
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 text-center gap-4 mt-4">
-                <div className="bg-gray-100 rounded-md h-[4rem] pt-2">
-                  <div>Paid Applications</div>
-                  <strong className="text-xl">45</strong>
-                </div>
-                <div className="bg-gray-100 rounded-md pt-2">
-                  <div>Final Offers</div>
-                  <strong className="text-xl">38</strong>
-                </div>
-                <div className="bg-gray-100 rounded-md pt-2">
-                  <div>Visas</div>
-                  <strong className="text-xl">32</strong>
-                </div>
-                <div className="bg-gray-100 rounded-md pt-2">
-                  <div>Promotions</div>
-                  <strong className="text-xl">12</strong>
+                  {hiddenItems && !showAll && (
+                    <button
+                      onClick={() => setShowAll(true)}
+                      className="bg-gray-200 rounded-md h-[4.5rem] flex items-center justify-center text-xl font-bold flex-shrink-0 min-w-[4rem] md:min-w-0"
+                    >
+                      ...
+                    </button>
+                  )}
                 </div>
               </div>
+
             </div>
           </div>
 
@@ -706,11 +714,11 @@ export default function AgentDashboard() {
               Number of applications by processing times
             </p>
 
-            <div className="h-64 w-full">
+            <div className="h-80 w-full flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={processingTimesData}
-                  margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  margin={{ top: 20, right: 30, left: 40, bottom: 20 }}
                   barGap={0}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
@@ -720,33 +728,20 @@ export default function AgentDashboard() {
                       value: "Average Processing Time (Months)",
                       angle: -90,
                       position: "insideLeft",
+                      offset: 10,
+                      style: { textAnchor: "middle" },
                     }}
                   />
                   <Tooltip />
                   <Legend />
-                  <Bar
-                    dataKey="visaApplications"
-                    name="Visa Applications"
-                    fill="#60a5fa"
-                  />
-                  <Bar
-                    dataKey="studyPermits"
-                    name="Study Permits"
-                    fill="#84e1bc"
-                  />
-                  <Bar
-                    dataKey="workPermits"
-                    name="Work Permits"
-                    fill="#fdba74"
-                  />
-                  <Bar
-                    dataKey="otherDocuments"
-                    name="Other Documents"
-                    fill="#d8b4fe"
-                  />
+                  <Bar dataKey="visaApplications" name="Visa Applications" fill="#60a5fa" />
+                  <Bar dataKey="studyPermits" name="Study Permits" fill="#84e1bc" />
+                  <Bar dataKey="workPermits" name="Work Permits" fill="#fdba74" />
+                  <Bar dataKey="otherDocuments" name="Other Documents" fill="#d8b4fe" />
                 </BarChart>
               </ResponsiveContainer>
             </div>
+
           </div>
 
           {/* Second Chart Section */}
@@ -795,8 +790,12 @@ export default function AgentDashboard() {
                       value: "Number of Applications",
                       angle: -90,
                       position: "insideLeft",
+                      dy: 5, // adjust vertical placement
+                      dx: 10, // optional: adjust horizontal alignment
+                      style: { textAnchor: "middle" } // center align the text
                     }}
                   />
+
                   <Tooltip />
                   <Legend />
                   <Bar dataKey="submitted" name="Submitted" fill="#93c5fd" />
@@ -882,13 +881,9 @@ export default function AgentDashboard() {
               </ResponsiveContainer>
             </div>
 
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 text-center text-sm">
-              {months.flat().map((month, index) => (
-                <button key={index} className="py-1 text-gray-700">
-                  {month}
-                </button>
-              ))}
-            </div>
+
+
+
           </div>
 
           {/* Revenue Section */}
@@ -967,9 +962,9 @@ export default function AgentDashboard() {
         </main>
 
         {/* Sidebar - Only visible on larger screens */}
-        <div className="w-full lg:w-[50%] px-6 pt-20">
+        <div className="w-full xl:w-[50%] px-6 pt-20 ">
           <div className="bg-white p-6 rounded-lg shadow-sm mb-6 border border-gray-100">
-            <h3 className="font-semibold text-2xl mb-4">Your balance</h3>
+            <h3 className="font-semibold text-2xl mb-4">Your Balance</h3>
             <div className="space-y-2 mb-4">
               <input placeholder="CAD" className="border p-2 rounded w-full" />
               <div className="mt-4 text-sm leading-[2] text-black flex flex-col ">
