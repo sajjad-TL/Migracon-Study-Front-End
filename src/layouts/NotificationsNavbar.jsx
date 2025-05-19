@@ -151,4 +151,3 @@ const NotificationsNavbar = ({ user }) => {
 };
 
 export default NotificationsNavbar;
-

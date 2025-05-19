@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:5000/api/auth';
+const API_BASE = 'http://localhost:5000/api/other-auth';
 
 export const requestResetCode = (email) =>
   axios.post(`${API_BASE}/forgot-password`, { email });
