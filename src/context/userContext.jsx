@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-
+import axios from "axios";
 export const UserContext = createContext({});
 
 export const UserProvider = ({ children }) => {
@@ -14,14 +14,29 @@ export const UserProvider = ({ children }) => {
   });
 
 
-  useEffect(() => {
-    if (user && Object.keys(user).length > 0) {
-      setUser(user)
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
-  }, [user]);
+useEffect(() => {
+  const token = localStorage.getItem("token");
+
+  if (token) {
+    axios.get("http://localhost:5000/api/other-auth/validate-token", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setUser((prev) => ({
+            ...prev,
+            agentId: res.data.agentId,
+          }));
+        }
+      })
+      .catch(() => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        setUser({});
+      });
+  }
+}, []);
+
 
   return (
     <UserContext.Provider value={{ user, setUser }}>
