@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
+import StudentForm from "../Model/StudentForm"; // ✅ import it if not already
+
 import { Link } from "react-router-dom";
 import { BsFillBagCheckFill, BsCalculatorFill } from "react-icons/bs";
 import { TiTick } from "react-icons/ti";
@@ -22,7 +24,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-import img1 from "../assets/schoolgirl.jpg"
+
 
 import { AiOutlineClose } from "react-icons/ai";
 
@@ -35,10 +37,15 @@ import { MdLocalPhone } from "react-icons/md";
 import { toast } from "react-toastify";
 
 export default function AgentDashboard() {
+const [isFormOpen, setIsFormOpen] = useState(false);
+
   const [activeTab, setActiveTab] = useState("Summer 2025");
   const [active, setActive] = useState("Dashboard");
   const [agentData, setAgentData] = useState(null);
   const [activeAction, setActiveAction] = useState("Add New Student");
+const toastShownRef = useRef(false); // 🛑 track whether toast was already shown
+
+
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
   const [studentFilter, setStudentFilter] = useState("Student");
   const [showAll, setShowAll] = useState(false);
@@ -48,10 +55,18 @@ export default function AgentDashboard() {
 
   const [currency, setCurrency] = useState("USD");
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+
   const { user } = useContext(UserContext);
   const navItems = ["Dashboard", "Student", "Application", "Program"];
   const navigate = useNavigate();
+const openStudentModal = () => setIsFormOpen(true);
+const closeStudentModal = () => setIsFormOpen(false);
 
+const handleStudentAdded = () => {
+  closeStudentModal();
+  fetchApplications(); // optional: refresh dashboard data
+};
   const dropdownRef = useRef();
   useEffect(() => {
     function handleClickOutside(event) {
@@ -65,12 +80,13 @@ export default function AgentDashboard() {
     };
   }, []);
 
-  const actions = [
-    { label: "Add New Student", icon: FaUserPlus },
-    { label: "Search Programs", icon: FaSearch },
-    { label: "Start Application", icon: FaFileAlt },
-    { label: "View Reports", icon: FaChartBar },
-  ];
+const actions = [
+  { label: "Add New Student", icon: FaUserPlus, type: "modal" },
+  { label: "Search Programs", icon: FaSearch, route: "/programs" },
+  { label: "Start Application", icon: FaFileAlt, route: "/applications" },
+  { label: "View Reports", icon: FaChartBar, route: "/reports" },
+];
+
   const items = [
     { label: "Paid Applications", value: 45 },
     { label: "Final Offers", value: 38 },
@@ -142,20 +158,67 @@ export default function AgentDashboard() {
 
   const [badgeCount, setBadgeCount] = useState(0);
 
-  useEffect(() => {
-    if (user?.agentId) {
-      axios
-        .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
-        .then((res) => {
-          setBadgeCount(res.data?.count || 0); // ✅ now setBadgeCount is defined
-        })
-        .catch((err) => {
-          console.error("Badge count fetch failed", err);
-          setBadgeCount(0);
-        });
-    }
-  }, [user]);
+  const fetchApplications = async () => {
+    try {
+      const res = await axios.get("http://localhost:5000/student/getAllApplications");
+      const apps = res.data.applications || [];
 
+      // Sort by createdAt descending
+      const sortedApps = apps.sort(
+        (a, b) => new Date(b.createdAt || b.applyDate) - new Date(a.createdAt || a.applyDate)
+      );
+
+      setApplications(sortedApps);
+    } catch (error) {
+      console.error("Error fetching applications:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchApplications();
+  }, []);
+
+useEffect(() => {
+  if (user?.agentId) {
+    axios
+      .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
+      .then((res) => {
+        setBadgeCount(res.data?.count || 0);
+
+        // Show toast only once per session
+        const hasShownToast = sessionStorage.getItem("notificationToastShown");
+
+        if (res.data?.count > 0 && !hasShownToast) {
+          toast.info(`You have ${res.data.count} new notifications!`);
+          sessionStorage.setItem("notificationToastShown", "true");
+        }
+      })
+      .catch((err) => {
+        console.error("Badge count fetch failed", err);
+        setBadgeCount(0);
+      });
+  }
+}, [user?.agentId]);
+
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/student/getAllApplications");
+        setApplications(res.data.applications);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchApplications();
+  }, []);
 
 
   const processingTimesData = [
@@ -358,7 +421,6 @@ export default function AgentDashboard() {
           <h1 className="text-3xl font-semibold text-gray-800 mb-6">
             Agent Dashboard
           </h1>
-
           {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
             <div className=" bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
@@ -370,7 +432,6 @@ export default function AgentDashboard() {
                 </div>
               </div>
             </div>
-
             <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center gap-2">
                 <div className="bg-green-400 rounded-full text-3xl">
@@ -378,21 +439,19 @@ export default function AgentDashboard() {
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">Approved Applications</div>
-                  <div className="text-xl font-semibold">156</div>
+                  <div className="text-xl font-semibold">{applications.filter(app => app.status === "Accepted").length}</div>
                 </div>
               </div>
             </div>
-
             <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
               <div className="pad flex items-center gap-2">
                 <IoDocumentText className="text-blue-600 text-3xl" />
-                <div >
+                <div>
                   <div className="text-sm text-gray-500">Applications</div>
-                  <div className="text-xl font-semibold">48</div>
+                  <div className="text-xl font-semibold">{applications.length}</div>
                 </div>
               </div>
             </div>
-
             <div className="bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center gap-2">
                 <div className="bg-red-400 p-2 rounded-full">
@@ -400,103 +459,87 @@ export default function AgentDashboard() {
                 </div>
                 <div>
                   <div className="text-sm text-gray-500">Rejected Applications</div>
-                  <div className="text-xl font-semibold">2</div>
+                  <div className="text-xl font-semibold">{applications.filter(app => app.status === "Rejected").length}</div>
                 </div>
               </div>
             </div>
           </div>
-
 
           {/* Two Column Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6">
             {/* Recent Applications */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="font-semibold text-2xl text-gray-800">
-                  Recent Applications
-                </h2>
+                <h2 className="font-semibold text-2xl text-gray-800">Recent Applications</h2>
               </div>
 
               <div className="space-y-3">
-                <div className="flex items-center justify-between border-b border-gray-100">
-                  <div className="flex items-center justify-around space-x-3 ">
-                    <div className=" h-12 w-16 sm:h-10 sm:w-10  rounded-full bg-gray-200">
-                      <img
-                        src={img1}
-                        alt="Student"
-                        className="rounded-full  h-full w-full"
-                      />
+                {loading ? (
+                  <div className="text-gray-500">Loading recent applications...</div>
+                ) : applications.length === 0 ? (
+                  <div className="text-gray-500">No recent applications found.</div>
+                ) : (
+                  applications
+                    .sort((a, b) => new Date(b.createdAt || b.applyDate) - new Date(a.createdAt || a.applyDate))
+                    .slice(0, 3)
+                    .map((app, index) => (
+                      <div
+                        key={index}
+                        className="flex justify-between items-center border-b border-gray-100 py-2"
+                      >
 
-                    </div>
-                    <div>
-                      <div className="font-medium">Sarah Chen</div>
-                      <div className="text-xs text-gray-500">
-                        University of Toronto · Computer Science
+                        {/* Left: Profile and student info */}
+                        <div className="flex items-center space-x-3">
+                          <div className="h-12 w-12 rounded-full bg-gray-200 overflow-hidden">
+                            <img
+                              src={app.profileImage || `https://i.pravatar.cc/40?u=${app.studentId}`}
+                              alt={`${app.firstName} ${app.lastName}`}
+                              className="h-full w-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <div className="font-medium text-sm">
+                              {app.firstName} {app.lastName}
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              {app.program || "Program Not Specified"} · {app.institute || "Unknown School"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Right: Status and Date */}
+                        <div className="text-right space-y-1">
+                          <div>
+                            <span
+                              className={`px-2 py-1 rounded text-xs font-medium ${app.status === "Approved"
+                                ? "bg-green-100 text-green-700"
+                                : app.status === "Rejected"
+                                  ? "bg-red-100 text-red-700"
+                                  : "bg-blue-100 text-blue-700"
+                                }`}
+                            >
+                              {app.status || "Pending"}
+                            </span>
+                          </div>
+                          <div className="text-xs text-gray-400">
+                            {new Date(app.createdAt || app.applyDate).toLocaleDateString()}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div className="text-xs text-blue-600 font-medium">
-                    <button className="px-2 py-1 rounded bg-blue-50">
-                      Under Review
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between border-b border-gray-100 p-0 md:p-2">
-                  <div className="flex items-center space-x-3 ">
-                    <div className=" h-12 w-16 sm:h-10 sm:w-10  rounded-full bg-gray-200">
-                      <img
-                        src={img1}
-                        alt="Student"
-                        className="rounded-full  h-full w-full"
-                      />
-
-                    </div>
-                    <div>
-                      <div className="font-medium">Mohammed Al-Rashid</div>
-                      <div className="text-xs text-gray-500">
-                        KFUPM University · Business Administration
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-xs text-yellow-600 font-medium">
-                    <button className="px-2 py-1 rounded bg-yellow-50 ">
-                      Pending Documents
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between p-0 md:p-2">
-                  <div className="flex items-center space-x-3">
-                    <div className=" h-12 w-16 sm:h-10 sm:w-10  rounded-full bg-gray-200">
-                      <img
-                        src={img1}
-                        alt="Student"
-                        className="rounded-full  h-full w-full"
-                      />
-
-                    </div>
-                    <div>
-                      <div className="font-medium">Priya Patel</div>
-                      <div className="text-xs text-gray-500">
-                        University of British Columbia · Engineering
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-xs text-blue-600 font-medium">
-                    <button className="px-2 py-1 rounded bg-blue-50">
-                      Offer Received
-                    </button>
-                  </div>
-                </div>
+                    ))
+                )}
               </div>
 
               <div className="mt-4">
-                <button className="w-full py-2 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50">
+                <button
+                  onClick={() => navigate('/application')}
+                  className="w-full py-2 border border-gray-200 rounded-md text-sm text-gray-600 hover:bg-gray-50"
+                >
                   View all
                 </button>
               </div>
             </div>
+
 
             {/* Tasks Due Soon */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
@@ -569,17 +612,26 @@ export default function AgentDashboard() {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <h2 className="font-semibold text-2xl text-gray-800 mb-4">Quick Actions</h2>
 
-            <div className="flex overflow-x-auto space-x-3 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-4 scrollbar-hide">
-              {actions.map(({ label, icon }) => (
-                <ActionButton
-                  key={label}
-                  label={label}
-                  icon={icon}
-                  isActive={activeAction === label}
-                  onClick={() => setActiveAction(label)}
-                />
-              ))}
-            </div>
+       <div className="flex overflow-x-auto space-x-3 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-4 scrollbar-hide">
+  {actions.map(({ label, icon, route, type }) => (
+    <ActionButton
+      key={label}
+      label={label}
+      icon={icon}
+      isActive={activeAction === label}
+      onClick={() => {
+        setActiveAction(label);
+        if (type === "modal") {
+          openStudentModal();
+        } else if (route) {
+          navigate(route);
+        }
+      }}
+    />
+  ))}
+</div>
+
+
           </div>
 
 
@@ -880,10 +932,6 @@ export default function AgentDashboard() {
                 </LineChart>
               </ResponsiveContainer>
             </div>
-
-
-
-
           </div>
 
           {/* Revenue Section */}
@@ -1037,6 +1085,18 @@ export default function AgentDashboard() {
           )}
         </div>
       </div>
+
+      
+{isFormOpen && (
+  <StudentForm
+    isOpen={isFormOpen}
+    onClose={closeStudentModal}
+    onStudentAdded={handleStudentAdded}
+  />
+)}
     </div>
+
+
+
   );
 }
