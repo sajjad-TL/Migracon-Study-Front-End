@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from "react";
-import StudentForm from "../Model/StudentForm"; // ✅ import it if not already
-
+import StudentForm from "../Model/StudentForm";
 import { Link } from "react-router-dom";
 import { BsFillBagCheckFill, BsCalculatorFill } from "react-icons/bs";
 import { TiTick } from "react-icons/ti";
@@ -11,7 +10,6 @@ import { FaUserPlus, FaSearch, FaFileAlt, FaChartBar } from "react-icons/fa";
 import { MdOutlineWhatsapp } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
-
 import {
   LineChart,
   Line,
@@ -24,11 +22,7 @@ import {
   BarChart,
   Bar,
 } from "recharts";
-
-
 import { AiOutlineClose } from "react-icons/ai";
-
-
 import { IoMdNotifications } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -37,36 +31,30 @@ import { MdLocalPhone } from "react-icons/md";
 import { toast } from "react-toastify";
 
 export default function AgentDashboard() {
-const [isFormOpen, setIsFormOpen] = useState(false);
-
+  const [isFormOpen, setIsFormOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Summer 2025");
   const [active, setActive] = useState("Dashboard");
   const [agentData, setAgentData] = useState(null);
   const [activeAction, setActiveAction] = useState("Add New Student");
-const toastShownRef = useRef(false); // 🛑 track whether toast was already shown
-
-
   const [selectedCountry, setSelectedCountry] = useState("All Countries");
   const [studentFilter, setStudentFilter] = useState("Student");
   const [showAll, setShowAll] = useState(false);
   const [mobileMenuOpen] = useState(false);
   const [selectedYear, setSelectedYear] = useState("2024");
   const [yearRevenue, setYearRevenue] = useState("2025");
-
   const [currency, setCurrency] = useState("USD");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-
   const { user } = useContext(UserContext);
   const navItems = ["Dashboard", "Student", "Application", "Program"];
   const navigate = useNavigate();
-const openStudentModal = () => setIsFormOpen(true);
-const closeStudentModal = () => setIsFormOpen(false);
+  const openStudentModal = () => setIsFormOpen(true);
+  const closeStudentModal = () => setIsFormOpen(false);
 
-const handleStudentAdded = () => {
-  closeStudentModal();
-  fetchApplications(); // optional: refresh dashboard data
-};
+  const handleStudentAdded = () => {
+    closeStudentModal();
+    fetchApplications();
+  };
+
   const dropdownRef = useRef();
   useEffect(() => {
     function handleClickOutside(event) {
@@ -80,12 +68,12 @@ const handleStudentAdded = () => {
     };
   }, []);
 
-const actions = [
-  { label: "Add New Student", icon: FaUserPlus, type: "modal" },
-  { label: "Search Programs", icon: FaSearch, route: "/programs" },
-  { label: "Start Application", icon: FaFileAlt, route: "/applications" },
-  { label: "View Reports", icon: FaChartBar, route: "/reports" },
-];
+  const actions = [
+    { label: "Add New Student", icon: FaUserPlus, type: "modal" },
+    { label: "Search Programs", icon: FaSearch, route: "/programs" },
+    { label: "Start Application", icon: FaFileAlt, route: "/application" },
+    { label: "View Reports", icon: FaChartBar, route: "/payments" },
+  ];
 
   const items = [
     { label: "Paid Applications", value: 45 },
@@ -162,8 +150,6 @@ const actions = [
     try {
       const res = await axios.get("http://localhost:5000/student/getAllApplications");
       const apps = res.data.applications || [];
-
-      // Sort by createdAt descending
       const sortedApps = apps.sort(
         (a, b) => new Date(b.createdAt || b.applyDate) - new Date(a.createdAt || a.applyDate)
       );
@@ -180,27 +166,27 @@ const actions = [
     fetchApplications();
   }, []);
 
-useEffect(() => {
-  if (user?.agentId) {
-    axios
-      .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
-      .then((res) => {
-        setBadgeCount(res.data?.count || 0);
+  useEffect(() => {
+    if (user?.agentId) {
+      axios
+        .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
+        .then((res) => {
+          setBadgeCount(res.data?.count || 0);
 
-        // Show toast only once per session
-        const hasShownToast = sessionStorage.getItem("notificationToastShown");
+          // Show toast only once per session
+          const hasShownToast = sessionStorage.getItem("notificationToastShown");
 
-        if (res.data?.count > 0 && !hasShownToast) {
-          toast.info(`You have ${res.data.count} new notifications!`);
-          sessionStorage.setItem("notificationToastShown", "true");
-        }
-      })
-      .catch((err) => {
-        console.error("Badge count fetch failed", err);
-        setBadgeCount(0);
-      });
-  }
-}, [user?.agentId]);
+          if (res.data?.count > 0 && !hasShownToast) {
+            toast.info(`You have ${res.data.count} new notifications!`);
+            sessionStorage.setItem("notificationToastShown", "true");
+          }
+        })
+        .catch((err) => {
+          console.error("Badge count fetch failed", err);
+          setBadgeCount(0);
+        });
+    }
+  }, [user?.agentId]);
 
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -612,24 +598,24 @@ useEffect(() => {
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <h2 className="font-semibold text-2xl text-gray-800 mb-4">Quick Actions</h2>
 
-       <div className="flex overflow-x-auto space-x-3 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-4 scrollbar-hide">
-  {actions.map(({ label, icon, route, type }) => (
-    <ActionButton
-      key={label}
-      label={label}
-      icon={icon}
-      isActive={activeAction === label}
-      onClick={() => {
-        setActiveAction(label);
-        if (type === "modal") {
-          openStudentModal();
-        } else if (route) {
-          navigate(route);
-        }
-      }}
-    />
-  ))}
-</div>
+            <div className="flex overflow-x-auto space-x-3 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-4 scrollbar-hide">
+              {actions.map(({ label, icon, route, type }) => (
+                <ActionButton
+                  key={label}
+                  label={label}
+                  icon={icon}
+                  isActive={activeAction === label}
+                  onClick={() => {
+                    setActiveAction(label);
+                    if (type === "modal") {
+                      openStudentModal();
+                    } else if (route) {
+                      navigate(route);
+                    }
+                  }}
+                />
+              ))}
+            </div>
 
 
           </div>
@@ -1086,14 +1072,14 @@ useEffect(() => {
         </div>
       </div>
 
-      
-{isFormOpen && (
-  <StudentForm
-    isOpen={isFormOpen}
-    onClose={closeStudentModal}
-    onStudentAdded={handleStudentAdded}
-  />
-)}
+
+      {isFormOpen && (
+        <StudentForm
+          isOpen={isFormOpen}
+          onClose={closeStudentModal}
+          onStudentAdded={handleStudentAdded}
+        />
+      )}
     </div>
 
 
