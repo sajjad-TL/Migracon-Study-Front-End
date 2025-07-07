@@ -9,9 +9,10 @@ export default function Application() {
   const [showModal, setShowModal] = useState(false);
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [originalApplications, setOriginalApplications] = useState([]);
-  const [showFilters, setShowFilters] = useState(false);
   const user = JSON.parse(localStorage.getItem('user')) || {};
+  const [showFilters, setShowFilters] = useState(false);
+  const [originalApplications, setOriginalApplications] = useState([]);
+
 
   const [filters, setFilters] = useState({
     paymentDate: '',
@@ -33,9 +34,17 @@ export default function Application() {
     if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
       return dateStr;
     }
+
     const date = new Date(dateStr);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   };
+
+
 
   const handleApplyFilters = () => {
     const filtered = originalApplications.filter((app) => {
@@ -54,21 +63,20 @@ export default function Application() {
         (!filters.stage || app.stage?.toLowerCase() === filters.stage.toLowerCase())
       );
     });
+
     setApplications(filtered);
   };
+
+
+
+
 
   const fetchApplications = async () => {
     try {
       const response = await axios.get("http://localhost:5000/student/getAllApplications");
       const apps = response.data.applications || [];
-
-      // Sort applications by createdAt or applyDate DESC
-      const sortedApps = apps.sort((a, b) =>
-        new Date(b.createdAt || b.applyDate) - new Date(a.createdAt || a.applyDate)
-      );
-
-      setApplications(sortedApps);
-      setOriginalApplications(sortedApps);
+      setApplications(apps);
+      setOriginalApplications(apps);
     } catch (error) {
       console.error("Failed to fetch applications", error);
     } finally {
@@ -77,6 +85,7 @@ export default function Application() {
   };
 
   useEffect(() => {
+
     fetchApplications();
   }, []);
 
@@ -97,6 +106,7 @@ export default function Application() {
     }
   };
 
+
   return (
     <div className="font-sans text-gray-800 bg-white min-h-screen">
       <ApplicationNavbar user={user} />
@@ -112,7 +122,9 @@ export default function Application() {
             </p>
           </div>
           <div className="flex items-center">
-            <button className="text-sm text-green-700 hover:underline mr-4">Try Task Management</button>
+            <button className="text-sm text-green-700 hover:underline mr-4">
+              Try Task Management
+            </button>
             <button onClick={() => setShowBanner(false)} className="text-gray-500 hover:text-gray-700">
               <X size={16} />
             </button>
@@ -124,33 +136,176 @@ export default function Application() {
         <div className="flex flex-row items-center justify-between mb-4">
           <h1 className="text-xl font-medium mb-4">Applications</h1>
           <div className="flex space-x-2">
-            <button onClick={handleApplyFilters} className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center">
+            <button
+              onClick={handleApplyFilters}
+              className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
+            >
               Apply Filters
             </button>
-            <button onClick={() => setShowFilters(!showFilters)} className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center">
+
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="px-3 py-1.5 border border-gray-300 rounded text-sm flex items-center"
+            >
               <Filter size={16} className="mr-1" /> Filters
             </button>
-            <button
-              onClick={() => setShowModal(true)}
-              className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm flex items-center"
-            >
-              <Plus size={16} className="mr-3" /> Add Application
-            </button>
-            {showModal && (
-              <ApplicationForm
-                onClose={() => setShowModal(false)}
-                onApplicationCreated={(newApp) => {
-                  const updatedApps = [newApp, ...applications];
-                  setApplications(updatedApps);
-                  setOriginalApplications(updatedApps);
-                  setShowModal(false);
-                }}
-              />
-            )}
+            <div>
+              <button
+                onClick={() => setShowModal(true)}
+                className="px-3 py-1.5 bg-blue-600 text-white rounded text-sm flex items-center"
+              >
+                <Plus size={16} className="mr-3" /> Add Application
+              </button>
+              {showModal && (
+                <ApplicationForm
+                  onClose={() => {
+                    setShowModal(false);
+                    fetchApplications();
+                  }}
+                />
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Filter form omitted for brevity, keep as-is if already working */}
+
+        {/* Filter Form */}
+        {showFilters && (
+
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Payment Date</label>
+              <input
+                type="date"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.paymentDate || ''}
+                onChange={(e) => setFilters({ ...filters, paymentDate: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">App ID</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm"
+                value={filters.applicationId || ''}
+                onChange={(e) => setFilters({ ...filters, applicationId: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Student ID</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm"
+                value={filters.studentId || ''}
+                onChange={(e) => setFilters({ ...filters, studentId: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">First Name</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm"
+                value={filters.firstName || ''}
+                onChange={(e) => setFilters({ ...filters, firstName: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Last Name</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm"
+                value={filters.lastName || ''}
+                onChange={(e) => setFilters({ ...filters, lastName: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Apply Date</label>
+              <input
+                type="date"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.applyDate || ''}
+                onChange={(e) => setFilters({ ...filters, applyDate: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Program</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.program || ''}
+                onChange={(e) => setFilters({ ...filters, program: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">School</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.institute || ''}
+                onChange={(e) => setFilters({ ...filters, institute: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Start Date</label>
+              <input
+                type="date"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.startDate || ''}
+                onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Recruitment Partner</label>
+              <input
+                type="text"
+                className="border border-gray-300 rounded p-2 text-sm w-full"
+                value={filters.requirementspartner || ''}
+                onChange={(e) =>
+                  setFilters({ ...filters, requirementspartner: e.target.value })}
+              />
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Status</label>
+              <select
+                className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white"
+                value={filters.status || ''}
+                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
+              >
+                <option value="">Select Status</option>
+                <option value="Accepted">Accepted</option>
+                <option value="pending">Pending</option>
+                <option value="rejected">Rejected</option>
+                <option value="Withdrawn">Withdrawn</option>
+                <option value="not-paid">not paid</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col">
+              <label className="text-xs uppercase text-gray-500 mb-1">Current Stage</label>
+              <select
+                className="appearance-none border border-gray-300 rounded p-2 pr-8 text-sm w-full bg-white"
+                value={filters.stage || ''}
+                onChange={(e) => setFilters({ ...filters, stage: e.target.value })}
+              >
+                <option value="">Select Stage</option>
+                <option value="initial">Initial</option>
+                <option value="review">Review</option>
+                <option value="final">Final</option>
+              </select>
+            </div>
+          </div>
+
+        )}
 
         {loading ? (
           <p>Loading applications...</p>
@@ -159,12 +314,47 @@ export default function Application() {
             <table className="w-full table-auto bg-white border border-gray-200 text-sm rounded shadow-sm">
               <thead className="bg-gray-50">
                 <tr>
-                  {["PAYMENT DATE", "APP ID", "STUDENT ID", "APPLY DATE", "FIRST NAME", "LAST NAME", "PROGRAM", "SCHOOL", "START DATE", "RECRUITMENT PARTNER", "STATUS", "REQUIREMENTS", "CURRENT STAGE"].map((header) => (
-                    <th key={header} className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
-                      {header}
-                    </th>
-                  ))}
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    PAYMENT DATE
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    APP ID
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    STUDENT ID
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    APPLY DATE
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    FIRST NAME
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    LAST NAME
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    PROGRAM
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    SCHOOL
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    START DATE
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    RECRUITMENT PARTNER
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    STATUS
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    REQUIREMENTS
+                  </th>
+                  <th className="py-2 px-2 text-left text-gray-600 text-xs font-semibold uppercase border-b whitespace-nowrap">
+                    CURRENT STAGE
+                  </th>
                 </tr>
+
               </thead>
               <tbody>
                 {applications.length > 0 ? (
@@ -177,22 +367,28 @@ export default function Application() {
                       <td className="py-2 px-2 border-b">{app.firstName}</td>
                       <td className="py-2 px-2 border-b">{app.lastName}</td>
                       <td className="py-2 px-2 border-b">{app.program}</td>
-                      <td className="py-2 px-2 border-b whitespace-nowrap">
-                        <div className="flex items-center space-x-1">
+                      <td className="py-2 px-2 border-b">
+                        <div className="flex items-center space-x-1 whitespace-nowrap">
                           <span className="text-red-500">⚑</span>
                           <span>{app.institute?.replace(/\s+/g, ' ').trim()}</span>
                         </div>
                       </td>
+
+
+
                       <td className="py-2 px-2 border-b">{app.startDate ? new Date(app.startDate).toLocaleDateString() : '-'}</td>
                       <td className="py-2 px-2 border-b">{app.requirementspartner}</td>
                       <td className="py-2 px-2 border-b">
-                        <span className={getStatusStyle(app.status)}>{app.status || '—'}</span>
+                        <span className={getStatusStyle(app.status)}>
+                          {app.status || '—'}
+                        </span>
                       </td>
                       <td className="py-2 px-2 border-b">
                         <span className="bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full inline-block">
                           {app.requirements || '—'}
                         </span>
                       </td>
+
                       <td className="py-2 px-2 border-b">{app.currentStage}</td>
                     </tr>
                   ))
@@ -206,6 +402,7 @@ export default function Application() {
               </tbody>
             </table>
           </div>
+
         )}
       </div>
     </div>
