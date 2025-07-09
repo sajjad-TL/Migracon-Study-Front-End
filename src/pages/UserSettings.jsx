@@ -47,13 +47,22 @@ const UserSettings = () => {
 
       const data = await response.json();
 
-      if (data.success) {
-        const { agentId, firstName, lastName, profilePicture, phone } = data.agent;
-        const name = `${firstName} ${lastName}`;
-        setUser({ agentId, name, profilePicture, phone });
-        setAgentData(data.agent);
-        closeModal();
-      } else {
+    if (data.success) {
+  const { agentId, firstName, lastName, profilePicture, phone } = data.agent;
+
+  const name = `${firstName} ${lastName}`;
+  
+  // Force refresh by appending timestamp to bust cache
+  const profilePictureWithCacheBust = profilePicture
+    ? `${profilePicture}?t=${Date.now()}`
+    : null;
+
+  setUser({ agentId, name, profilePicture: profilePictureWithCacheBust, phone });
+  setAgentData({ ...data.agent, profilePicture: profilePictureWithCacheBust });
+
+  closeModal();
+}
+else {
         alert("Update failed: " + data.message);
       }
     } catch (err) {
@@ -113,10 +122,7 @@ const UserSettings = () => {
 
         {/* Profile Details (Read Only) */}
         <div className="space-y-5">
-          <div>
-            <label className="block text-gray-700 mb-1">Full Name</label>
-            <div className="border px-4 py-2 rounded-md bg-gray-50">{`${agentData?.firstName || "N/A"} ${agentData?.lastName || ""}`}</div>
-          </div>
+          
 
           <div>
             <label className="block text-gray-700 mb-1">Email</label>

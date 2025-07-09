@@ -24,6 +24,8 @@ const ProfileDetail = () => {
   const closeModal = () => setIsEditOpen(false);
   const [agentData, setAgentData] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [imageVersion, setImageVersion] = useState(Date.now());
+
   const dropdownRef = useRef();
 
   // const { user } = useContext(UserContext);
@@ -290,7 +292,7 @@ const fetchAgentData = async () => {
                         <img
                           alt="Profile"
                           className="w-10 h-10 rounded-full ms-auto"
-                          src={user?.profilePicture ? `${user.profilePicture}?v${Date.now()}` : "https://randomuser.me/api/portraits/women/44.jpg"}
+                          src={user?.profilePicture ? `${user.profilePicture}?v${Date.now()}` : ""}
                         />
                       </div>
 

@@ -30,10 +30,8 @@ export default function StudentDashboard() {
   const [viewMode, setViewMode] = useState('table');
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState([]);
-
   const [setStudentData] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
-
   const { user } = useContext(UserContext);
   const agentId = user?.agentId;
   const studentsPerPage = 6;
@@ -68,6 +66,14 @@ export default function StudentDashboard() {
     setIsEditModalOpen(false);
   };
 
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+
+  const newThisMonth = students.filter((s) => {
+    if (!s.createdAt) return false;
+    const created = new Date(s.createdAt);
+    return created.getMonth() === currentMonth && created.getFullYear() === currentYear;
+  }).length;
 
   const fetchStudents = async () => {
     try {
@@ -81,13 +87,12 @@ export default function StudentDashboard() {
         lastName: s.lastName,
         avatar: `https://i.pravatar.cc/40?u=${s._id}`,
         email: s.email,
+        createdAt: s.createdAt, // ⬅️ Make sure backend returns this
         education: s.applications?.map(app => app.program).join(', ') || "N/A",
         status: s.status,
         applicationCount: s.applicationCount || 0,
         applications: s.applications || [],
       }));
-
-
       setStudents(normalized);
     } catch (error) {
       console.error("Error fetching students:", error);
@@ -152,7 +157,12 @@ export default function StudentDashboard() {
 
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {[{ label: 'Total Students', value: students.length, icon: '👥' }, { label: 'Active Applications', value: activeApplicationsCount, icon: '📄' }, { label: 'Completed', value: '892', icon: '✅' }, { label: 'New This Month', value: '325', icon: '➕' }].map((stat, i) => (
+        {[
+          { label: 'Total Students', value: students.length, icon: '👥' },
+          { label: 'Active Applications', value: activeApplicationsCount, icon: '📄' },
+          { label: 'Completed', value: '892', icon: '✅' },
+          { label: 'New This Month', value: newThisMonth, icon: '🆕' }
+        ].map((stat, i) => (
           <div key={i} className="bg-white shadow rounded-xl p-4 flex items-center gap-4">
             <div className="text-3xl">{stat.icon}</div>
             <div>

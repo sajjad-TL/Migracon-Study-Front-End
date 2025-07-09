@@ -6,15 +6,8 @@ export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
-  const [notifications, setNotifications] = useState(() => {
-    const saved = localStorage.getItem("notifications");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [unreadCount, setUnreadCount] = useState(() => {
-    const saved = localStorage.getItem("unreadCount");
-    return saved ? parseInt(saved) : 0;
-  });
+  const [notifications, setNotifications] = useState([]);
+  const [badgeCount, setBadgeCount] = useState(0);
 
   useEffect(() => {
     const socketIo = io("http://localhost:5000");
@@ -24,45 +17,82 @@ export const SocketProvider = ({ children }) => {
     });
 
     socketIo.on("notification", (data) => {
-      const time = new Date().toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      });
-
+      console.log("📧 New notification received:", data);
+      
       const newNotification = {
-        id: Date.now(), // frontend generated ID
+        _id: data._id || Date.now().toString(),
+        userId: data.userId,
         message: data.message,
-        type: data.type,
-        time,
+        type: data.type || "Updates",
+        isRead: data.isRead || false,
+        createdAt: data.createdAt || new Date().toISOString(),
+        // For compatibility with old format
+        notificationType: data.type || "Updates",
+        emailFrequency: "Real-time",
+        mobileNotifications: true,
+        time: data.createdAt || new Date().toISOString()
       };
 
-      const updatedNotifications = [newNotification, ...notifications];
-      setNotifications(updatedNotifications);
-      setUnreadCount((prev) => {
-        const updated = prev + 1;
-        localStorage.setItem("unreadCount", updated.toString());
+      setNotifications((prev) => {
+        const updated = [newNotification, ...prev];
         return updated;
       });
+      
+      setBadgeCount((prev) => prev + 1);
+    });
 
-      localStorage.setItem("notifications", JSON.stringify(updatedNotifications));
+    socketIo.on("disconnect", () => {
+      console.log("❌ Socket disconnected");
     });
 
     setSocket(socketIo);
-
     return () => {
       socketIo.disconnect();
     };
-  }, [notifications]);
+  }, []);
 
-  const markAllAsRead = () => {
-    setUnreadCount(0);
-    localStorage.setItem("unreadCount", "0");
+  const deleteNotification = async (id) => {
+    try {
+      // Delete from backend
+      const response = await fetch(`http://localhost:5000/agent-notifications/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        // Remove from local state
+        setNotifications((prev) => prev.filter((n) => n._id !== id && n.id !== id));
+        setBadgeCount((prev) => Math.max(0, prev - 1));
+      } else {
+        console.error('Failed to delete notification');
+      }
+    } catch (error) {
+      console.error('Error deleting notification:', error);
+    }
   };
 
-  const deleteNotification = (id) => {
-    const updated = notifications.filter((n) => n.id !== id);
-    setNotifications(updated);
-    localStorage.setItem("notifications", JSON.stringify(updated));
+  const markAsRead = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/agent-notifications/${id}/read`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        setNotifications((prev) =>
+          prev.map((n) =>
+            (n._id === id || n.id === id) ? { ...n, isRead: true } : n
+          )
+        );
+        setBadgeCount((prev) => Math.max(0, prev - 1));
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+    }
   };
 
   return (
@@ -70,9 +100,11 @@ export const SocketProvider = ({ children }) => {
       value={{
         socket,
         notifications,
-        unreadCount,
-        markAllAsRead,
+        setNotifications,
+        badgeCount,
+        setBadgeCount,
         deleteNotification,
+        markAsRead,
       }}
     >
       {children}

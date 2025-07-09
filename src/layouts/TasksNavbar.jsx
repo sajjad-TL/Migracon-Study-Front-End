@@ -3,10 +3,13 @@ import { IoMdArrowBack } from "react-icons/io";
 import { IoMdNotifications } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
+import { useEffect } from "react";
+import axios from "axios";
 
 const TasksNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [badgeCount, setBadgeCount] = useState(0);
 
     const navigate = useNavigate();
     const dropdownRef = useRef();
@@ -20,6 +23,27 @@ const TasksNavbar = ({ user }) => {
     };
 
 
+    useEffect(() => {
+        if (user?.agentId) {
+            axios
+                .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
+                .then((res) => {
+                    setBadgeCount(res.data?.count || 0);
+
+                    // Show toast only once per session
+                    const hasShownToast = sessionStorage.getItem("notificationToastShown");
+
+                    if (res.data?.count > 0 && !hasShownToast) {
+                        toast.info(`You have ${res.data.count} new notifications!`);
+                        sessionStorage.setItem("notificationToastShown", "true");
+                    }
+                })
+                .catch((err) => {
+                    console.error("Badge count fetch failed", err);
+                    setBadgeCount(0);
+                });
+        }
+    }, [user?.agentId]);
 
     return (
         <div className="w-full py-4 px-4 md:px-8 border-b">
@@ -43,9 +67,11 @@ const TasksNavbar = ({ user }) => {
                     <Link to="/notifications">
                         <div className="relative cursor-pointer">
                             <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                                6
-                            </span>
+                            {badgeCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                                    {badgeCount}
+                                </span>
+                            )}
                         </div>
                     </Link>
 
@@ -69,7 +95,7 @@ const TasksNavbar = ({ user }) => {
                                         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
                                     </Link>
                                     <Link to="/UserSetting">
-                                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
                                     </Link>
                                     <li className="border-t"></li>
                                     <li
@@ -124,7 +150,7 @@ const TasksNavbar = ({ user }) => {
                         </li>
                         <li>
                             <Link to="/UserSetting" className="block py-2 px-4 rounded hover:bg-gray-100">
-                            Settings
+                                Settings
                             </Link>
                         </li>
                     </ul>
