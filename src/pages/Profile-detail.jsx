@@ -51,16 +51,22 @@ const ProfileDetail = () => {
     window.location.href = "/login";
   };
 
-  const fetchAgentData = async () => {
-    try {
-      if (user?.agentId) {
-        const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
-        setAgentData(response.data.agent);
-      }
-    } catch (error) {
-      console.error('Error fetching agent data:', error);
+const fetchAgentData = async () => {
+  try {
+    if (user?.agentId) {
+      const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
+      setAgentData(response.data.agent);
+
+      setUser((prev) => ({
+        ...prev,
+        profilePicture: response.data.agent.profilePicture,
+      }));
     }
-  };
+  } catch (error) {
+    console.error('Error fetching agent data:', error);
+  }
+};
+
 
   const handleUpdate = async (formData) => {
     const sendData = new FormData();

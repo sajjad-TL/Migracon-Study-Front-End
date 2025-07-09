@@ -1,10 +1,20 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 
 const PublicRoute = ({ children }) => {
-  const isAuthenticated = !!localStorage.getItem('token');
+  const location = useLocation();
+  const token = localStorage.getItem('token');
+  const isAuthenticated = !!token;
 
-  return isAuthenticated ? <Navigate to="/dashboard" /> : children;
+  console.log('PublicRoute → Authenticated:', isAuthenticated);
+  console.log('PublicRoute → Location:', location.pathname);
+
+  if (isAuthenticated && location.pathname !== '/dashboard') {
+    // If already authenticated and not on dashboard, redirect
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return children;
 };
 
 export default PublicRoute;

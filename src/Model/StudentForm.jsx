@@ -76,6 +76,7 @@ const StudentForm = ({ isOpen, onClose, onStudentAdded }) => {
       });
 
       const data = await response.json();
+      console.log(data,"ajfioawej")
 
       if (!response.ok) {
         if (data?.message === "User already exists") {
