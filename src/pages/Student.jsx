@@ -30,10 +30,8 @@ export default function StudentDashboard() {
   const [viewMode, setViewMode] = useState('table');
   const [searchTerm, setSearchTerm] = useState('');
   const [students, setStudents] = useState([]);
-
   const [setStudentData] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
-
   const { user } = useContext(UserContext);
   const agentId = user?.agentId;
   const studentsPerPage = 6;
@@ -95,9 +93,6 @@ export default function StudentDashboard() {
         applicationCount: s.applicationCount || 0,
         applications: s.applications || [],
       }));
-
-
-
       setStudents(normalized);
     } catch (error) {
       console.error("Error fetching students:", error);
