@@ -16,30 +16,23 @@ export const SocketProvider = ({ children }) => {
       console.log("✅ Socket connected:", socketIo.id);
     });
 
-    socketIo.on("notification", (data) => {
-      console.log("📧 New notification received:", data);
-      
-      const newNotification = {
-        _id: data._id || Date.now().toString(),
-        userId: data.userId,
-        message: data.message,
-        type: data.type || "Updates",
-        isRead: data.isRead || false,
-        createdAt: data.createdAt || new Date().toISOString(),
-        // For compatibility with old format
-        notificationType: data.type || "Updates",
-        emailFrequency: "Real-time",
-        mobileNotifications: true,
-        time: data.createdAt || new Date().toISOString()
-      };
+   socketIo.on("notification", (data) => {
+  console.log("📧 New notification received:", data); // You should see this!
+  
+  const newNotification = {
+    _id: data._id || Date.now().toString(),
+    userId: data.userId,
+    message: data.message,
+    type: data.type || "Updates",
+    isRead: data.isRead || false,
+    createdAt: data.createdAt || new Date().toISOString(),
+    time: data.createdAt || new Date().toISOString()
+  };
 
-      setNotifications((prev) => {
-        const updated = [newNotification, ...prev];
-        return updated;
-      });
-      
-      setBadgeCount((prev) => prev + 1);
-    });
+  setNotifications((prev) => [newNotification, ...prev]);
+  setBadgeCount((prev) => prev + 1);
+});
+
 
     socketIo.on("disconnect", () => {
       console.log("❌ Socket disconnected");
@@ -73,27 +66,26 @@ export const SocketProvider = ({ children }) => {
     }
   };
 
-  const markAsRead = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:5000/agent-notifications/${id}/read`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+const markAsRead = async (id) => {
+  try {
+    const response = await fetch(`http://localhost:5000/agent-notifications/${id}/read`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+    });
 
-      if (response.ok) {
-        setNotifications((prev) =>
-          prev.map((n) =>
-            (n._id === id || n.id === id) ? { ...n, isRead: true } : n
-          )
-        );
-        setBadgeCount((prev) => Math.max(0, prev - 1));
-      }
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
+    if (response.ok) {
+      setNotifications((prev) =>
+        prev.map((n) =>
+          (n._id === id || n.id === id) ? { ...n, isRead: true } : n
+        )
+      );
+      setBadgeCount((prev) => Math.max(0, prev - 1)); // ✅ This reduces badge
     }
-  };
+  } catch (error) {
+    console.error('Error marking notification as read:', error);
+  }
+};
+
 
   return (
     <SocketContext.Provider
@@ -102,6 +94,7 @@ export const SocketProvider = ({ children }) => {
         notifications,
         setNotifications,
         badgeCount,
+        
         setBadgeCount,
         deleteNotification,
         markAsRead,

@@ -4,20 +4,27 @@ import { motion } from 'framer-motion';
 import { format } from 'timeago.js';
 import NotificationsNavbar from '../layouts/NotificationsNavbar';
 import { UserContext } from '../context/userContext';
-import { useSocket } from '../context/SocketContext';
 import axios from 'axios';
+import { useSocket } from '../context/SocketContext';
 
 export default function Notification() {
   const { user } = useContext(UserContext);
-  const { notifications, setNotifications, badgeCount, setBadgeCount, deleteNotification, markAsRead, socket } = useSocket();
+  const {
+    notifications,
+    setNotifications,
+    badgeCount,
+    setBadgeCount,
+    deleteNotification,
+    markAsRead,
+    socket
+  } = useSocket();
+
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState(null);
   const [lastFetch, setLastFetch] = useState(null);
 
-  // Enhanced fetch function with better error handling
   const fetchNotifications = async (showLoading = true) => {
     if (!user?.agentId) {
-      console.log('❌ No agent ID found');
       setApiError('No agent ID found');
       return;
     }
@@ -26,69 +33,28 @@ export default function Notification() {
     setApiError(null);
 
     try {
-      const agentId = user.agentId;
-      const url = `http://localhost:5000/agent-notifications/${agentId}`;
-      console.log('🌐 Fetching from URL:', url);
-      console.log('📋 Request details:', {
-        method: 'GET',
-        url: url,
-        agentId: agentId,
-        timestamp: new Date().toISOString()
-      });
-
-      const res = await axios.get(url, {
-        timeout: 10000, // 10 second timeout
-        headers: {
-          'Content-Type': 'application/json',
-        }
-      });
-
-      console.log('📦 Full Response:', {
-        status: res.status,
-        statusText: res.statusText,
-        data: res.data,
-        headers: res.headers
-      });
+      const res = await axios.get(
+        `http://localhost:5000/agent-notifications/${user.agentId}`,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
 
       setLastFetch(new Date().toISOString());
 
       if (res.data.success && Array.isArray(res.data.notifications)) {
-        const transformedNotifications = res.data.notifications.map(notif => ({
-          ...notif,
-          notificationType: notif.type || 'Updates',
+        const transformed = res.data.notifications.map(n => ({
+          ...n,
+          notificationType: n.type || 'Updates',
           emailFrequency: 'Real-time',
           mobileNotifications: true,
-          time: notif.createdAt
+          time: n.createdAt,
         }));
-        console.log('✅ Transformed notifications:', transformedNotifications);
-        setNotifications(transformedNotifications);
+        setNotifications(transformed);
         setBadgeCount(res.data.count || 0);
       } else {
-        console.log('⚠️ No notifications or invalid response structure');
-        console.log('Response structure:', {
-          hasSuccess: 'success' in res.data,
-          successValue: res.data.success,
-          hasNotifications: 'notifications' in res.data,
-          notificationsType: typeof res.data.notifications,
-          isArray: Array.isArray(res.data.notifications)
-        });
         setNotifications([]);
         setBadgeCount(0);
       }
     } catch (err) {
-      console.error('❌ Failed to load notifications:', err);
-      console.error('❌ Error details:', {
-        message: err.message,
-        status: err.response?.status,
-        statusText: err.response?.statusText,
-        data: err.response?.data,
-        config: {
-          url: err.config?.url,
-          method: err.config?.method,
-          timeout: err.config?.timeout
-        }
-      });
-
       setApiError(`Failed to load notifications: ${err.message}`);
       setNotifications([]);
       setBadgeCount(0);
@@ -97,96 +63,65 @@ export default function Notification() {
     }
   };
 
-  // First useEffect - Fetch notifications on component mount
   useEffect(() => {
-    console.log('🔍 User object:', user);
-    console.log('🔍 Agent ID:', user?.agentId);
-
-    if (user?.agentId) {
-      fetchNotifications();
-    }
+    if (user?.agentId) fetchNotifications();
   }, [user?.agentId]);
 
-  // Second useEffect - Socket listeners
+  // 👇 Auto-mark unread notifications as read on mount
   useEffect(() => {
-    if (!user?.agentId || !socket) {
-      console.log('❌ Missing user.agentId or socket:', {
-        agentId: user?.agentId,
-        socket: !!socket
-      });
-      return;
-    }
+    const unread = notifications.filter(n => !n.isRead);
+    unread.forEach(n => {
+      markAsRead(n._id || n.id);
+    });
+  }, [notifications]);
 
-    console.log('🔌 Setting up socket listeners for agent:', user.agentId);
+  // Socket setup
+  useEffect(() => {
+    if (!user?.agentId || !socket) return;
 
-    // Join agent-specific room
     socket.emit('join-agent-room', user.agentId);
 
-
     const handleNotification = (notification) => {
-      console.log('📥 Received notification:', notification);
+      if (!notification?.message) return;
+
       if (notification.userId === user.agentId) {
-        setNotifications(prev => [notification, ...prev]);
+        const transformed = {
+          _id: `live-${Date.now()}`,
+          message: notification.message,
+          type: notification.type || 'Login',
+          notificationType: notification.type || 'Updates',
+          userId: notification.userId,
+          emailFrequency: 'Real-time',
+          mobileNotifications: true,
+          createdAt: notification.createdAt || new Date().toISOString(),
+          isRead: false,
+        };
+        setNotifications(prev => [transformed, ...prev]);
         setBadgeCount(prev => prev + 1);
       }
     };
 
     const handleNotificationRead = (data) => {
-      console.log('👁️ Notification read:', data);
       if (data.userId === user.agentId) {
         setNotifications(prev =>
-          prev.map(notif =>
-            notif._id === data.notificationId
-              ? { ...notif, isRead: true }
-              : notif
-          )
+          prev.map(n => (n._id === data.notificationId ? { ...n, isRead: true } : n))
         );
         setBadgeCount(prev => Math.max(0, prev - 1));
       }
     };
 
     const handleNotificationDeleted = (data) => {
-      console.log('🗑️ Notification deleted:', data);
       if (data.userId === user.agentId) {
-        setNotifications(prev =>
-          prev.filter(notif => notif._id !== data.notificationId)
-        );
+        setNotifications(prev => prev.filter(n => n._id !== data.notificationId));
         setBadgeCount(prev => Math.max(0, prev - 1));
       }
     };
 
-    // Add connection event listeners
-    const handleConnect = () => {
-      console.log('✅ Socket connected');
-    };
-
-    const handleDisconnect = () => {
-      console.log('❌ Socket disconnected');
-    };
-
-    const handlePong = (data) => {
-      console.log('🏓 Pong received:', data);
-    };
-
-    const handleRoomJoined = (data) => {
-      console.log('🏠 Room joined:', data);
-    };
-
-    // Add all event listeners
-    socket.on('connect', handleConnect);
-    socket.on('disconnect', handleDisconnect);
-    socket.on('pong', handlePong);
-    socket.on('room-joined', handleRoomJoined);
     socket.on('notification', handleNotification);
     socket.on('notification-read', handleNotificationRead);
     socket.on('notification-deleted', handleNotificationDeleted);
 
     return () => {
-      console.log('🧹 Cleaning up socket listeners');
-      socket.off('connect', handleConnect);
-      socket.off('disconnect', handleDisconnect);
-      socket.off('pong', handlePong);
-      socket.off('room-joined', handleRoomJoined);
       socket.off('notification', handleNotification);
       socket.off('notification-read', handleNotificationRead);
       socket.off('notification-deleted', handleNotificationDeleted);
@@ -213,21 +148,15 @@ export default function Notification() {
     }
   };
 
-  const handleMarkAsRead = (id) => {
-    markAsRead(id);
-  };
-
   const handleDelete = (id) => {
     deleteNotification(id);
   };
-
 
   return (
     <>
       <NotificationsNavbar user={user} badgeCount={badgeCount} />
       <div className="bg-gradient-to-br from-gray-100 to-white min-h-screen p-6 flex justify-center">
         <div className="w-full max-w-5xl">
-
           {apiError && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               <strong>API Error:</strong> {apiError}
@@ -242,10 +171,11 @@ export default function Notification() {
           )}
 
           <div className="grid gap-4 sm:grid-cols-2 items-stretch">
-            {Array.isArray(notifications) && notifications.length > 0 ? (
+            {notifications.length > 0 ? (
               notifications.map((notif, index) => {
                 const type = notif.notificationType || notif.type || 'Updates';
                 const isRead = notif.isRead || false;
+
                 return (
                   <motion.div
                     key={notif._id || notif.id}
@@ -260,6 +190,7 @@ export default function Notification() {
                     >
                       <X size={14} />
                     </button>
+
                     <div className="flex items-start space-x-3">
                       <div className="relative">
                         <div className={`bg-gradient-to-br ${getGradient(type)} p-2 rounded-full`}>
@@ -269,6 +200,7 @@ export default function Notification() {
                           <span className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-400 border-2 border-white rounded-full animate-ping"></span>
                         )}
                       </div>
+
                       <div className="flex-1 overflow-hidden">
                         <h4 className="text-sm font-semibold text-gray-800 leading-tight">
                           🔔 {type} {isRead && <span className="text-green-500 text-xs">✓ Read</span>}
@@ -289,13 +221,11 @@ export default function Notification() {
                         </div>
                       </div>
                     </div>
+
                     <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition duration-300 text-[11px] text-blue-500 cursor-pointer flex gap-3">
                       {!isRead && (
-                        <span
-                          className="hover:underline flex items-center gap-1"
-                          onClick={() => handleMarkAsRead(notif._id || notif.id)}
-                        >
-                          <CheckCircle size={12} /> Mark as read
+                        <span className="hover:underline flex items-center gap-1">
+                          <CheckCircle size={12} /> Marked as read
                         </span>
                       )}
                       <span className="hover:underline">Reply</span>
@@ -310,24 +240,6 @@ export default function Notification() {
                 <p className="text-sm text-gray-500">
                   You'll see notifications here when students are added or applications are submitted.
                 </p>
-                {!user?.agentId && (
-                  <p className="text-red-500 text-sm mt-2">
-                    ⚠️ Agent ID not found in user context
-                  </p>
-                )}
-                {!socket?.connected && (
-                  <p className="text-red-500 text-sm mt-2">
-                    ⚠️ Socket not connected
-                  </p>
-                )}
-                <div className="mt-4 space-x-2">
-                  <button
-                    onClick={() => fetchNotifications()}
-                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  >
-                    Refresh Notifications
-                  </button>
-                </div>
               </div>
             )}
           </div>

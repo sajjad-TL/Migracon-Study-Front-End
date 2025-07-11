@@ -7,14 +7,15 @@ import { GoogleLogin } from '@react-oauth/google';
 import { UserContext } from '../context/userContext';
 import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
-
+import { useSocket } from "../context/SocketContext";
 
 const Login = () => {
+  const { socket } = useSocket(); // ✅ Correct usage inside component
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext)
+  const { setUser } = useContext(UserContext);
 
   const handleLoginSuccess = async (response) => {
     try {
@@ -31,13 +32,12 @@ const Login = () => {
       if (data?.token) {
         localStorage.setItem("token", data.token);
         setUser(data);
-        setError(null);
+        socket?.emit("agent-connected", { agentId: data.agentId }); // emit on Google login
         navigate("/dashboard");
-        toast.success("user login successfully")
+        toast.success("User login successfully");
       } else {
         setError(data.message || 'Something went wrong');
-        toast.error("user not login")
-
+        toast.error("User not logged in");
       }
 
     } catch (err) {
@@ -46,13 +46,10 @@ const Login = () => {
     }
   };
 
-
   const handleLoginError = (error) => {
     setError('Failed to login with Google');
-    toast.error("user not login")
-
+    toast.error("Google login failed");
   };
-
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,17 +69,21 @@ const Login = () => {
       const res = await axios.post("http://localhost:5000/api/other-auth/login", form);
 
       if (res.status === 200) {
-
         localStorage.setItem("token", res.data.token);
-        setUser(res.data)
-        navigate("/dashboard");
-        toast.success("User login successfully")
+        setUser(res.data);
 
+        // Emit agent-connected event via socket
+        if (socket && res.data.agentId) {
+    socket.emit("join-agent-room", res.data.agentId); // ✅ critical
+  }
+
+
+        navigate("/dashboard");
+        toast.success("User login successfully");
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed. Try again.");
-      toast.error("Incorrect Email and Password")
-
+      toast.error("Incorrect Email or Password");
     }
   };
 
@@ -93,25 +94,19 @@ const Login = () => {
     }
   }, []);
 
-
   return (
     <div className="min-h-screen flex">
-         <div className="hidden md:block w-5/12 bg-blue-700 relative overflow-hidden">
+      <div className="hidden md:block w-5/12 bg-blue-700 relative overflow-hidden">
         <div className="absolute w-full h-full">
           <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 -left-20"></div>
           <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-40 -left-10"></div>
           <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 left-20"></div>
         </div>
       </div>
+
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8">
-
         <div className="w-full max-w-sm">
-          <img
-            src={logo}
-            alt="ApplyBoard Logo"
-            className="h-10 mb-8"
-          />
-
+          <img src={logo} alt="ApplyBoard Logo" className="h-10 mb-8" />
           <h2 className="text-2xl font-semibold mb-6">Log In</h2>
 
           {error && (
@@ -153,10 +148,7 @@ const Login = () => {
           </form>
 
           <div className="text-sm text-right mt-2 text-blue-600 cursor-pointer hover:underline">
-            <Link to="/forgot-password">
-
-              Forgot password?
-            </Link>
+            <Link to="/forgot-password">Forgot password?</Link>
           </div>
 
           <div className="flex items-center my-4">
@@ -168,7 +160,6 @@ const Login = () => {
           <div className="space-y-2">
             <GoogleLogin
               onSuccess={handleLoginSuccess}
-
               onError={handleLoginError}
             />
             <button className="w-full flex items-center justify-center border rounded-lg py-2 hover:bg-gray-100">
@@ -203,7 +194,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };

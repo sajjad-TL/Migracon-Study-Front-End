@@ -3,6 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { UserProvider } from "./context/userContext";
+import { SocketProvider } from "./context/SocketContext"; // ✅ Import this
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -13,8 +14,10 @@ function App() {
   return (
     <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
       <UserProvider>
-        <AppRoutes />
-        <ToastContainer position="top-right" autoClose={3000} />
+        <SocketProvider> 
+          <AppRoutes />
+          <ToastContainer position="top-right" autoClose={3000} />
+        </SocketProvider>
       </UserProvider>
     </GoogleOAuthProvider>
   );

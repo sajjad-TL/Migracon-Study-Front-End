@@ -3,12 +3,15 @@ import { IoMdArrowBack } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 
+
 const SettingsNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const dropdownRef = useRef();
     const sidebarRef = useRef();
+    
+    
 
 
 

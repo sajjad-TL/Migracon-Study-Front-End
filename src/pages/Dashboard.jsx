@@ -29,6 +29,9 @@ import axios from "axios";
 import { TfiEmail } from "react-icons/tfi";
 import { MdLocalPhone } from "react-icons/md";
 import { toast } from "react-toastify";
+import { useSocket } from "../context/SocketContext";
+
+
 
 export default function AgentDashboard() {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -49,6 +52,8 @@ export default function AgentDashboard() {
   const navigate = useNavigate();
   const openStudentModal = () => setIsFormOpen(true);
   const closeStudentModal = () => setIsFormOpen(false);
+  const { badgeCount } = useSocket();
+  
 
   const handleStudentAdded = () => {
     closeStudentModal();
@@ -144,7 +149,7 @@ export default function AgentDashboard() {
   ];
 
 
-  const [badgeCount, setBadgeCount] = useState(0);
+  // const [badgeCount, setBadgeCount] = useState(0);
 
   const fetchApplications = async () => {
     try {
@@ -340,16 +345,15 @@ export default function AgentDashboard() {
             <div className="relative" ref={dropdownRef}>
               <div className="flex flex-row gap-8 items-center cursor-pointer">
                 <Link to="/notifications">
-                  <div className="relative cursor-pointer">
-                    <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
-
-                    {badgeCount > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                        {badgeCount}
-                      </span>
-                    )}
-                  </div>
-                </Link>
+                    <div className="relative cursor-pointer">
+                        <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
+                        {badgeCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                            {badgeCount}
+                        </span>
+                        )}
+                    </div>
+                    </Link>
 
                 <img
                   src={

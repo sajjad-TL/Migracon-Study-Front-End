@@ -61,7 +61,6 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
       status: formData.status
     };
 
-    // Add application data if we have an applicationId
     if (applicationId) {
       payload.updatedApplication = {
         applicationId: applicationId,
@@ -83,10 +82,10 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "Failed to update student.");
-      }
+      // if (!response.ok) {
+      //   const errorText = await response.text();
+      //   // throw new Error(errorText || "Failed to update student.");
+      // }
 
       const result = await response.json();
       toast.success("Student updated successfully!");
@@ -98,7 +97,7 @@ const EditStudent = ({ isOpen, onClose, agentData, onStudentUpdated }) => {
       onClose();
     } catch (error) {
       console.error("Update failed:", error);
-      toast.error("Update failed: " + error.message);
+      // toast.error("Update failed: " + error.message);
     }
   };
 

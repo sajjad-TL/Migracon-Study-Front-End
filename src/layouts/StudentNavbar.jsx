@@ -4,14 +4,18 @@ import { IoMdNotifications } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 import axios from "axios";
+import { useSocket } from "../context/SocketContext";
+
+
 const StudentNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-        const [badgeCount, setBadgeCount] = useState(0);
 
     const navigate = useNavigate();
     const dropdownRef = useRef();
     const sidebarRef = useRef();
+    const { badgeCount } = useSocket();
+
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -89,14 +93,14 @@ const StudentNavbar = ({ user }) => {
                 {/* Right side: Notifications + Profile */}
                 <div className="flex items-center gap-4">
                   <Link to="/notifications">
-                        <div className="relative cursor-pointer">
-                            <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
-                            {badgeCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                                    {badgeCount}
-                                </span>
-                            )}
-                        </div>
+                    <div className="relative cursor-pointer">
+                        <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
+                        {badgeCount > 0 && (
+                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                            {badgeCount}
+                        </span>
+                        )}
+                    </div>
                     </Link>
                     
                     <div className="relative" ref={dropdownRef}>
