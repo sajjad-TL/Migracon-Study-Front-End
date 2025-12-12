@@ -36,15 +36,12 @@ export default function Application() {
     }
 
     const date = new Date(dateStr);
-
     const year = date.getFullYear();
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const day = date.getDate().toString().padStart(2, '0');
 
     return `${year}-${month}-${day}`;
   };
-
-
 
   const handleApplyFilters = () => {
     const filtered = originalApplications.filter((app) => {
@@ -66,10 +63,6 @@ export default function Application() {
 
     setApplications(filtered);
   };
-
-
-
-
 
   const fetchApplications = async () => {
     try {
@@ -168,8 +161,6 @@ export default function Application() {
           </div>
         </div>
 
-
-        {/* Filter Form */}
         {showFilters && (
 
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
@@ -374,8 +365,6 @@ export default function Application() {
                         </div>
                       </td>
 
-
-
                       <td className="py-2 px-2 border-b">{app.startDate ? new Date(app.startDate).toLocaleDateString() : '-'}</td>
                       <td className="py-2 px-2 border-b">{app.requirementspartner}</td>
                       <td className="py-2 px-2 border-b">
@@ -402,7 +391,6 @@ export default function Application() {
               </tbody>
             </table>
           </div>
-
         )}
       </div>
     </div>

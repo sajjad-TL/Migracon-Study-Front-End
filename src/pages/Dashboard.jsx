@@ -52,9 +52,6 @@ export default function AgentDashboard() {
   const navigate = useNavigate();
   const openStudentModal = () => setIsFormOpen(true);
   const closeStudentModal = () => setIsFormOpen(false);
-  const { badgeCount } = useSocket();
-  
-
   const handleStudentAdded = () => {
     closeStudentModal();
     fetchApplications();
@@ -149,7 +146,7 @@ export default function AgentDashboard() {
   ];
 
 
-  // const [badgeCount, setBadgeCount] = useState(0);
+  const [badgeCount, setBadgeCount] = useState(0);
 
   const fetchApplications = async () => {
     try {
@@ -177,10 +174,7 @@ export default function AgentDashboard() {
         .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
         .then((res) => {
           setBadgeCount(res.data?.count || 0);
-
-          // Show toast only once per session
           const hasShownToast = sessionStorage.getItem("notificationToastShown");
-
           if (res.data?.count > 0 && !hasShownToast) {
             toast.info(`You have ${res.data.count} new notifications!`);
             sessionStorage.setItem("notificationToastShown", "true");
@@ -320,7 +314,6 @@ export default function AgentDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm border-b border-gray-200">
         <div className="flex items-center justify-between px-4">
           <div className="flex md:space-x-6">
@@ -345,15 +338,15 @@ export default function AgentDashboard() {
             <div className="relative" ref={dropdownRef}>
               <div className="flex flex-row gap-8 items-center cursor-pointer">
                 <Link to="/notifications">
-                    <div className="relative cursor-pointer">
-                        <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
-                        {badgeCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                            {badgeCount}
-                        </span>
-                        )}
-                    </div>
-                    </Link>
+                  <div className="relative cursor-pointer">
+                    <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
+                    {badgeCount > 0 && (
+                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                        {badgeCount}
+                      </span>
+                    )}
+                  </div>
+                </Link>
 
                 <img
                   src={
@@ -367,7 +360,6 @@ export default function AgentDashboard() {
                 />
               </div>
 
-              {/* Dropdown menu */}
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
                   <ul className="py-2 text-sm text-gray-700">
@@ -394,7 +386,6 @@ export default function AgentDashboard() {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden bg-white px-4 py-2 border-t border-gray-200">
             <div className="flex flex-col space-y-2">
@@ -411,7 +402,6 @@ export default function AgentDashboard() {
           <h1 className="text-3xl font-semibold text-gray-800 mb-6">
             Agent Dashboard
           </h1>
-          {/* Stats Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3 mb-6">
             <div className=" bg-white px-3 py-3 rounded-lg shadow-sm border border-gray-200">
               <div className="pad flex items-center gap-2 ">
@@ -455,9 +445,7 @@ export default function AgentDashboard() {
             </div>
           </div>
 
-          {/* Two Column Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-6">
-            {/* Recent Applications */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="font-semibold text-2xl text-gray-800">Recent Applications</h2>
@@ -477,8 +465,6 @@ export default function AgentDashboard() {
                         key={index}
                         className="flex justify-between items-center border-b border-gray-100 py-2"
                       >
-
-                        {/* Left: Profile and student info */}
                         <div className="flex items-center space-x-3">
                           <div className="h-12 w-12 rounded-full bg-gray-200 overflow-hidden">
                             <img
@@ -497,7 +483,6 @@ export default function AgentDashboard() {
                           </div>
                         </div>
 
-                        {/* Right: Status and Date */}
                         <div className="text-right space-y-1">
                           <div>
                             <span
@@ -530,8 +515,6 @@ export default function AgentDashboard() {
               </div>
             </div>
 
-
-            {/* Tasks Due Soon */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="font-semibold text-2xl text-gray-800">Tasks Due Soon</h2>
@@ -597,11 +580,8 @@ export default function AgentDashboard() {
               </div>
             </div>
           </div>
-
-          {/* Quick Actions */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <h2 className="font-semibold text-2xl text-gray-800 mb-4">Quick Actions</h2>
-
             <div className="flex overflow-x-auto space-x-3 lg:space-x-0 lg:grid lg:grid-cols-4 lg:gap-4 scrollbar-hide">
               {actions.map(({ label, icon, route, type }) => (
                 <ActionButton
@@ -620,12 +600,8 @@ export default function AgentDashboard() {
                 />
               ))}
             </div>
-
-
           </div>
 
-
-          {/* Task Management */}
           <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
             <h2 className="font-semibold text-2xl text-gray-800 mb-4">
               Task Management
@@ -651,16 +627,11 @@ export default function AgentDashboard() {
                 </button>
               ))}
             </div>
-
-
-            {/* Application Statistics */}
             <div>
               <h3 className="text-sm font-medium text-gray-700 mb-2">
                 Application Statistics - Summer 2025
               </h3>
               <div className="h-64 bg-white ">
-                {/* Chart placeholder */}
-
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={data}>
                     <CartesianGrid strokeDasharray="3 3" />
@@ -720,8 +691,6 @@ export default function AgentDashboard() {
 
             </div>
           </div>
-
-          {/* Business Insights */}
 
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6 ">
             <div className="flex justify-between items-center mb-4">
@@ -786,7 +755,6 @@ export default function AgentDashboard() {
 
           </div>
 
-          {/* Second Chart Section */}
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold text-gray-800">
@@ -832,9 +800,9 @@ export default function AgentDashboard() {
                       value: "Number of Applications",
                       angle: -90,
                       position: "insideLeft",
-                      dy: 5, // adjust vertical placement
-                      dx: 10, // optional: adjust horizontal alignment
-                      style: { textAnchor: "middle" } // center align the text
+                      dy: 5,
+                      dx: 10,
+                      style: { textAnchor: "middle" }
                     }}
                   />
 
@@ -853,7 +821,6 @@ export default function AgentDashboard() {
             </div>
           </div>
 
-          {/* Performance Section */}
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
             <div className="flex justify-between items-center mb-4 ">
               <h2 className="text-lg font-semibold">Performance</h2>
@@ -867,10 +834,7 @@ export default function AgentDashboard() {
                     <option value="2024">2024</option>
                     <option value="2023">2023</option>
                   </select>
-
                 </div>
-
-
 
                 <div className="relative  ">
                   <select
@@ -924,7 +888,6 @@ export default function AgentDashboard() {
             </div>
           </div>
 
-          {/* Revenue Section */}
           <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-6 mb-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-semibold">Revenue Generated</h2>
@@ -999,7 +962,6 @@ export default function AgentDashboard() {
           </div>
         </main>
 
-        {/* Sidebar - Only visible on larger screens */}
         <div className="w-full xl:w-[50%] px-6 pt-20 ">
           <div className="bg-white p-6 rounded-lg shadow-sm mb-6 border border-gray-100">
             <h3 className="font-semibold text-2xl mb-4">Your Balance</h3>
@@ -1076,7 +1038,6 @@ export default function AgentDashboard() {
         </div>
       </div>
 
-
       {isFormOpen && (
         <StudentForm
           isOpen={isFormOpen}
@@ -1085,8 +1046,5 @@ export default function AgentDashboard() {
         />
       )}
     </div>
-
-
-
   );
 }

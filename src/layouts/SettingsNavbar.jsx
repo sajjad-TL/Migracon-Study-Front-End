@@ -7,40 +7,27 @@ import { IoMdClose } from "react-icons/io";
 const SettingsNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
     const dropdownRef = useRef();
     const sidebarRef = useRef();
-    
-    
-
-
-
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         window.location.href = "/login";
     };
 
-
-
     return (
         <div className="w-full py-4 px-4 md:px-8 border-b">
 
             <div className="flex justify-between items-center">
-                {/* Left side: Hamburger + Back + Breadcrumbs */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-
-
                     <Link to="/dashboard" className="flex items-center gap-2 cursor-pointer">
                         <IoMdArrowBack className="text-xl text-black" />
                         <span className="text-gray-500 hover:text-black transition">Dashboard</span>
                     </Link>
-                    
+
                     <span className="mx-1">/</span>
                     <span className="font-medium text-black border-b-2 border-black pb-1">Settings</span>
                 </div>
-
-                {/* Right side: Notifications + Profile */}
                 <div className="flex items-center gap-4">
 
 
@@ -63,7 +50,7 @@ const SettingsNavbar = ({ user }) => {
                                     <Link to="/ProfileDetail">
                                         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
                                     </Link>
-                                   
+
                                     <li className="border-t"></li>
                                     <li
                                         className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-red-500"
@@ -78,7 +65,6 @@ const SettingsNavbar = ({ user }) => {
                 </div>
             </div>
 
-            {/* Sidebar */}
             <div
                 ref={sidebarRef}
                 className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -115,7 +101,7 @@ const SettingsNavbar = ({ user }) => {
                                 Reports
                             </Link>
                         </li>
-                      
+
 
                     </ul>
                 </nav>
@@ -137,7 +123,6 @@ const SettingsNavbar = ({ user }) => {
                 </div>
             </div>
 
-            {/* Overlay */}
             {sidebarOpen && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-40"

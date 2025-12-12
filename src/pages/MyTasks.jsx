@@ -171,16 +171,11 @@ export default function StudentTaskDashboard() {
 
   return (
     <div className="bg-gray-50 min-h-screen">
-      {/* Header */}
       <TasksNavbar user={user} />
 
-
-      {/* Main content */}
       <div className="p-4">
         <h1 className="text-xl font-medium mb-1">My tasks</h1>
         <p className="text-sm text-gray-600 mb-4">You have 20 uncompleted tasks</p>
-
-        {/* Filters */}
         <div className="flex flex-wrap gap-2 mb-4">
           <div className="flex-1 min-w-[150px]">
             <div className="border rounded bg-white flex justify-between items-center p-2 text-sm">
@@ -231,8 +226,6 @@ export default function StudentTaskDashboard() {
             </div>
           </div>
         </div>
-
-        {/* Status and task options */}
         <div className="flex justify-between items-center mb-4">
           <div className="text-sm text-gray-600">
             Showing 19 out of 19 uncompleted tasks
@@ -262,13 +255,10 @@ export default function StudentTaskDashboard() {
           </div>
         </div>
 
-        {/* Task cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {tasks.map(renderTaskCard)}
         </div>
       </div>
-
-      {/* Help button */}
       <div className="fixed bottom-4 right-4">
         <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">
           <HelpCircle size={24} className="text-white" />

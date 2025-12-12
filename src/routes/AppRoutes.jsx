@@ -23,9 +23,7 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<Navigate to="/login" />} /> */}
 
-        {/* Public Routes */}
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
@@ -42,8 +40,6 @@ const AppRoutes = () => {
           }
         />
 
-
-        {/* Protected Routes with Layout */}
         <Route
           path="/"
           element={
@@ -62,7 +58,6 @@ const AppRoutes = () => {
           <Route path="notifications" element={<Notification />} />
           <Route path="UserSetting" element={<UserSetting />} />
           <Route path="payments" element={<Payments />} />
-          {/* Add more nested routes here if needed */}
         </Route>
       </Routes>
     </BrowserRouter>

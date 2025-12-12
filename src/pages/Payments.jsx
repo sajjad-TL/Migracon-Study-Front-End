@@ -14,7 +14,6 @@ export default function PaymentsPage() {
   const [expandedTransaction, setExpandedTransaction] = useState(null);
 
   const { user } = useContext(UserContext);
-
   const purchasesData = [
     {
       date: "Jan 27, 2023",
@@ -107,18 +106,16 @@ export default function PaymentsPage() {
 
   return (
     <div className="xl:max-w-10xl mx-auto bg-white">
-      {/* Header Navigation */}
       <div className="border-b border-gray-200 px-4 py-3 flex items-center">
         <PaymentNavbar user={user} />
       </div>
 
-      {/* Tab Navigation */}
       <div className="px-4">
         <div className="flex border-b">
           <button
             className={`py-4 px-4 ${activeTab === "Purchases"
-                ? "text-blue-600 border-b-2 border-blue-600 font-medium"
-                : "text-gray-500"
+              ? "text-blue-600 border-b-2 border-blue-600 font-medium"
+              : "text-gray-500"
               }`}
             onClick={() => setActiveTab("Purchases")}
           >
@@ -126,8 +123,8 @@ export default function PaymentsPage() {
           </button>
           <button
             className={`py-4 px-4 ${activeTab === "ApplyCredits"
-                ? "text-blue-600 border-b-2 border-blue-600 font-medium"
-                : "text-gray-500"
+              ? "text-blue-600 border-b-2 border-blue-600 font-medium"
+              : "text-gray-500"
               }`}
             onClick={() => setActiveTab("ApplyCredits")}
           >
@@ -135,8 +132,6 @@ export default function PaymentsPage() {
           </button>
         </div>
       </div>
-
-      {/* Content Area */}
       <div className="p-4">
         {activeTab === "Purchases" && (
           <>
@@ -214,7 +209,6 @@ export default function PaymentsPage() {
                 </div>
               </div>
 
-              {/* Orders Table */}
               <div className="border rounded overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -334,7 +328,6 @@ export default function PaymentsPage() {
                 </div>
               </div>
 
-              {/* Transactions Table */}
               <div className="border rounded overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className="bg-gray-50">
@@ -416,8 +409,6 @@ export default function PaymentsPage() {
           </>
         )}
       </div>
-
-      {/* Help Button */}
       <div className="fixed bottom-4 right-4">
         <button className="bg-blue-600 text-white rounded-full px-4 py-2 flex items-center shadow-lg">
           <span className="mr-2">Help</span>

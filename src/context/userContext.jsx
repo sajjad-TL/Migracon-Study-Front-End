@@ -2,7 +2,6 @@ import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 
 export const UserContext = createContext({});
-
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
@@ -14,14 +13,12 @@ export const UserProvider = ({ children }) => {
     }
   });
 
-  // ✅ Sync to localStorage when user updates
   useEffect(() => {
     if (user && Object.keys(user).length > 0) {
       localStorage.setItem("user", JSON.stringify(user));
     }
   }, [user]);
 
-  // ✅ Validate token on load
   useEffect(() => {
     const token = localStorage.getItem("token");
 

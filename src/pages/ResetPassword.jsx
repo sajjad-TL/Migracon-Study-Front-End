@@ -67,7 +67,6 @@ export default function ResetPassword() {
   );
   return (
     <div className="flex h-screen">
-      {/* Left blue section */}
       <div className="hidden md:block w-5/12 bg-blue-700 relative overflow-hidden">
         <div className="absolute w-full h-full">
           <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 -left-20"></div>
@@ -75,7 +74,6 @@ export default function ResetPassword() {
           <div className="absolute rounded-full w-96 h-96 border border-blue-600 opacity-20 top-16 left-20"></div>
         </div>
       </div>
-      {/* Right content section */}
       <div className="w-full md:w-7/12 flex items-center justify-center p-8 bg-gray-100">
         <div className="w-full max-w-md bg-white shadow rounded-lg p-6">
           <div className="text-center mb-6">

@@ -67,7 +67,6 @@ export default function Notification() {
     if (user?.agentId) fetchNotifications();
   }, [user?.agentId]);
 
-  // 👇 Auto-mark unread notifications as read on mount
   useEffect(() => {
     const unread = notifications.filter(n => !n.isRead);
     unread.forEach(n => {
@@ -75,7 +74,6 @@ export default function Notification() {
     });
   }, [notifications]);
 
-  // Socket setup
   useEffect(() => {
     if (!user?.agentId || !socket) return;
 

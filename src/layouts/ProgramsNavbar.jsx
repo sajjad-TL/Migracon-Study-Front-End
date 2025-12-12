@@ -10,27 +10,23 @@ import { useSocket } from "../context/SocketContext";
 const ProgramsNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    // const [badgeCount, setBadgeCount] = useState(0);
+    const [badgeCount, setBadgeCount] = useState(0);
     const navigate = useNavigate();
     const dropdownRef = useRef();
     const sidebarRef = useRef();
-    const { badgeCount } = useSocket();
-    
-
 
     const handleLogout = () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         window.location.href = "/login";
     };
- useEffect(() => {
+    useEffect(() => {
         if (user?.agentId) {
             axios
                 .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
                 .then((res) => {
                     setBadgeCount(res.data?.count || 0);
 
-                    // Show toast only once per session
                     const hasShownToast = sessionStorage.getItem("notificationToastShown");
 
                     if (res.data?.count > 0 && !hasShownToast) {
@@ -48,7 +44,7 @@ const ProgramsNavbar = ({ user }) => {
     return (
         <div className="w-full py-4 px-4 md:px-8 border-b">
             <div className="flex justify-between items-center">
-                {/* Left side: Hamburger + Back + Breadcrumbs */}
+
                 <div className="flex items-center gap-2 text-sm text-gray-600">
 
                     <div
@@ -62,17 +58,16 @@ const ProgramsNavbar = ({ user }) => {
                     <span className="font-medium text-black border-b-2 border-black pb-1">Programs</span>
                 </div>
 
-                {/* Right side: Notifications + Profile */}
                 <div className="flex items-center gap-4">
-                     <Link to="/notifications">
-                    <div className="relative cursor-pointer">
-                        <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
-                        {badgeCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                            {badgeCount}
-                        </span>
-                        )}
-                    </div>
+                    <Link to="/notifications">
+                        <div className="relative cursor-pointer">
+                            <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
+                            {badgeCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                                    {badgeCount}
+                                </span>
+                            )}
+                        </div>
                     </Link>
 
                     <div className="relative" ref={dropdownRef}>
@@ -83,7 +78,6 @@ const ProgramsNavbar = ({ user }) => {
                             onClick={() => setDropdownOpen((prev) => !prev)}
                         />
 
-                        {/* Dropdown menu */}
                         {dropdownOpen && (
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 border">
                                 <ul className="py-2 text-sm text-gray-700">
@@ -95,7 +89,7 @@ const ProgramsNavbar = ({ user }) => {
                                         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
                                     </Link>
                                     <Link to="/UserSetting">
-                                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
                                     </Link>
                                     <li className="border-t"></li>
                                     <li
@@ -111,7 +105,6 @@ const ProgramsNavbar = ({ user }) => {
                 </div>
             </div>
 
-            {/* Sidebar */}
             <div
                 ref={sidebarRef}
                 className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -149,7 +142,7 @@ const ProgramsNavbar = ({ user }) => {
                             </Link>
                         </li>
                         <li>
-                            <Link  to="/UserSetting" className="block py-2 px-4 rounded hover:bg-gray-100">
+                            <Link to="/UserSetting" className="block py-2 px-4 rounded hover:bg-gray-100">
                                 Settings
                             </Link>
                         </li>

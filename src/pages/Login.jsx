@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useSocket } from "../context/SocketContext";
 
 const Login = () => {
-  const { socket } = useSocket(); // ✅ Correct usage inside component
+  const { socket } = useSocket();
   const [form, setForm] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
@@ -32,7 +32,7 @@ const Login = () => {
       if (data?.token) {
         localStorage.setItem("token", data.token);
         setUser(data);
-        socket?.emit("agent-connected", { agentId: data.agentId }); // emit on Google login
+        socket?.emit("agent-connected", { agentId: data.agentId });
         navigate("/dashboard");
         toast.success("User login successfully");
       } else {
@@ -72,12 +72,9 @@ const Login = () => {
         localStorage.setItem("token", res.data.token);
         setUser(res.data);
 
-        // Emit agent-connected event via socket
         if (socket && res.data.agentId) {
-    socket.emit("join-agent-room", res.data.agentId); // ✅ critical
-  }
-
-
+          socket.emit("join-agent-room", res.data.agentId);
+        }
         navigate("/dashboard");
         toast.success("User login successfully");
       }

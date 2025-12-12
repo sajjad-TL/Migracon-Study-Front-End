@@ -6,10 +6,9 @@ import { Eye, EyeOff } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { CheckCircle, Circle } from 'lucide-react';
 
-
 const Register = () => {
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
@@ -97,7 +96,6 @@ const Register = () => {
 
   const password = form.password || '';
   const { firstName, lastName } = form;
-
   const checks = {
     length: password.length >= 12,
     lower: /[a-z]/.test(password),
@@ -204,18 +202,18 @@ const Register = () => {
             {renderCheck(checks.upper, 'An uppercase letter')}
             {renderCheck(checks.number, 'A number')}
             {renderCheck(checks.symbol, 'A symbol')}
-            </div>
+          </div>
 
-            <div className="text-sm text-blue-600 mt-4 space-x-4">
-              <a href="#" className="underline">Terms and Conditions</a>
-              <a href="#" className="underline">Privacy Policy</a>
-            </div>
-            <div className="flex items-start gap-2 mt-4 text-sm">
-              <input name="consentAccepted" checked={form.consentAccepted} onChange={handleChange} type="checkbox" className="mt-1" />
-              <p className="text-gray-700">
-                I have reviewed and consented to the ApplyBoard Terms and Conditions and Privacy Policy. The foregoing information/application/document(s) are true and complete.
-              </p>
-            </div>
+          <div className="text-sm text-blue-600 mt-4 space-x-4">
+            <a href="#" className="underline">Terms and Conditions</a>
+            <a href="#" className="underline">Privacy Policy</a>
+          </div>
+          <div className="flex items-start gap-2 mt-4 text-sm">
+            <input name="consentAccepted" checked={form.consentAccepted} onChange={handleChange} type="checkbox" className="mt-1" />
+            <p className="text-gray-700">
+              I have reviewed and consented to the ApplyBoard Terms and Conditions and Privacy Policy. The foregoing information/application/document(s) are true and complete.
+            </p>
+          </div>
           <button type="submit" className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 mt-4">
             Submit
           </button>

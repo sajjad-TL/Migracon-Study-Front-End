@@ -6,39 +6,34 @@ import { IoMdClose } from "react-icons/io";
 import axios from "axios";
 import { useSocket } from "../context/SocketContext";
 
-
 const StudentNavbar = ({ user }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
     const navigate = useNavigate();
     const dropdownRef = useRef();
     const sidebarRef = useRef();
     const { badgeCount } = useSocket();
 
-
-    // Close dropdown when clicking outside
     useEffect(() => {
         function handleClickOutside(event) {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
                 setDropdownOpen(false);
             }
         }
-        
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [dropdownRef]);
 
-    // Close sidebar when clicking outside
     useEffect(() => {
         function handleClickOutside(event) {
             if (sidebarRef.current && !sidebarRef.current.contains(event.target) && sidebarOpen) {
                 setSidebarOpen(false);
             }
         }
-        
+
         document.addEventListener("mousedown", handleClickOutside);
         return () => {
             document.removeEventListener("mousedown", handleClickOutside);
@@ -50,14 +45,12 @@ const StudentNavbar = ({ user }) => {
         localStorage.removeItem("user");
         window.location.href = "/login";
     };
- useEffect(() => {
+    useEffect(() => {
         if (user?.agentId) {
             axios
                 .get(`http://localhost:5000/notification/notification-preferences/${user.agentId}`)
                 .then((res) => {
-                    setBadgeCount(res.data?.count || 0);
 
-                    // Show toast only once per session
                     const hasShownToast = sessionStorage.getItem("notificationToastShown");
 
                     if (res.data?.count > 0 && !hasShownToast) {
@@ -67,18 +60,16 @@ const StudentNavbar = ({ user }) => {
                 })
                 .catch((err) => {
                     console.error("Badge count fetch failed", err);
-                    setBadgeCount(0);
                 });
         }
     }, [user?.agentId]);
-  
+
 
     return (
         <div className="w-full pb-3 px-4 md:px-8 border-b">
             <div className="flex justify-between items-center">
-                {/* Left side: Hamburger + Back + Breadcrumbs */}
                 <div className="flex items-center gap-2 text-sm text-gray-600">
-                    
+
                     <div
                         className="flex items-center gap-2 cursor-pointer"
                         onClick={() => navigate('/dashboard')}
@@ -90,19 +81,18 @@ const StudentNavbar = ({ user }) => {
                     <span className="font-medium text-black border-b-2 border-black pb-1">Student</span>
                 </div>
 
-                {/* Right side: Notifications + Profile */}
                 <div className="flex items-center gap-4">
-                  <Link to="/notifications">
-                    <div className="relative cursor-pointer">
-                        <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
-                        {badgeCount > 0 && (
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
-                            {badgeCount}
-                        </span>
-                        )}
-                    </div>
+                    <Link to="/notifications">
+                        <div className="relative cursor-pointer">
+                            <IoMdNotifications className="text-2xl text-gray-500 hover:text-gray-700" />
+                            {badgeCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                                    {badgeCount}
+                                </span>
+                            )}
+                        </div>
                     </Link>
-                    
+
                     <div className="relative" ref={dropdownRef}>
                         <img
                             src={user?.profilePicture ? `${user.profilePicture}?v=${Date.now()}` : "https://randomuser.me/api/portraits/women/44.jpg"}
@@ -111,7 +101,6 @@ const StudentNavbar = ({ user }) => {
                             onClick={() => setDropdownOpen((prev) => !prev)}
                         />
 
-                        {/* Dropdown menu */}
                         {dropdownOpen && (
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50 border">
                                 <ul className="py-2 text-sm text-gray-700">
@@ -123,7 +112,7 @@ const StudentNavbar = ({ user }) => {
                                         <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Profile</li>
                                     </Link>
                                     <Link to="/UserSetting">
-                                    <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
+                                        <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer">Settings</li>
                                     </Link>
                                     <li className="border-t"></li>
                                     <li
@@ -139,16 +128,14 @@ const StudentNavbar = ({ user }) => {
                 </div>
             </div>
 
-            {/* Sidebar */}
-            <div 
+            <div
                 ref={sidebarRef}
-                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${
-                    sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
+                className={`fixed top-0 left-0 h-full w-64 bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                    }`}
             >
                 <div className="flex items-center justify-between p-4 border-b">
                     <h2 className="text-lg font-semibold">Menu</h2>
-                    <button 
+                    <button
                         onClick={() => setSidebarOpen(false)}
                         className="text-gray-500 hover:text-gray-700"
                     >
@@ -185,7 +172,7 @@ const StudentNavbar = ({ user }) => {
                     </ul>
                 </nav>
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t">
-                    <div 
+                    <div
                         className="flex items-center gap-3 cursor-pointer"
                         onClick={handleLogout}
                     >
@@ -201,10 +188,9 @@ const StudentNavbar = ({ user }) => {
                     </div>
                 </div>
             </div>
-            
-            {/* Overlay */}
+
             {sidebarOpen && (
-                <div 
+                <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-40"
                     onClick={() => setSidebarOpen(false)}
                 ></div>

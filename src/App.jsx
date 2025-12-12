@@ -3,7 +3,7 @@ import AppRoutes from "./routes/AppRoutes";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { UserProvider } from "./context/userContext";
-import { SocketProvider } from "./context/SocketContext"; // ✅ Import this
+import { SocketProvider } from "./context/SocketContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 

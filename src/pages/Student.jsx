@@ -38,7 +38,6 @@ export default function StudentDashboard() {
 
   const openModal = () => setIsFormOpen(true);
   const closeModal = () => setIsFormOpen(false);
-
   const openEditModal = (student) => {
     setSelectedStudent(student);
     setIsEditModalOpen(true);
@@ -51,6 +50,7 @@ export default function StudentDashboard() {
 
   const handleUpdateStudent = (updatedStudent) => {
     setStudentData(updatedStudent);
+    console.log(updatedStudent, "updated student data");
     setStudents(prev =>
       prev.map(s =>
         s._id === updatedStudent._id
@@ -79,6 +79,7 @@ export default function StudentDashboard() {
     try {
       const res = await fetch(`http://localhost:5000/agent/all-students/${agentId}`);
       const data = await res.json();
+      console.log(data, "fetch students response");
 
       const normalized = (data?.students || []).map(s => ({
         _id: s._id,
@@ -87,7 +88,7 @@ export default function StudentDashboard() {
         lastName: s.lastName,
         avatar: `https://i.pravatar.cc/40?u=${s._id}`,
         email: s.email,
-        createdAt: s.createdAt, // ⬅️ Make sure backend returns this
+        createdAt: s.createdAt,
         education: s.applications?.map(app => app.program).join(', ') || "N/A",
         status: s.status,
         applicationCount: s.applicationCount || 0,
@@ -155,10 +156,9 @@ export default function StudentDashboard() {
     <div className="p-6 space-y-6">
       <StudentNavbar user={user} />
 
-      {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Total Students', value: students.length, icon: '👥' },
+          { label: 'Total Students', value: students.length, icon: '' },
           { label: 'Active Applications', value: activeApplicationsCount, icon: '📄' },
           { label: 'Completed', value: '892', icon: '✅' },
           { label: 'New This Month', value: newThisMonth, icon: '🆕' }
@@ -173,7 +173,6 @@ export default function StudentDashboard() {
         ))}
       </div>
 
-      {/* Students */}
       <div className="bg-white shadow rounded-xl p-4">
         <div className="flex flex-col md:flex-row items-center mb-4 gap-2">
           <button onClick={openModal} className="bg-black text-white px-4 py-2 rounded-md font-medium">
@@ -237,7 +236,6 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* Table or Grid View */}
         {viewMode === 'table' ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
@@ -298,7 +296,6 @@ export default function StudentDashboard() {
           </div>
         )}
 
-        {/* Pagination */}
         <div className="flex justify-between items-center mt-4 text-sm">
           <div>
             Showing {startIndex + 1} to {Math.min(endIndex, filteredStudents.length)} of {filteredStudents.length} results
@@ -319,7 +316,6 @@ export default function StudentDashboard() {
         </div>
       </div>
 
-      {/* Modals */}
       <EditStudent
         isOpen={isEditModalOpen}
         onClose={() => setIsEditModalOpen(false)}

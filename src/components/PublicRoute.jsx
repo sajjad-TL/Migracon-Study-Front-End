@@ -10,7 +10,6 @@ const PublicRoute = ({ children }) => {
   console.log('PublicRoute → Location:', location.pathname);
 
   if (isAuthenticated && location.pathname !== '/dashboard') {
-    // If already authenticated and not on dashboard, redirect
     return <Navigate to="/dashboard" replace />;
   }
 

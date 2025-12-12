@@ -27,9 +27,7 @@ const ProfileDetail = () => {
   const [imageVersion, setImageVersion] = useState(Date.now());
 
   const dropdownRef = useRef();
-
-  // const { user } = useContext(UserContext);
-    const agentId = user?.agentId;
+  const agentId = user?.agentId;
 
   useEffect(() => {
     fetchAgentData();
@@ -53,21 +51,21 @@ const ProfileDetail = () => {
     window.location.href = "/login";
   };
 
-const fetchAgentData = async () => {
-  try {
-    if (user?.agentId) {
-      const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
-      setAgentData(response.data.agent);
+  const fetchAgentData = async () => {
+    try {
+      if (user?.agentId) {
+        const response = await axios.get(`http://localhost:5000/agent/${user.agentId}`);
+        setAgentData(response.data.agent);
 
-      setUser((prev) => ({
-        ...prev,
-        profilePicture: response.data.agent.profilePicture,
-      }));
+        setUser((prev) => ({
+          ...prev,
+          profilePicture: response.data.agent.profilePicture,
+        }));
+      }
+    } catch (error) {
+      console.error('Error fetching agent data:', error);
     }
-  } catch (error) {
-    console.error('Error fetching agent data:', error);
-  }
-};
+  };
 
 
   const handleUpdate = async (formData) => {
@@ -123,27 +121,20 @@ const fetchAgentData = async () => {
   const [selectedNotificationType, setSelectedNotificationType] = useState("Notes");
   const [emailFrequency, setEmailFrequency] = useState("Immediate");
   const [mobileNotifications, setMobileNotifications] = useState(false);
-
-  // Handle dropdown change for notification type
   const handleNotificationTypeChange = (e) => {
     setSelectedNotificationType(e.target.value);
   };
 
-  // Handle dropdown change for email frequency
   const handleEmailFrequencyChange = (e) => {
     setEmailFrequency(e.target.value);
   };
 
-  // Handle mobile notifications toggle
   const handleMobileNotificationToggle = () => {
     setMobileNotifications(!mobileNotifications);
   };
 
-  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // ⚠️ Replace with dynamic userId (from auth, context, etc.)
     const userId = agentId;
 
     const preferences = {
@@ -167,13 +158,11 @@ const fetchAgentData = async () => {
   return (
     <div className="container-fluid mr-10">
       <div className="bg-gray-50 ">
-        {/* Header */}
         <header className="bg-white shadow-sm">
           <div
             className="container mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4 sm:gap-0"
 
           >
-            {/* Breadcrumb */}
             <div className="flex flex-row items-center flex-wrap gap-2 text-sm sm:text-base text-gray-500">
               <Link to="/dashboard" className="text-gray-500">
                 <div className="flex flex-row gap-1 items-center">
@@ -185,8 +174,6 @@ const fetchAgentData = async () => {
               <span> / </span>
               <span className="text-gray-900 font-semibold">Dashboard</span>
             </div>
-
-            {/* Notification + Profile */}
             <div className="relative" ref={dropdownRef}>
               <div className="flex items-center space-x-3 sm:space-x-4">
                 <FaBell className="text-gray-500 cursor-pointer text-lg sm:text-xl" />
@@ -217,10 +204,8 @@ const fetchAgentData = async () => {
           </div>
         </header>
 
-        {/* Main */}
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
           <div className="rounded-lg p-4 sm:p-6 bg-white shadow-sm">
-            {/* Tabs */}
             <div
               className="flex flex-wrap justify-between items-start sm:items-center mb-4 sm:mb-6 gap-4 sm:gap-0"
               style={{ borderBottom: "2px solid #d6d6d6", width: "100%" }}
@@ -241,13 +226,9 @@ const fetchAgentData = async () => {
               </div>
             </div>
 
-
-            {/* Tab Content */}
             {activeTab === "profile" && (
               <>
-                {/* Profile Info */}
                 <div className="container mx-auto px-4">
-                  {/* Top Profile Header Row */}
                   <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-6">
                     <h2 className="text-2xl font-semibold text-gray-900 mb-4 md:mb-0">
                       Profile Information
@@ -270,9 +251,7 @@ const fetchAgentData = async () => {
                     </div>
                   </div>
 
-                  {/* Main Card */}
                   <div className="p-6 rounded-lg border shadow-sm bg-white w-full md:w-[85%] lg:w-[52%] mr-auto">
-                    {/* Header */}
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-semibold text-gray-900">User Settings</h3>
                       <MdEdit className="text-gray-500 cursor-pointer" onClick={openModal} />
@@ -285,7 +264,6 @@ const fetchAgentData = async () => {
                       onSubmit={handleUpdate}
                     />
 
-                    {/* Content */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-6">
                       <div className="text-sm text-gray-500 font-medium">Profile Photo</div>
                       <div className="flex items-center">
@@ -332,7 +310,6 @@ const fetchAgentData = async () => {
 
             {activeTab === "business" && (
               <>
-                {/* Profile Info */}
                 <div className="w-full px-4 sm:px-6 lg:px-8 mb-6">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <h2 className="text-xl sm:text-2xl font-semibold text-gray-900">
@@ -354,8 +331,6 @@ const fetchAgentData = async () => {
                     </div>
                   </div>
                 </div>
-
-                {/* General Info Card */}
                 <div className="w-full px-4 sm:px-6 lg:px-8">
                   <div className="p-6 rounded-lg border bg-white max-w-full sm:max-w-2xl lg:max-w-3xl mx-auto">
                     <h3 className="text-lg font-semibold text-gray-800 mb-6">
@@ -407,10 +382,8 @@ const fetchAgentData = async () => {
                         />
                         <span>Canada</span>
                       </div>
-
                       <div className="text-gray-500 font-medium">State / Province</div>
                       <div className="text-gray-900 sm:text-right">Ontario</div>
-
                       <div className="text-gray-500 font-medium">Postal Code</div>
                       <div className="text-gray-900 sm:text-right">L5V 0C6</div>
                     </div>
@@ -419,111 +392,102 @@ const fetchAgentData = async () => {
               </>
             )}
 
-
             {activeTab === "notifications" && (
-         <div className="px-4 sm:px-6 lg:px-8 py-6">
-         <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">
-           Notification Preferences
-         </h1>
-         <p className="text-gray-600 mb-6 pb-2 border-b-2 border-gray-300" style={{ maxWidth: "800px" }}>
-           Manage your notifications (including alert types and frequency) to stay informed and meet every deadline.
-         </p>
-   
-         <form onSubmit={handleSubmit}>
-           {/* Notification Type */}
-           <div className="mb-6 max-w-sm">
-             <label htmlFor="notification-type" className="block text-gray-700 font-medium mb-2">
-               Notification type <i className="fas fa-info-circle text-gray-400"></i>
-             </label>
-             <select
-               id="notification-type"
-               className="block w-full border border-gray-300 rounded-md p-2"
-               value={selectedNotificationType}
-               onChange={handleNotificationTypeChange}
-             >
-               <option value="Notes">Notes</option>
-               <option value="Messages">Messages</option>
-               <option value="Reminders">Reminders</option>
-               <option value="Updates">Updates</option>
-             </select>
-             <p className="text-gray-600 mt-2">
-               You will receive a notification when a new note has been added to an application.
-             </p>
-           </div>
-   
-           {/* Email Notifications */}
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full lg:max-w-4xl">
-             {/* Email Notifications Section */}
-             <div className="bg-white p-6 rounded-lg shadow-md w-full">
-               <h2 className="text-lg font-medium text-gray-800 mb-4">Email notifications</h2>
-               <p className="text-gray-600 mb-4">
-                 Adjust how you would like to receive this type of notification via email.
-               </p>
-               <label htmlFor="frequency-options" className="block text-gray-700 font-medium mb-2">
-                 Frequency options
-               </label>
-               <select
-                 id="frequency-options"
-                 className="block w-full border border-gray-300 rounded-md p-2 mb-4"
-                 value={emailFrequency}
-                 onChange={handleEmailFrequencyChange}
-               >
-                 <option value="Immediate">Immediate</option>
-                 <option value="Never">Never</option>
-                 <option value="Daily">Daily</option>
-                 <option value="Weekly">Weekly</option>
-               </select>
-             </div>
-   
-             {/* Mobile Push Notifications Section */}
-             <div className="bg-white p-6 rounded-lg shadow-md w-full flex flex-col items-center text-center">
-               <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 w-full text-left">
-                 Mobile Push Notifications
-               </h2>
-   
-               <img
-                 src="https://via.placeholder.com/100" // Replace with actual image path
-                 alt="Mobile Notification"
-                 className="mb-4"
-               />
-   
-               <p className="text-gray-600 mb-4">
-                 To receive notifications on your phone, open the ApplyBoard app. Don’t have it yet?
-               </p>
-   
-               <button
-                 type="button"
-                 className="bg-blue-600 hover:bg-blue-700 transition-colors duration-200 text-white px-5 py-2 rounded-lg flex items-center"
-                 onClick={handleMobileNotificationToggle}
-               >
-                 {mobileNotifications ? (
-                   <i className="fas fa-check mr-2"></i>
-                 ) : (
-                   <i className="fas fa-times mr-2"></i>
-                 )}
-                 {mobileNotifications ? "Disable" : "Enable"} Mobile Notifications
-               </button>
-             </div>
-           </div>
-   
-           {/* Submit Button */}
-           <div className="flex justify-end mt-4">
-             <button
-               type="submit"
-               className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-             >
-               Save Preferences
-             </button>
-           </div>
-         </form>
-       </div>
-      
+              <div className="px-4 sm:px-6 lg:px-8 py-6">
+                <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-2">
+                  Notification Preferences
+                </h1>
+                <p className="text-gray-600 mb-6 pb-2 border-b-2 border-gray-300" style={{ maxWidth: "800px" }}>
+                  Manage your notifications (including alert types and frequency) to stay informed and meet every deadline.
+                </p>
 
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-6 max-w-sm">
+                    <label htmlFor="notification-type" className="block text-gray-700 font-medium mb-2">
+                      Notification type <i className="fas fa-info-circle text-gray-400"></i>
+                    </label>
+                    <select
+                      id="notification-type"
+                      className="block w-full border border-gray-300 rounded-md p-2"
+                      value={selectedNotificationType}
+                      onChange={handleNotificationTypeChange}
+                    >
+                      <option value="Notes">Notes</option>
+                      <option value="Messages">Messages</option>
+                      <option value="Reminders">Reminders</option>
+                      <option value="Updates">Updates</option>
+                    </select>
+                    <p className="text-gray-600 mt-2">
+                      You will receive a notification when a new note has been added to an application.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-full lg:max-w-4xl">
+                    <div className="bg-white p-6 rounded-lg shadow-md w-full">
+                      <h2 className="text-lg font-medium text-gray-800 mb-4">Email notifications</h2>
+                      <p className="text-gray-600 mb-4">
+                        Adjust how you would like to receive this type of notification via email.
+                      </p>
+                      <label htmlFor="frequency-options" className="block text-gray-700 font-medium mb-2">
+                        Frequency options
+                      </label>
+                      <select
+                        id="frequency-options"
+                        className="block w-full border border-gray-300 rounded-md p-2 mb-4"
+                        value={emailFrequency}
+                        onChange={handleEmailFrequencyChange}
+                      >
+                        <option value="Immediate">Immediate</option>
+                        <option value="Never">Never</option>
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                      </select>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-md w-full flex flex-col items-center text-center">
+                      <h2 className="text-lg sm:text-xl font-semibold text-gray-800 mb-4 w-full text-left">
+                        Mobile Push Notifications
+                      </h2>
+
+                      <img
+                        src="https://via.placeholder.com/100"
+                        alt="Mobile Notification"
+                        className="mb-4"
+                      />
+
+                      <p className="text-gray-600 mb-4">
+                        To receive notifications on your phone, open the ApplyBoard app. Don’t have it yet?
+                      </p>
+
+                      <button
+                        type="button"
+                        className="bg-blue-600 hover:bg-blue-700 transition-colors duration-200 text-white px-5 py-2 rounded-lg flex items-center"
+                        onClick={handleMobileNotificationToggle}
+                      >
+                        {mobileNotifications ? (
+                          <i className="fas fa-check mr-2"></i>
+                        ) : (
+                          <i className="fas fa-times mr-2"></i>
+                        )}
+                        {mobileNotifications ? "Disable" : "Enable"} Mobile Notifications
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end mt-4">
+                    <button
+                      type="submit"
+                      className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+                    >
+                      Save Preferences
+                    </button>
+                  </div>
+                </form>
+              </div>
             )}
           </div>
         </main>
 
-        {/* Footer */}
         <footer className="bg-white py-4 mt-[11rem]">
           <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 mb-4 md:mb-0">
@@ -563,7 +527,6 @@ const fetchAgentData = async () => {
           </div>
         </footer>
 
-        {/* Help Button */}
         <div className="fixed bottom-4 right-4">
           <button className="bg-blue-600 text-white px-4 py-2 rounded-full shadow-lg">
             Help

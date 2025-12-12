@@ -2,7 +2,6 @@ import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import {
   Search,
-  ChevronDown,
   Filter,
   ChevronLeft,
   ChevronRight,
@@ -17,20 +16,17 @@ export default function ProgramSchool() {
   const [compareMode, setCompareMode] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const programsPerPage = 3;
-
   const [levels, setLevels] = useState([]);
   const [fields, setFields] = useState([]);
   const [intakes, setIntakes] = useState([]);
   const [destinations, setDestinations] = useState([]);
   const [institutions, setInstitutions] = useState([]);
-const [sortOption, setSortOption] = useState("relevance");
-
+  const [sortOption, setSortOption] = useState("relevance");
   const [selectedLevel, setSelectedLevel] = useState("");
   const [selectedField, setSelectedField] = useState("");
   const [selectedIntake, setSelectedIntake] = useState("");
   const [selectedDestination, setSelectedDestination] = useState("");
   const [selectedInstitution, setSelectedInstitution] = useState("");
-
   const [showFilters, setShowFilters] = useState(false);
   const { user } = useContext(UserContext);
 
@@ -41,7 +37,6 @@ const [sortOption, setSortOption] = useState("relevance");
         const data = response.data.programs || [];
 
         setPrograms(data);
-
         setLevels([...new Set(data.map((p) => p.level).filter(Boolean))]);
         setFields([...new Set(data.map((p) => p.fieldOfStudy).filter(Boolean))]);
         setIntakes([...new Set(data.map((p) => p.intake).filter(Boolean))]);
@@ -72,31 +67,29 @@ const [sortOption, setSortOption] = useState("relevance");
 
   const totalPages = Math.ceil(filteredPrograms.length / programsPerPage);
   const sortedPrograms = [...filteredPrograms].sort((a, b) => {
-  switch (sortOption) {
-    case "nameAsc":
-      return a.name.localeCompare(b.name);
-    case "nameDesc":
-      return b.name.localeCompare(a.name);
-    case "tuitionLowHigh":
-      return (a.tuitionFee || 0) - (b.tuitionFee || 0);
-    case "tuitionHighLow":
-      return (b.tuitionFee || 0) - (a.tuitionFee || 0);
-    default:
-      return 0; // relevance (default order)
-  }
-});
+    switch (sortOption) {
+      case "nameAsc":
+        return a.name.localeCompare(b.name);
+      case "nameDesc":
+        return b.name.localeCompare(a.name);
+      case "tuitionLowHigh":
+        return (a.tuitionFee || 0) - (b.tuitionFee || 0);
+      case "tuitionHighLow":
+        return (b.tuitionFee || 0) - (a.tuitionFee || 0);
+      default:
+        return 0;
+    }
+  });
 
-const paginatedPrograms = sortedPrograms.slice(
-  (currentPage - 1) * programsPerPage,
-  currentPage * programsPerPage
-);
+  const paginatedPrograms = sortedPrograms.slice(
+    (currentPage - 1) * programsPerPage,
+    currentPage * programsPerPage
+  );
 
   return (
     <div className="bg-gray-50 min-h-screen">
       <ProgramsNavbar user={user} />
-
       <div className="mx-auto p-4">
-        {/* Search + Filters */}
         <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
           <div className="relative mb-4">
             <Search className="absolute left-3 top-3 text-gray-400" size={20} />
@@ -112,11 +105,8 @@ const paginatedPrograms = sortedPrograms.slice(
             />
           </div>
 
-         
-
           {showFilters && (
             <div className="mt-4 bg-gray-100 p-4 rounded-md grid grid-cols-1 md:grid-cols-5 gap-3">
-              {/* Program Level */}
               <div>
                 <label className="text-xs text-gray-600">Program Level</label>
                 <select
@@ -136,7 +126,6 @@ const paginatedPrograms = sortedPrograms.slice(
                 </select>
               </div>
 
-              {/* Field of Study */}
               <div>
                 <label className="text-xs text-gray-600">Field of Study</label>
                 <select
@@ -156,7 +145,6 @@ const paginatedPrograms = sortedPrograms.slice(
                 </select>
               </div>
 
-              {/* Intakes */}
               <div>
                 <label className="text-xs text-gray-600">Intake</label>
                 <select
@@ -176,7 +164,6 @@ const paginatedPrograms = sortedPrograms.slice(
                 </select>
               </div>
 
-              {/* Destination */}
               <div>
                 <label className="text-xs text-gray-600">Destination</label>
                 <select
@@ -196,7 +183,6 @@ const paginatedPrograms = sortedPrograms.slice(
                 </select>
               </div>
 
-              {/* Institution */}
               <div>
                 <label className="text-xs text-gray-600">Institution</label>
                 <select
@@ -237,60 +223,55 @@ const paginatedPrograms = sortedPrograms.slice(
           )}
         </div>
 
-        {/* Programs List */}
         <div className="bg-white shadow-sm rounded-md p-4 mx-auto">
           <div className="flex justify-between items-center mb-4">
             <div className="flex flex-row gap-4 items-center">
               <div className="text-sm text-gray-600">
                 {filteredPrograms.length} programs found
               </div>
-             <div className="flex items-center gap-4">
-  {/* Sort Dropdown */}
-  <div className="flex items-center">
-    <span className="text-sm mr-2">Sort</span>
-    <select
-      className="w-40 p-1 pr-6 border rounded-md text-sm"
-      value={sortOption}
-      onChange={(e) => setSortOption(e.target.value)}
-    >
-      <option value="relevance">Relevance</option>
-      <option value="nameAsc">Program Name (A-Z)</option>
-      <option value="nameDesc">Program Name (Z-A)</option>
-      <option value="tuitionLowHigh">Tuition Low → High</option>
-      <option value="tuitionHighLow">Tuition High → Low</option>
-    </select>
-  </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center">
+                  <span className="text-sm mr-2">Sort</span>
+                  <select
+                    className="w-40 p-1 pr-6 border rounded-md text-sm"
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value)}
+                  >
+                    <option value="relevance">Relevance</option>
+                    <option value="nameAsc">Program Name (A-Z)</option>
+                    <option value="nameDesc">Program Name (Z-A)</option>
+                    <option value="tuitionLowHigh">Tuition Low → High</option>
+                    <option value="tuitionHighLow">Tuition High → Low</option>
+                  </select>
+                </div>
 
-  {/* Compare Toggle */}
-  <div className="flex items-center">
-    <span className="text-sm mr-2">Compare</span>
-    <div
-      className="w-10 h-5 bg-gray-200 rounded-full relative cursor-pointer"
-      onClick={() => setCompareMode(!compareMode)}
-    >
-      <div
-        className={`w-5 h-5 rounded-full absolute top-0 transition-all duration-200 ${
-          compareMode ? "bg-blue-600 right-0" : "bg-white left-0"
-        } shadow`}
-      ></div>
-    </div>
-  </div>
-</div>
+                <div className="flex items-center">
+                  <span className="text-sm mr-2">Compare</span>
+                  <div
+                    className="w-10 h-5 bg-gray-200 rounded-full relative cursor-pointer"
+                    onClick={() => setCompareMode(!compareMode)}
+                  >
+                    <div
+                      className={`w-5 h-5 rounded-full absolute top-0 transition-all duration-200 ${compareMode ? "bg-blue-600 right-0" : "bg-white left-0"
+                        } shadow`}
+                    ></div>
+                  </div>
+                </div>
+              </div>
 
             </div>
 
-             <div className="flex justify-end">
-            <button
-              onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center text-sm border rounded-md px-3 py-1"
-            >
-              <Filter size={14} className="mr-1" />
-              Student eligibility filters
-            </button>
-          </div>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center text-sm border rounded-md px-3 py-1"
+              >
+                <Filter size={14} className="mr-1" />
+                Student eligibility filters
+              </button>
+            </div>
           </div>
 
-          {/* Display Paginated Programs */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {paginatedPrograms.length > 0 ? (
               paginatedPrograms.map((program, index) => (
@@ -352,7 +333,6 @@ const paginatedPrograms = sortedPrograms.slice(
             )}
           </div>
 
-          {/* Pagination */}
           {filteredPrograms.length > programsPerPage && (
             <div className="flex justify-between items-center mt-6">
               <div className="text-sm text-gray-500">
@@ -377,7 +357,6 @@ const paginatedPrograms = sortedPrograms.slice(
             </div>
           )}
 
-          {/* Floating Help Button */}
           <div className="fixed bottom-4 right-4">
             <button className="w-12 h-12 bg-black text-white rounded-full flex items-center justify-center shadow-lg">
               <HelpCircle />

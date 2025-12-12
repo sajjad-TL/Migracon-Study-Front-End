@@ -52,7 +52,6 @@ const UserSettings = () => {
 
   const name = `${firstName} ${lastName}`;
   
-  // Force refresh by appending timestamp to bust cache
   const profilePictureWithCacheBust = profilePicture
     ? `${profilePicture}?t=${Date.now()}`
     : null;
@@ -70,10 +69,6 @@ else {
       alert("Something went wrong!");
     }
   };
-
-
-
-
 
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -120,7 +115,6 @@ else {
           </button>
         </div>
 
-        {/* Profile Details (Read Only) */}
         <div className="space-y-5">
           
 
@@ -134,7 +128,6 @@ else {
             <div className="border px-4 py-2 rounded-md bg-gray-50">{agentData?.phone || "N/A"}</div>
           </div>
 
-          {/* Preferences */}
           <div className="flex items-center justify-between mt-4">
             <span className="text-gray-700">Enable Notifications</span>
             <input
@@ -162,7 +155,6 @@ else {
         </div>
       </div>
 
-      {/* Edit Modal */}
       <EditProfileModal
         isOpen={isEditOpen}
         onClose={closeModal}
